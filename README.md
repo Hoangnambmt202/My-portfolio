@@ -1,36 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# My portfolio
 
-## Getting Started
+Welcome to my Portfolio website! This website introduces my skills, projects and experience as a programmer.
 
-First, run the development server:
+## Introduce
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+This portfolio is designed to provide a comprehensive view of my ability and my contributions can bring to future projects. Here, you will find a selection of projects that I have implemented, along with detailed information about my role, the technologies used and the achieved results.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+*** Introduction: ** The brief introduction of my qualifications and passion in the field of programming.
+*** Project: ** Detailed overview of selective projects, including:
+    * Project description
+    * The technologies are used
+    * Link to live demo or code storage
+    * Challenges and main solutions
+*** Skills: ** List of programming languages, frameworks, tools and technology that I am proficient.
+*** Experience: ** Summary of my professional work experience and learning experience, focusing on the roles and responsibilities related.
+*** Contact: ** Detailed information on how to contact me for work opportunities, collaboration or questions.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Technology
 
-## Learn More
+This portfolio is built using the following technologies:
 
-To learn more about Next.js, take a look at the following resources:
+* [List the front technologies, for example: React, Angular, VUE.JS]
+* [List of rear technologies, for example: Node.js, Python, Django, Flask]
+* [List of databases, for example: Postgresql, MySQL, MongoDB]
+* [List the deployment tools, for example: Netlify, Vercel, AWS, Heroku]
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Contribute
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+If you have any improvement proposals or want to report the problem, please create a problem or send a pull request.
 
-## Deploy on Vercel
+## Contact information
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+* Email:  nam23062002@gmail.com
+* Linkedin: https://www.linkedin.com/in/pham-ngoc-hoang-nam
