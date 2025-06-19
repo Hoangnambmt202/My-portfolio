@@ -21,7 +21,7 @@ export default function RootLayout({
       <body className={inter.className}>
         
         <Nav />
-        <main className="pr-16 bg-black">
+        <main className="bg-black">
           {children}
         </main>
 

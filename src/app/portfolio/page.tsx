@@ -22,14 +22,14 @@ const Projects = () => {
             transition={{ duration: 0.5 }}
             className="min-h-screen py-20 px-4"
         >
-            <div className="max-w-7xl mx-auto">
+            <div className="max-w-4xl mx-auto">
                 <motion.h2 
                     initial={{ y: -20 }}
                     animate={{ y: 0 }}
                     transition={{ duration: 0.5 }}
-                    className="text-4xl font-bold text-center text-black mb-12"
+                    className="text-4xl font-bold text-center text-white mb-12"
                 >
-                    My Projects
+                    My <span className='text-[color:var(--primary-color)]'>Portfolio</span>
                 </motion.h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {projects.map((project, index) => (
