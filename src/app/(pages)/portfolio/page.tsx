@@ -1,6 +1,9 @@
 'use client';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { NextButton } from '@/components/elements/NextButton';
+import Image from 'next/image';
+import { Header } from '@/components/layout/Header';
 
 const Projects = () => {
     const [projects] = useState([
@@ -20,17 +23,11 @@ const Projects = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="min-h-screen py-20 px-4"
+            className="min-h-screen px-4"
         >
             <div className="max-w-4xl mx-auto">
-                <motion.h2 
-                    initial={{ y: -20 }}
-                    animate={{ y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="text-4xl font-bold text-center text-white mb-12"
-                >
-                    My <span className='text-[color:var(--primary-color)]'>Portfolio</span>
-                </motion.h2>
+                <Header backdrop="WORKS" title="MY PORTFOLIO" />
+                
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {projects.map((project, index) => (
                         <motion.div 
@@ -41,7 +38,7 @@ const Projects = () => {
                             whileHover={{ scale: 1.05 }}
                             className="bg-gray-800 rounded-lg overflow-hidden shadow-lg"
                         >
-                            <img src={project.image} alt={project.title} className="w-full h-48 object-cover" />
+                            <Image width={100} height={100} src={project.image} alt={project.title} className="w-full h-48 object-cover" />
                             <div className="p-6">
                                 <h3 className="text-xl font-semibold text-white mb-2">{project.title}</h3>
                                 <p className="text-gray-400 mb-4">{project.description}</p>
@@ -77,6 +74,11 @@ const Projects = () => {
                     ))}
                 </div>
             </div>
+            <div className='mt-16 flex justify-center'>
+                <NextButton content="Contact me" class="" href={"/contact"}/>
+
+            </div>
+            
         </motion.div>
     );
 };

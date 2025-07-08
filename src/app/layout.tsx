@@ -1,10 +1,31 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Poppins, Roboto } from 'next/font/google'
 import "@/styles/globals.css";
-import Nav from "@/components/layout/Nav";
+
+import PageTransition from "@/components/layout/PageTransition";
+import Sidebar from "@/components/layout/Sidebar";
 
 
-const inter = Inter({ subsets: ["latin"] });
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+});
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-poppins',
+  display: 'swap',
+});
+
+const roboto = Roboto({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  display: 'swap',
+});
+
 
 export const metadata: Metadata = {
   title: "My Portfolio",
@@ -17,16 +38,13 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        
-        <Nav />
-        <main className="bg-black">
+    <html lang="en" className={`${roboto.className} ${poppins.className} ${inter.variable}`}>
+      <body >
+        <PageTransition />
+        <Sidebar />
+        <main className="bg-[#202020]  min-h-screen">
           {children}
         </main>
-
-       
-        
       </body>
     </html>
   );
