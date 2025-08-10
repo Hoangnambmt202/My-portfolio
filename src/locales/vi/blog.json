@@ -13,5 +13,13 @@
   "sortBy": "Sắp xếp theo",
   "sortByDate": "Ngày đăng",
   "sortByViews": "Lượt xem",
-  "sortByTitle": "Tiêu đề"
+  "sortByTitle": "Tiêu đề",
+  "backToBlog": "Quay lại Blog",
+  "relatedPosts": "Bài viết liên quan",
+  "comments": "Bình luận",
+  "postComment": "Đăng bình luận",
+  "writeComment": "Viết bình luận của bạn...",
+  "yourName": "Tên của bạn",
+  "yourEmail": "Email của bạn",
+  "authorBio": "Về tác giả"
 }

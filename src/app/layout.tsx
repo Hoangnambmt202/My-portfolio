@@ -40,7 +40,7 @@ export default function RootLayout({
         <I18nProvider>
           
           <Sidebar />
-          <main className="bg-[#202020] min-h-screen">
+          <main className="bg-[#202020] min-h-screen py-8">
             {children}
           </main>
         </I18nProvider>

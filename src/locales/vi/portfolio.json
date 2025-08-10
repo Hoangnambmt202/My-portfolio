@@ -1,10 +1,10 @@
 {
   "title": "DỰ ÁN CỦA TÔI",
   "backdrop": "WORKS",
-  "myWork": "CÔNG VIỆC CỦA TÔI",
+  "myWork": "PORTFOLIO CỦA TÔI",
   "allProjects": "Tất cả dự án",
-  "webDev": "Web Development",
-  "mobileDev": "Mobile Development",
+  "webDev": "Dự án Web",
+  "mobileDev": "Dự án Mobile",
   "design": "Design",
   "viewProject": "Xem dự án",
   "sourceCode": "Mã nguồn",

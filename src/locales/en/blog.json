@@ -13,5 +13,13 @@
   "sortBy": "Sort by",
   "sortByDate": "Date",
   "sortByViews": "Views",
-  "sortByTitle": "Title"
+  "sortByTitle": "Title",
+  "backToBlog": "Back to Blog",
+  "relatedPosts": "Related Posts",
+  "comments": "Comments",
+  "postComment": "Post Comment",
+  "writeComment": "Write your comment...",
+  "yourName": "Your Name",
+  "yourEmail": "Your Email",
+  "authorBio": "About the Author"
 }
