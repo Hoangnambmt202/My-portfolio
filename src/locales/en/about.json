@@ -1,0 +1,23 @@
+{
+  "title": "ABOUT ME",
+  "backdrop": "RESUME",
+  "personalInfo": "PERSONAL INFOS",
+  "firstName": "First Name",
+  "lastName": "Last Name",
+  "birthday": "Birth day",
+  "address": "Address",
+  "nationality": "Nationality",
+  "phone": "Phone",
+  "email": "Email",
+  "website": "Website",
+  "mySkills": "MY SKILLS",
+  "whatCanIDo": "WHAT CAN I DO",
+  "webDevelopment": "Web Development",
+  "webDevelopmentDesc": "Creating responsive and interactive web applications using modern technologies.",
+  "mobileDevelopment": "Mobile Development",
+  "mobileDevelopmentDesc": "Developing mobile applications for multiple platforms using React Native and Flutter.",
+  "uiuxDesign": "UI/UX Design",
+  "uiuxDesignDesc": "Designing beautiful and intuitive user interfaces with great user experience.",
+  "seoOptimization": "Performance",
+  "seoOptimizationDesc": "Optimizing applications for maximum speed and scalability."
+}

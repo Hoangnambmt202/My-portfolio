@@ -1,0 +1,18 @@
+{
+  "title": "LIÊN HỆ",
+  "backdrop": "CONTACT",
+  "getInTouch": "LIÊN HỆ VỚI TÔI",
+  "dontBeShy": "ĐỪNG NGẠI NGÙNG!",
+  "description": "Hãy thoải mái liên hệ với tôi. Tôi luôn sẵn sàng thảo luận về những cơ hội mới, ý tưởng sáng tạo hoặc cơ hội để trở thành một phần trong tầm nhìn của bạn.",
+  "mailMe": "GỬI MAIL CHO TÔI",
+  "callMe": "GỌI CHO TÔI",
+  "yourName": "TÊN CỦA BẠN",
+  "yourEmail": "EMAIL CỦA BẠN",
+  "yourSubject": "CHỦ ĐỀ",
+  "yourMessage": "TIN NHẮN CỦA BẠN",
+  "sendMessage": "GỬI TIN NHẮN",
+  "sending": "Đang gửi...",
+  "messageSent": "Tin nhắn đã được gửi!",
+  "messageSuccess": "Cảm ơn bạn đã liên hệ. Tôi sẽ phản hồi sớm nhất có thể!",
+  "messageError": "Có lỗi xảy ra khi gửi tin nhắn. Vui lòng thử lại."
+}

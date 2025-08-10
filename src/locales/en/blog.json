@@ -1,0 +1,17 @@
+{
+  "title": "MY BLOG",
+  "backdrop": "POSTS",
+  "myBlog": "MY BLOG",
+  "readMore": "Read more",
+  "readingTime": "min read",
+  "publishedOn": "Published on",
+  "category": "Category",
+  "tags": "Tags",
+  "noPostsFound": "No posts found",
+  "searchPlaceholder": "Search posts...",
+  "filterByCategory": "Filter by category",
+  "sortBy": "Sort by",
+  "sortByDate": "Date",
+  "sortByViews": "Views",
+  "sortByTitle": "Title"
+}

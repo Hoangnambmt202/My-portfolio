@@ -1,0 +1,17 @@
+{
+  "title": "BLOG CỦA TÔI",
+  "backdrop": "POSTS",
+  "myBlog": "BLOG CỦA TÔI",
+  "readMore": "Đọc thêm",
+  "readingTime": "phút đọc",
+  "publishedOn": "Đăng vào",
+  "category": "Danh mục",
+  "tags": "Thẻ",
+  "noPostsFound": "Không tìm thấy bài viết nào",
+  "searchPlaceholder": "Tìm kiếm bài viết...",
+  "filterByCategory": "Lọc theo danh mục",
+  "sortBy": "Sắp xếp theo",
+  "sortByDate": "Ngày đăng",
+  "sortByViews": "Lượt xem",
+  "sortByTitle": "Tiêu đề"
+}
