@@ -1,28 +1,14 @@
 import { StoreApi, UseBoundStore } from 'zustand';
 
 // Type-safe selector creator
-export const createSelectors = <S extends UseBoundStore<StoreApi<object>>>(
-  store: S,
-) => {
-  const storeIn = store as S;
-  const storeOut: S & {
-    use: {
-      [K in keyof ReturnType<S>]: () => ReturnType<S>[K];
-    };
-  } = storeIn as unknown as S & {
-    use: {
-      [K in keyof ReturnType<S>]: () => ReturnType<S>[K];
-    };
+export const createSelectors = <S>(store: UseBoundStore<StoreApi<S>>) => {
+  return {
+    use: new Proxy({} as {
+      [K in keyof S]: () => S[K];
+    }, {
+      get: (_, key: string) => store((state) => state[key as keyof S]),
+    }),
   };
-
-  Object.keys(storeIn.getState()).forEach((k) => {
-    const key = k as keyof ReturnType<S>;
-    const selector = () => storeIn((s) => s[key]);
-    if (!storeOut.use) storeOut.use = {} as typeof storeOut.use;
-    storeOut.use[key] = selector;
-  });
-
-  return storeOut;
 };
 
 // Shallow comparison utility

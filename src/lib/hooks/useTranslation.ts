@@ -46,7 +46,7 @@ export const useTranslation = () => {
       vi: { name: 'Vietnamese', nativeName: 'Tiếng Việt' },
     };
     
-    return languageNames[locale];
+    return languageNames[locale as Locale];
   }, [locale]);
 
   return {

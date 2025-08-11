@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { persist } from './middleware/persist';
-import { createSelectors } from './utils/selectors';
 import type { Locale, TranslationKeys } from '@/lib/types/i18n';
 
 interface I18nState {
@@ -219,4 +218,34 @@ const useI18nStoreBase = create<I18nState>()(
   )
 );
 
-export const useI18nStore = createSelectors(useI18nStoreBase);
+// Create selectors manually for this store
+const useI18nStore = useI18nStoreBase as typeof useI18nStoreBase & {
+  use: {
+    locale: () => Locale;
+    availableLocales: () => Locale[];
+    isLoading: () => boolean;
+    translations: () => Partial<Record<Locale, TranslationKeys>>;
+    setLocale: () => (locale: Locale) => void;
+    loadTranslations: () => (locale: Locale) => Promise<void>;
+    getTranslation: () => (key: string, locale?: Locale) => string;
+    isRTL: () => () => boolean;
+    getDirection: () => () => 'ltr' | 'rtl';
+    formatMessage: () => (key: string, values?: Record<string, string | number>) => string;
+  };
+};
+
+// Add the use property manually
+(useI18nStore as any).use = {
+  locale: () => useI18nStoreBase((state) => state.locale),
+  availableLocales: () => useI18nStoreBase((state) => state.availableLocales),
+  isLoading: () => useI18nStoreBase((state) => state.isLoading),
+  translations: () => useI18nStoreBase((state) => state.translations),
+  setLocale: () => useI18nStoreBase((state) => state.setLocale),
+  loadTranslations: () => useI18nStoreBase((state) => state.loadTranslations),
+  getTranslation: () => useI18nStoreBase((state) => state.getTranslation),
+  isRTL: () => useI18nStoreBase((state) => state.isRTL),
+  getDirection: () => useI18nStoreBase((state) => state.getDirection),
+  formatMessage: () => useI18nStoreBase((state) => state.formatMessage),
+};
+
+export { useI18nStore };
