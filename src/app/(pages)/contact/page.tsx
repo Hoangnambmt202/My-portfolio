@@ -5,6 +5,7 @@ import { Header } from "@/components/layout/Header";
 import { Input } from "@/components/elements/Input";
 import { useContactForm, useNotifications } from "@/lib/hooks/useStores";
 import { useTranslation } from "@/lib/hooks/useTranslation";
+import { ContactForm } from "@/lib/store";
 
 export default function ContactPage() {
   const { t } = useTranslation();
@@ -38,10 +39,11 @@ export default function ContactPage() {
   };
 
   const handleInputChange =
-    (field: keyof typeof form) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      updateForm(field, e.target.value);
-    };
+  (field: keyof ContactForm) =>
+  (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    updateForm(field, e.target.value);
+  };
+
 
   return (
     <div className="container mx-auto px-4">
