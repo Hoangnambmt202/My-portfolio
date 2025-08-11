@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useGlobalStore, usePortfolioStore, useBlogStore, useContactStore } from '@/lib/store';
-import type { Theme } from '@/lib/store';import type { ContactForm } from '@/lib/store/useContactStore';
+import type { ContactForm } from '@/lib/store/useContactStore';
 
 // Global store hooks
 export const useTheme = () => {
