@@ -234,6 +234,7 @@ export default function ContactPage() {
                   </span>
 
                   {isSubmitting && (
+        
                     <div className="absolute flex flex-row justify-center items-center gap-2">
                       <div className="animate-spin size-4 border-2 border-[#FFF] border-t-transparent rounded-full"></div>
                       {t("contact.sending")}

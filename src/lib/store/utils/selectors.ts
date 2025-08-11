@@ -4,21 +4,21 @@ import { StoreApi, UseBoundStore } from 'zustand';
 export const createSelectors = <S extends UseBoundStore<StoreApi<object>>>(
   store: S,
 ) => {
-  let storeIn = store as S;
+  const storeIn = store as S;
   const storeOut: S & {
     use: {
-      [K in keyof S extends (...args: any[]) => infer R ? R : never]: () => S extends (
-        ...args: any[]
-      ) => infer R
-        ? R[K]
-        : never;
+      [K in keyof ReturnType<S>]: () => ReturnType<S>[K];
     };
-  } = storeIn as any;
+  } = storeIn as unknown as S & {
+    use: {
+      [K in keyof ReturnType<S>]: () => ReturnType<S>[K];
+    };
+  };
 
   Object.keys(storeIn.getState()).forEach((k) => {
-    const key = k as keyof typeof storeIn extends (...args: any[]) => infer R ? R : never;
+    const key = k as keyof ReturnType<S>;
     const selector = () => storeIn((s) => s[key]);
-    if (!storeOut.use) storeOut.use = {} as any;
+    if (!storeOut.use) storeOut.use = {} as typeof storeOut.use;
     storeOut.use[key] = selector;
   });
 

@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "@/lib/hooks/useTranslation";
@@ -125,11 +125,11 @@ Building responsive web applications requires careful planning and attention to 
 
 export default function BlogDetailPage() {
   const params = useParams();
-  const router = useRouter();
   const { t } = useTranslation();
-  const { setLoading } = useLoading();
-  const [post, setPost] = useState<any>(null);
-  const [relatedPosts, setRelatedPosts] = useState<any[]>([]);
+  const { setLoading } = useLoading() as { setLoading: (loading: boolean, message?: string) => void };
+  type BlogPost = typeof mockBlogPosts[number];
+  const [post, setPost] = useState<BlogPost | null>(null);
+  const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -209,7 +209,7 @@ export default function BlogDetailPage() {
       >
         <div className="text-center">
           <h1 className="text-4xl font-bold text-white mb-4">Post Not Found</h1>
-          <p className="text-gray-400 mb-8">The blog post you're looking for doesn't exist.</p>
+          <p className="text-gray-400 mb-8">The blog post you&apos;re looking for doesn&apos;t exist.</p>
           <Link 
             href="/blog"
             onClick={handleBackClick}
@@ -466,7 +466,7 @@ export default function BlogDetailPage() {
                   </div>
                   <p className="text-gray-700">
                     Great article! The explanation of concurrent features in React 18 is very clear and helpful. 
-                    I'm excited to implement these in my next project.
+                    I&apos;m excited to implement these in my next project.
                   </p>
                 </div>
               </div>

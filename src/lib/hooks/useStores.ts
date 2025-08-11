@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useGlobalStore, usePortfolioStore, useBlogStore, useContactStore } from '@/lib/store';
-import type { Theme } from '@/lib/store';
+
 
 // Global store hooks
 export const useTheme = () => {
@@ -35,7 +35,7 @@ export const useNavigation = () => {
   const setNavigating = useGlobalStore((state) => state.setNavigating);
 
   return {
-    ...navigation,
+    navigation,
     setCurrentPath,
     setNavigating,
   };
