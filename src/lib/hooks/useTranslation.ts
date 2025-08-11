@@ -3,10 +3,10 @@ import { useI18nStore } from '@/lib/store/useI18nStore';
 import type { Locale } from '@/lib/types/i18n';
 
 export const useTranslation = () => {
-  const locale = useI18nStore.use.locale();
-  const isLoading = useI18nStore.use.isLoading();
-  const availableLocales = useI18nStore.use.availableLocales();
-  const translations = useI18nStore.use.translations();
+  const locale = useI18nStore((state) => state.locale);
+  const isLoading = useI18nStore((state) => state.isLoading);
+  const availableLocales = useI18nStore((state) => state.availableLocales);
+  const translations = useI18nStore((state) => state.translations);
   
   const setLocale = useI18nStore((state) => state.setLocale);
   const loadTranslations = useI18nStore((state) => state.loadTranslations);

@@ -7,8 +7,8 @@ interface I18nProviderProps {
 }
 
 export const I18nProvider: React.FC<I18nProviderProps> = ({ children }) => {
-  const locale = useI18nStore.use.locale();
-  const translations = useI18nStore.use.translations();
+  const locale = useI18nStore((state) => state.locale);
+  const translations = useI18nStore((state) => state.translations);
   const loadTranslations = useI18nStore((state) => state.loadTranslations);
 
   useEffect(() => {
