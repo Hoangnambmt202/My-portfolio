@@ -71,7 +71,7 @@ export function generateMetadata(config: MetadataConfig): Metadata {
         },
       ],
       locale: locale === 'vi' ? 'vi_VN' : 'en_US',
-      type: type as any,
+      type: type,
     },
 
     // Twitter

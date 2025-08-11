@@ -11,6 +11,26 @@ const compat = new FlatCompat({
 
 const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
+  {
+    rules: {
+      // Disable unused vars for catch blocks
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          "argsIgnorePattern": "^_",
+          "varsIgnorePattern": "^_",
+          "caughtErrorsIgnorePattern": "^_"
+        }
+      ],
+      // Allow explicit any in specific cases
+      "@typescript-eslint/no-explicit-any": [
+        "error",
+        {
+          "ignoreRestArgs": true
+        }
+      ]
+    }
+  }
 ];
 
 export default eslintConfig;

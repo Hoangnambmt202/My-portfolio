@@ -46,63 +46,63 @@ const loadTranslationFile = async (locale: Locale): Promise<TranslationKeys> => 
     try {
       const common = await import(`../../locales/${locale}/common.json`);
       translations.common = common.default || common;
-    } catch (e) {
+    } catch {
       console.warn(`Failed to load common translations for ${locale}`);
     }
 
     try {
       const navigation = await import(`../../locales/${locale}/navigation.json`);
       translations.navigation = navigation.default || navigation;
-    } catch (e) {
+    } catch {
       console.warn(`Failed to load navigation translations for ${locale}`);
     }
 
     try {
       const home = await import(`../../locales/${locale}/home.json`);
       translations.home = home.default || home;
-    } catch (e) {
+    } catch {
       console.warn(`Failed to load home translations for ${locale}`);
     }
 
     try {
       const about = await import(`../../locales/${locale}/about.json`);
       translations.about = about.default || about;
-    } catch (e) {
+    } catch {
       console.warn(`Failed to load about translations for ${locale}`);
     }
 
     try {
       const contact = await import(`../../locales/${locale}/contact.json`);
       translations.contact = contact.default || contact;
-    } catch (e) {
+    } catch {
       console.warn(`Failed to load contact translations for ${locale}`);
     }
 
     try {
       const portfolio = await import(`../../locales/${locale}/portfolio.json`);
       translations.portfolio = portfolio.default || portfolio;
-    } catch (e) {
+    } catch {
       console.warn(`Failed to load portfolio translations for ${locale}`);
     }
 
     try {
       const blog = await import(`../../locales/${locale}/blog.json`);
       translations.blog = blog.default || blog;
-    } catch (e) {
+    } catch {
       console.warn(`Failed to load blog translations for ${locale}`);
     }
 
     try {
       const validation = await import(`../../locales/${locale}/validation.json`);
       translations.validation = validation.default || validation;
-    } catch (e) {
+    } catch {
       console.warn(`Failed to load validation translations for ${locale}`);
     }
 
     try {
       const notifications = await import(`../../locales/${locale}/notifications.json`);
       translations.notifications = notifications.default || notifications;
-    } catch (e) {
+    } catch {
       console.warn(`Failed to load notifications translations for ${locale}`);
     }
 
@@ -171,6 +171,7 @@ const useI18nStoreBase = create<I18nState>()(
 
         // Handle nested keys (e.g., "common.greeting")
         const keys = key.split('.');
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let value: any = translation;
 
         for (const k of keys) {

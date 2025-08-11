@@ -17,6 +17,7 @@ export const useTheme = () => {
   };
 };
 
+
 export const useLoading = () => {
   const isLoading = useGlobalStore.use.isLoading();
   const loadingMessage = useGlobalStore.use.loadingMessage();
