@@ -87,7 +87,7 @@ interface ContactState {
   submitForm: () => Promise<boolean>;
   
   // Actions - Filters
-  setFilter: (key: keyof ContactState['filters'], value: any) => void;
+  setFilter: (key: keyof ContactState['filters'], value: ContactState['filters'][keyof ContactState['filters']]) => void;
   clearFilters: () => void;
   
   // Computed getters
@@ -326,7 +326,7 @@ const useContactStoreBase = create<ContactState>((set, get) => ({
       });
       
       return true;
-    } catch (error) {
+    } catch (_error) {
       set({ 
         isSubmitting: false, 
         submitError: 'Failed to send message. Please try again.' 

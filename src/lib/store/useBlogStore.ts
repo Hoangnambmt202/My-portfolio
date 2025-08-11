@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { createSelectors } from './utils/selectors';
-import type { BlogPost, Comment, BlogCategory } from '@/lib/types/blog';
+import type { BlogPost, Comment, Author, BlogCategory } from '@/lib/types/blog';
 
 interface BlogState {
   // Posts
@@ -53,7 +53,7 @@ interface BlogState {
   approveComment: (id: string) => void;
   
   // Actions - Filters
-  setFilter: (key: keyof BlogState['filters'], value: any) => void;
+  setFilter: (key: keyof BlogState['filters'], value: BlogState['filters'][keyof BlogState['filters']]) => void;
   clearFilters: () => void;
   setSearchQuery: (query: string) => void;
   setSorting: (sortBy: BlogState['sortBy'], sortOrder: BlogState['sortOrder']) => void;
@@ -233,7 +233,7 @@ const useBlogStoreBase = create<BlogState>((set, get) => ({
   getFilteredPosts: () => {
     const { posts, filters, searchQuery, sortBy, sortOrder } = get();
     
-    let filtered = posts.filter(post => {
+    const filtered = posts.filter(post => {
       // Filter by category
       if (filters.category && post.category !== filters.category) return false;
       
