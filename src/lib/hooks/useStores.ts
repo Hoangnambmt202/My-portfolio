@@ -137,7 +137,7 @@ export const useBlogPosts = () => {
 
   const setPosts = useBlogStore.use.setPosts();
   const setSelectedPost = useBlogStore.use.setSelectedPost();
-  // const getFilteredPosts = useBlogStore.use.getFilteredProjects();
+  const getFilteredPosts = useBlogStore.use.getFilteredPosts();
   const setFilter = useBlogStore.use.setFilter();
   const setSearchQuery = useBlogStore.use.setSearchQuery();
   const setCurrentPage = useBlogStore.use.setCurrentPage();
@@ -154,7 +154,7 @@ export const useBlogPosts = () => {
     pagination,
     setPosts,
     setSelectedPost,
-
+    getFilteredPosts,
     setFilter,
     setSearchQuery,
     setCurrentPage,

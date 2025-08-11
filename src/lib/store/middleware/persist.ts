@@ -1,4 +1,4 @@
-import { StateCreator } from "zustand";
+import { StateCreator } from 'zustand';
 
 export interface PersistOptions<T> {
   name: string;
@@ -35,16 +35,30 @@ export const persist = <T>(
       return null;
     };
 
-    const store = config((...args) => {
-      set(...args);
-      saveState(get());
-    }, get, api);
+    // Create a wrapper for the set function that saves state after each update
+    const enhancedSet: typeof set = (partial, replace) => {
+      if (replace === true) {
+        // Handle replace = true case
+        set(partial as T, true);
+      } else {
+        // Handle replace = false or undefined case
+        set(partial, false);
+      }
+      // Save state after setting
+      setTimeout(() => saveState(get()), 0);
+    };
 
+    const store = config(enhancedSet, get, api);
+
+    // Load persisted state on initialization
     if (typeof window !== "undefined") {
       const persistedState = loadState();
       if (persistedState) {
-        Object.assign(store, persistedState);
-        onRehydrateStorage?.(store);
+        // Merge persisted state with initial state
+        const currentState = get();
+        const mergedState = { ...currentState, ...persistedState };
+        set(mergedState as T, true);
+        onRehydrateStorage?.(mergedState as T);
       }
     }
 
