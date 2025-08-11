@@ -6,8 +6,8 @@ import type { ContactForm } from '@/lib/store/useContactStore';
 export const useTheme = () => {
   const theme = useGlobalStore.use.theme();
   const isDark = useGlobalStore.use.isDark();
-  const setTheme = useGlobalStore((state) => state.setTheme);
-  const toggleTheme = useGlobalStore((state) => state.toggleTheme);
+  const setTheme = useGlobalStore.use.setTheme();
+  const toggleTheme = useGlobalStore.use.toggleTheme();
 
   return {
     theme,
@@ -20,7 +20,7 @@ export const useTheme = () => {
 export const useLoading = () => {
   const isLoading = useGlobalStore.use.isLoading();
   const loadingMessage = useGlobalStore.use.loadingMessage();
-  const setLoading = useGlobalStore((state) => state.setLoading);
+  const setLoading = useGlobalStore.use.setLoading();
 
   return {
     isLoading,
@@ -31,8 +31,8 @@ export const useLoading = () => {
 
 export const useNavigation = () => {
   const navigation = useGlobalStore.use.navigation();
-  const setCurrentPath = useGlobalStore((state) => state.setCurrentPath);
-  const setNavigating = useGlobalStore((state) => state.setNavigating);
+  const setCurrentPath = useGlobalStore.use.setCurrentPath();
+  const setNavigating = useGlobalStore.use.setNavigating();
 
   return {
     ...navigation,
@@ -43,9 +43,9 @@ export const useNavigation = () => {
 
 export const useNotifications = () => {
   const notifications = useGlobalStore.use.notifications();
-  const addNotification = useGlobalStore((state) => state.addNotification);
-  const removeNotification = useGlobalStore((state) => state.removeNotification);
-  const clearNotifications = useGlobalStore((state) => state.clearNotifications);
+  const addNotification = useGlobalStore.use.addNotification();
+  const removeNotification = useGlobalStore.use.removeNotification();
+  const clearNotifications = useGlobalStore.use.clearNotifications();
 
   const showSuccess = useCallback((title: string, message: string, duration?: number) => {
     addNotification({ type: 'success', title, message, duration });
@@ -84,11 +84,11 @@ export const useProjects = () => {
   const projectsError = usePortfolioStore.use.projectsError();
   const filters = usePortfolioStore.use.filters();
 
-  const setProjects = usePortfolioStore((state) => state.setProjects);
-  const setSelectedProject = usePortfolioStore((state) => state.setSelectedProject);
-  const getFilteredProjects = usePortfolioStore((state) => state.getFilteredProjects);
-  const setFilter = usePortfolioStore((state) => state.setFilter);
-  const clearFilters = usePortfolioStore((state) => state.clearFilters);
+  const setProjects = usePortfolioStore.use.setProjects();
+  const setSelectedProject = usePortfolioStore.use.setSelectedProject();
+  const getFilteredProjects = usePortfolioStore.use.getFilteredProjects();
+  const setFilter = usePortfolioStore.use.setFilter();
+  const clearFilters = usePortfolioStore.use.clearFilters();
 
   return {
     projects,
@@ -110,9 +110,9 @@ export const useSkills = () => {
   const skillCategories = usePortfolioStore.use.skillCategories();
   const skillsLoading = usePortfolioStore.use.skillsLoading();
 
-  const setSkills = usePortfolioStore((state) => state.setSkills);
-  const addSkill = usePortfolioStore((state) => state.addSkill);
-  const getSkillsByCategory = usePortfolioStore((state) => state.getSkillsByCategory);
+  const setSkills = usePortfolioStore.use.setSkills();
+  const addSkill = usePortfolioStore.use.addSkill();
+  const getSkillsByCategory = usePortfolioStore.use.getSkillsByCategory();
 
   return {
     skills,
@@ -135,13 +135,13 @@ export const useBlogPosts = () => {
   const searchQuery = useBlogStore.use.searchQuery();
   const pagination = useBlogStore.use.pagination();
 
-  const setPosts = useBlogStore((state) => state.setPosts);
-  const setSelectedPost = useBlogStore((state) => state.setSelectedPost);
-  const getFilteredPosts = useBlogStore((state) => state.getFilteredPosts);
-  const setFilter = useBlogStore((state) => state.setFilter);
-  const setSearchQuery = useBlogStore((state) => state.setSearchQuery);
-  const setCurrentPage = useBlogStore((state) => state.setCurrentPage);
-  const getRelatedPosts = useBlogStore((state) => state.getRelatedPosts);
+  const setPosts = useBlogStore.use.setPosts();
+  const setSelectedPost = useBlogStore.use.setSelectedPost();
+  // const getFilteredPosts = useBlogStore.use.getFilteredProjects();
+  const setFilter = useBlogStore.use.setFilter();
+  const setSearchQuery = useBlogStore.use.setSearchQuery();
+  const setCurrentPage = useBlogStore.use.setCurrentPage();
+  const getRelatedPosts = useBlogStore.use.getRelatedPosts();
 
   return {
     posts,
@@ -154,7 +154,7 @@ export const useBlogPosts = () => {
     pagination,
     setPosts,
     setSelectedPost,
-    getFilteredPosts,
+
     setFilter,
     setSearchQuery,
     setCurrentPage,
@@ -170,11 +170,11 @@ export const useContactForm = () => {
   const submitError = useContactStore.use.submitError();
   const submitSuccess = useContactStore.use.submitSuccess();
 
-  const updateForm = useContactStore((state) => state.updateForm);
-  const validateForm = useContactStore((state) => state.validateForm);
-  const submitForm = useContactStore((state) => state.submitForm);
-  const resetForm = useContactStore((state) => state.resetForm);
-  const clearFormErrors = useContactStore((state) => state.clearFormErrors);
+  const updateForm = useContactStore.use.updateForm();
+  const validateForm = useContactStore.use.validateForm();
+  const submitForm = useContactStore.use.submitForm();
+  const resetForm = useContactStore.use.resetForm();
+  const clearFormErrors = useContactStore.use.clearFormErrors();
 
   // Type-safe form field updater
   const updateFormField = useCallback(<K extends keyof ContactForm>(field: K, value: ContactForm[K]) => {
@@ -201,11 +201,11 @@ export const useContactMessages = () => {
   const messagesLoading = useContactStore.use.messagesLoading();
   const stats = useContactStore.use.stats();
 
-  const setMessages = useContactStore((state) => state.setMessages);
-  const setSelectedMessage = useContactStore((state) => state.setSelectedMessage);
-  const getFilteredMessages = useContactStore((state) => state.getFilteredMessages);
-  const markAsRead = useContactStore((state) => state.markAsRead);
-  const getUnreadCount = useContactStore((state) => state.getUnreadCount);
+  const setMessages = useContactStore.use.setMessages();
+  const setSelectedMessage = useContactStore.use.setSelectedMessage();
+  const getFilteredMessages = useContactStore.use.getFilteredMessages();
+  const markAsRead = useContactStore.use.markAsRead();
+  const getUnreadCount = useContactStore.use.getUnreadCount();
 
   return {
     messages,
