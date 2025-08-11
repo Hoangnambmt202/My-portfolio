@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useGlobalStore, usePortfolioStore, useBlogStore, useContactStore } from '@/lib/store';
-
+import type { Theme } from '@/lib/store';import type { ContactForm } from '@/lib/store/useContactStore';
 
 // Global store hooks
 export const useTheme = () => {
@@ -16,7 +16,6 @@ export const useTheme = () => {
     toggleTheme,
   };
 };
-
 
 export const useLoading = () => {
   const isLoading = useGlobalStore.use.isLoading();
@@ -36,7 +35,7 @@ export const useNavigation = () => {
   const setNavigating = useGlobalStore((state) => state.setNavigating);
 
   return {
-    navigation,
+    ...navigation,
     setCurrentPath,
     setNavigating,
   };
@@ -177,13 +176,18 @@ export const useContactForm = () => {
   const resetForm = useContactStore((state) => state.resetForm);
   const clearFormErrors = useContactStore((state) => state.clearFormErrors);
 
+  // Type-safe form field updater
+  const updateFormField = useCallback(<K extends keyof ContactForm>(field: K, value: ContactForm[K]) => {
+    updateForm(field, value);
+  }, [updateForm]);
+
   return {
     form,
     formErrors,
     isSubmitting,
     submitError,
     submitSuccess,
-    updateForm,
+    updateForm: updateFormField,
     validateForm,
     submitForm,
     resetForm,

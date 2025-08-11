@@ -5,7 +5,6 @@ export interface ContactMessage {
   id: string;
   name: string;
   email: string;
-  subject: string;
   message: string;
   phone?: string;
   company?: string;
@@ -18,7 +17,6 @@ export interface ContactMessage {
 export interface ContactForm {
   name: string;
   email: string;
-  subject: string;
   message: string;
   phone: string;
   company: string;
@@ -27,7 +25,6 @@ export interface ContactForm {
 export interface FormValidation {
   name: string[];
   email: string[];
-  subject: string[];
   message: string[];
   phone: string[];
   company: string[];
@@ -79,15 +76,15 @@ interface ContactState {
   removeTag: (id: string, tag: string) => void;
   
   // Actions - Form
-  updateForm: (field: keyof ContactForm, value: string) => void;
-  setFormError: (field: keyof ContactForm, errors: string[]) => void;
+  updateForm: <K extends keyof ContactForm>(field: K, value: ContactForm[K]) => void;
+  setFormError: <K extends keyof ContactForm>(field: K, errors: string[]) => void;
   clearFormErrors: () => void;
   resetForm: () => void;
   validateForm: () => boolean;
   submitForm: () => Promise<boolean>;
   
   // Actions - Filters
-  setFilter: (key: keyof ContactState['filters'], value: ContactState['filters'][keyof ContactState['filters']]) => void;
+  setFilter: <K extends keyof ContactState['filters']>(key: K, value: ContactState['filters'][K]) => void;
   clearFilters: () => void;
   
   // Computed getters
@@ -107,7 +104,6 @@ interface ContactState {
 const initialForm: ContactForm = {
   name: '',
   email: '',
-  subject: '',
   message: '',
   phone: '',
   company: '',
@@ -116,7 +112,6 @@ const initialForm: ContactForm = {
 const initialFormErrors: FormValidation = {
   name: [],
   email: [],
-  subject: [],
   message: [],
   phone: [],
   company: [],
@@ -265,15 +260,7 @@ const useContactStoreBase = create<ContactState>((set, get) => ({
       isValid = false;
     }
     
-    // Subject validation
-    if (!form.subject.trim()) {
-      errors.subject.push('Subject is required');
-      isValid = false;
-    } else if (form.subject.trim().length < 5) {
-      errors.subject.push('Subject must be at least 5 characters');
-      isValid = false;
-    }
-    
+   
     // Message validation
     if (!form.message.trim()) {
       errors.message.push('Message is required');
