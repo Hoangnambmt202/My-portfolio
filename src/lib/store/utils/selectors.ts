@@ -1,7 +1,7 @@
 import { StoreApi, UseBoundStore } from 'zustand';
 
 // Type-safe selector creator
-export const createSelectors = <S extends Record<string, any>>(
+export const createSelectors = <S extends Record<string, unknown>>(
   store: UseBoundStore<StoreApi<S>>
 ) => {
   const storeIn = store as UseBoundStore<StoreApi<S>>;
@@ -15,8 +15,10 @@ export const createSelectors = <S extends Record<string, any>>(
 
   const storeOut = storeIn as StoreWithSelectors;
 
-  // Initialize the use object
-  storeOut.use = {} as any;
+  // Initialize the use object with proper typing
+  storeOut.use = {} as {
+    [K in keyof S]: () => S[K];
+  };
   
   // Get all keys from the initial state
   const initialState = storeIn.getState();
@@ -24,7 +26,7 @@ export const createSelectors = <S extends Record<string, any>>(
   // Create selectors for each state property
   Object.keys(initialState).forEach((key) => {
     const stateKey = key as keyof S;
-    (storeOut.use as any)[stateKey] = () => storeIn((state) => state[stateKey]);
+    (storeOut.use as Record<string, () => unknown>)[stateKey as string] = () => storeIn((state) => state[stateKey]);
   });
 
   return storeOut;
