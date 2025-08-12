@@ -5,7 +5,7 @@ import { Header } from "@/components/layout/Header";
 import { Input } from "@/components/elements/Input";
 import { useContactForm, useNotifications } from "@/lib/hooks/useStores";
 import { useTranslation } from "@/lib/hooks/useTranslation";
-import { ContactForm } from "@/lib/store";
+import type { ContactForm } from "@/lib/store/useContactStore";
 
 export default function ContactPage() {
   const { t } = useTranslation();
@@ -38,12 +38,11 @@ export default function ContactPage() {
     }
   };
 
-  const handleInputChange =
-  (field: keyof ContactForm) =>
-  (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (field: keyof ContactForm) => (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     updateForm(field, e.target.value);
   };
-
 
   return (
     <div className="container mx-auto px-4">
@@ -108,6 +107,7 @@ export default function ContactPage() {
               <a
                 href="https://www.linkedin.com/in/pham-ngoc-hoang-nam/"
                 target="_blank"
+                rel="noopener noreferrer"
                 className="w-14 h-14 bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl flex items-center justify-center shadow-lg border border-blue-500/50 cursor-pointer transform transition-all duration-300 ease-out hover:scale-110 hover:-translate-y-2 hover:shadow-2xl"
               >
                 <svg
@@ -122,6 +122,7 @@ export default function ContactPage() {
               <a
                 href="https://www.facebook.com/pham.ngoc.hoang.nam/"
                 target="_blank"
+                rel="noopener noreferrer"
                 className="w-14 h-14 bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-xl flex items-center justify-center shadow-lg border border-indigo-500/50 cursor-pointer transform transition-all duration-300 ease-out hover:scale-110 hover:-translate-y-2 hover:shadow-2xl"
               >
                 <svg
@@ -136,6 +137,7 @@ export default function ContactPage() {
               <a
                 href="https://www.youtube.com/@NamGoPhim"
                 target="_blank"
+                rel="noopener noreferrer"
                 className="w-14 h-14 bg-gradient-to-br from-red-600 to-red-800 rounded-xl flex items-center justify-center shadow-lg border border-red-500/50 cursor-pointer transform transition-all duration-300 ease-out hover:scale-110 hover:-translate-y-2 hover:shadow-2xl"
               >
                 <svg
@@ -180,14 +182,14 @@ export default function ContactPage() {
                 </div>
                 <div className="flex-1">
                   <Input
-                    id="phone"
-                    htmlFor="phone"
-                    placeholder={t("contact.yourPhone")}
-                    label={t("contact.yourPhone")}
+                    id="subject"
+                    htmlFor="subject"
+                    placeholder={t("contact.yourSubject")}
+                    label={t("contact.yourSubject")}
                     type="text"
-                    value={form.phone}
-                    onChange={handleInputChange("phone")}
-                    error={formErrors.phone[0]}
+                    value={form.subject}
+                    onChange={handleInputChange("subject")}
+                    error={formErrors.subject[0]}
                   />
                 </div>
               </div>
@@ -236,7 +238,6 @@ export default function ContactPage() {
                   </span>
 
                   {isSubmitting && (
-        
                     <div className="absolute flex flex-row justify-center items-center gap-2">
                       <div className="animate-spin size-4 border-2 border-[#FFF] border-t-transparent rounded-full"></div>
                       {t("contact.sending")}

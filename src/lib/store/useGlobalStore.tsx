@@ -1,6 +1,6 @@
 // lib/store/useGlobalStore.ts
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist } from './middleware/persist';
 
 export type Theme = 'light' | 'dark' | 'system';
 

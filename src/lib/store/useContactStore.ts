@@ -1,10 +1,10 @@
 import { create } from 'zustand';
-import { createSelectors } from './utils/selectors';
 
 export interface ContactMessage {
   id: string;
   name: string;
   email: string;
+  subject: string;
   message: string;
   phone?: string;
   company?: string;
@@ -17,6 +17,7 @@ export interface ContactMessage {
 export interface ContactForm {
   name: string;
   email: string;
+  subject: string;
   message: string;
   phone: string;
   company: string;
@@ -25,6 +26,7 @@ export interface ContactForm {
 export interface FormValidation {
   name: string[];
   email: string[];
+  subject: string[];
   message: string[];
   phone: string[];
   company: string[];
@@ -36,14 +38,14 @@ interface ContactState {
   selectedMessage: ContactMessage | null;
   messagesLoading: boolean;
   messagesError: string | null;
-  
+
   // Form state
   form: ContactForm;
   formErrors: FormValidation;
   isSubmitting: boolean;
   submitError: string | null;
   submitSuccess: boolean;
-  
+
   // Filters
   filters: {
     status: ContactMessage['status'] | '';
@@ -53,7 +55,7 @@ interface ContactState {
       end: Date | null;
     };
   };
-  
+
   // Statistics
   stats: {
     total: number;
@@ -61,7 +63,7 @@ interface ContactState {
     replied: number;
     thisMonth: number;
   };
-  
+
   // Actions - Messages
   setMessages: (messages: ContactMessage[]) => void;
   addMessage: (message: ContactMessage) => void;
@@ -74,7 +76,7 @@ interface ContactState {
   setPriority: (id: string, priority: ContactMessage['priority']) => void;
   addTag: (id: string, tag: string) => void;
   removeTag: (id: string, tag: string) => void;
-  
+
   // Actions - Form
   updateForm: <K extends keyof ContactForm>(field: K, value: ContactForm[K]) => void;
   setFormError: <K extends keyof ContactForm>(field: K, errors: string[]) => void;
@@ -82,17 +84,17 @@ interface ContactState {
   resetForm: () => void;
   validateForm: () => boolean;
   submitForm: () => Promise<boolean>;
-  
+
   // Actions - Filters
   setFilter: <K extends keyof ContactState['filters']>(key: K, value: ContactState['filters'][K]) => void;
   clearFilters: () => void;
-  
+
   // Computed getters
   getFilteredMessages: () => ContactMessage[];
   getMessagesByStatus: (status: ContactMessage['status']) => ContactMessage[];
   getUnreadCount: () => number;
   getStats: () => ContactState['stats'];
-  
+
   // Loading states
   setMessagesLoading: (loading: boolean) => void;
   setSubmitting: (submitting: boolean) => void;
@@ -104,6 +106,7 @@ interface ContactState {
 const initialForm: ContactForm = {
   name: '',
   email: '',
+  subject: '',
   message: '',
   phone: '',
   company: '',
@@ -112,24 +115,25 @@ const initialForm: ContactForm = {
 const initialFormErrors: FormValidation = {
   name: [],
   email: [],
+  subject: [],
   message: [],
   phone: [],
   company: [],
 };
 
-const useContactStoreBase = create<ContactState>((set, get) => ({
+export const useContactStore = create<ContactState>((set, get) => ({
   // Initial state
   messages: [],
   selectedMessage: null,
   messagesLoading: false,
   messagesError: null,
-  
+
   form: { ...initialForm },
   formErrors: { ...initialFormErrors },
   isSubmitting: false,
   submitError: null,
   submitSuccess: false,
-  
+
   filters: {
     status: '',
     priority: '',
@@ -138,20 +142,20 @@ const useContactStoreBase = create<ContactState>((set, get) => ({
       end: null,
     },
   },
-  
+
   stats: {
     total: 0,
     unread: 0,
     replied: 0,
     thisMonth: 0,
   },
-  
+
   // Message actions
   setMessages: (messages) => {
     const stats = get().getStats();
     set({ messages, stats });
   },
-  
+
   addMessage: (message) => set((state) => {
     const newMessages = [...state.messages, message];
     return { 
@@ -169,79 +173,79 @@ const useContactStoreBase = create<ContactState>((set, get) => ({
       }
     };
   }),
-  
+
   updateMessage: (id, updates) => set((state) => ({
     messages: state.messages.map(m => 
       m.id === id ? { ...m, ...updates } : m
     )
   })),
-  
+
   deleteMessage: (id) => set((state) => ({
     messages: state.messages.filter(m => m.id !== id)
   })),
-  
+
   setSelectedMessage: (message) => set({ selectedMessage: message }),
-  
+
   markAsRead: (id) => set((state) => ({
     messages: state.messages.map(m => 
       m.id === id ? { ...m, status: 'read' as const } : m
     )
   })),
-  
+
   markAsReplied: (id) => set((state) => ({
     messages: state.messages.map(m => 
       m.id === id ? { ...m, status: 'replied' as const } : m
     )
   })),
-  
+
   archiveMessage: (id) => set((state) => ({
     messages: state.messages.map(m => 
       m.id === id ? { ...m, status: 'archived' as const } : m
     )
   })),
-  
+
   setPriority: (id, priority) => set((state) => ({
     messages: state.messages.map(m => 
       m.id === id ? { ...m, priority } : m
     )
   })),
-  
+
   addTag: (id, tag) => set((state) => ({
     messages: state.messages.map(m => 
       m.id === id ? { ...m, tags: [...m.tags, tag] } : m
     )
   })),
-  
+
   removeTag: (id, tag) => set((state) => ({
     messages: state.messages.map(m => 
       m.id === id ? { ...m, tags: m.tags.filter(t => t !== tag) } : m
     )
   })),
-  
+
   // Form actions
   updateForm: (field, value) => set((state) => ({
     form: { ...state.form, [field]: value },
     submitSuccess: false, // Reset success state when form changes
   })),
-  
+
   setFormError: (field, errors) => set((state) => ({
     formErrors: { ...state.formErrors, [field]: errors }
   })),
-  
+
   clearFormErrors: () => set({ formErrors: { ...initialFormErrors } }),
-  
+
   resetForm: () => set({ 
     form: { ...initialForm },
     formErrors: { ...initialFormErrors },
     submitError: null,
     submitSuccess: false,
   }),
-  
+
   validateForm: () => {
     const { form } = get();
     const errors: FormValidation = { ...initialFormErrors };
     let isValid = true;
-    
+
     // Name validation
     if (!form.name.trim()) {
       errors.name.push('Name is required');
@@ -250,7 +254,7 @@ const useContactStoreBase = create<ContactState>((set, get) => ({
       errors.name.push('Name must be at least 2 characters');
       isValid = false;
     }
-    
+
     // Email validation
     if (!form.email.trim()) {
       errors.email.push('Email is required');
@@ -259,8 +263,16 @@ const useContactStoreBase = create<ContactState>((set, get) => ({
       errors.email.push('Please enter a valid email address');
       isValid = false;
     }
-    
-   
+
+    // Subject validation
+    if (!form.subject.trim()) {
+      errors.subject.push('Subject is required');
+      isValid = false;
+    } else if (form.subject.trim().length < 5) {
+      errors.subject.push('Subject must be at least 5 characters');
+      isValid = false;
+    }
+
     // Message validation
     if (!form.message.trim()) {
       errors.message.push('Message is required');
@@ -269,31 +281,31 @@ const useContactStoreBase = create<ContactState>((set, get) => ({
       errors.message.push('Message must be at least 10 characters');
       isValid = false;
     }
-    
+
     // Phone validation (optional)
     if (form.phone && !/^[\+]?[1-9][\d]{0,15}$/.test(form.phone.replace(/\s/g, ''))) {
       errors.phone.push('Please enter a valid phone number');
       isValid = false;
     }
-    
+
     set({ formErrors: errors });
     return isValid;
   },
-  
+
   submitForm: async () => {
     const { form, validateForm } = get();
-    
+
     set({ isSubmitting: true, submitError: null });
-    
+
     if (!validateForm()) {
       set({ isSubmitting: false });
       return false;
     }
-    
+
     try {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
+
       // Create new message
       const newMessage: ContactMessage = {
         id: Date.now().toString(),
@@ -303,15 +315,15 @@ const useContactStoreBase = create<ContactState>((set, get) => ({
         priority: 'medium',
         tags: [],
       };
-      
+
       get().addMessage(newMessage);
-      
+
       set({ 
         isSubmitting: false, 
         submitSuccess: true,
         form: { ...initialForm }
       });
-      
+
       return true;
     } catch (_error) {
       set({ 
@@ -321,12 +333,12 @@ const useContactStoreBase = create<ContactState>((set, get) => ({
       return false;
     }
   },
-  
+
   // Filter actions
   setFilter: (key, value) => set((state) => ({
     filters: { ...state.filters, [key]: value }
   })),
-  
+
   clearFilters: () => set({
     filters: {
       status: '',
@@ -334,43 +346,43 @@ const useContactStoreBase = create<ContactState>((set, get) => ({
       dateRange: { start: null, end: null },
     }
   }),
-  
+
   // Computed getters
   getFilteredMessages: () => {
     const { messages, filters } = get();
-    
+
     return messages.filter(message => {
       // Filter by status
       if (filters.status && message.status !== filters.status) return false;
-      
+
       // Filter by priority
       if (filters.priority && message.priority !== filters.priority) return false;
-      
+
       // Filter by date range
       if (filters.dateRange.start || filters.dateRange.end) {
         const messageDate = new Date(message.createdAt);
         if (filters.dateRange.start && messageDate < filters.dateRange.start) return false;
         if (filters.dateRange.end && messageDate > filters.dateRange.end) return false;
       }
-      
+
       return true;
     });
   },
-  
+
   getMessagesByStatus: (status) => {
     const { messages } = get();
     return messages.filter(m => m.status === status);
   },
-  
+
   getUnreadCount: () => {
     const { messages } = get();
     return messages.filter(m => m.status === 'unread').length;
   },
-  
+
   getStats: () => {
     const { messages } = get();
     const now = new Date();
-    
+
     return {
       total: messages.length,
       unread: messages.filter(m => m.status === 'unread').length,
@@ -382,7 +394,7 @@ const useContactStoreBase = create<ContactState>((set, get) => ({
       }).length,
     };
   },
-  
+
   // Loading states
   setMessagesLoading: (loading) => set({ messagesLoading: loading }),
   setSubmitting: (submitting) => set({ isSubmitting: submitting }),
@@ -390,5 +402,3 @@ const useContactStoreBase = create<ContactState>((set, get) => ({
   setSubmitError: (error) => set({ submitError: error }),
   setSubmitSuccess: (success) => set({ submitSuccess: success }),
 }));
-
-export const useContactStore = createSelectors(useContactStoreBase);

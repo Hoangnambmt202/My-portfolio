@@ -1,7 +1,8 @@
 import { useCallback } from 'react';
-import { useGlobalStore, usePortfolioStore, useBlogStore, useContactStore } from '@/lib/store';
-import type { ContactForm } from '@/lib/store/useContactStore';
-
+import { useGlobalStore } from '@/lib/store/useGlobalStore';
+import { usePortfolioStore } from '@/lib/store/usePortfolioStore';
+import { useBlogStore } from '@/lib/store/useBlogStore';
+import { useContactStore } from '@/lib/store/useContactStore';
 // Global store hooks
 export const useTheme = () => {
   const theme = useGlobalStore((state) => state.theme);
@@ -17,13 +18,7 @@ export const useTheme = () => {
   };
 };
 
-type LoadingHook = {
-  isLoading: boolean;
-  loadingMessage: string;
-  setLoading: (loading: boolean, message?: string) => void;
-};
-
-export const useLoading = (): LoadingHook => {
+export const useLoading = () => {
   const isLoading = useGlobalStore((state) => state.isLoading);
   const loadingMessage = useGlobalStore((state) => state.loadingMessage);
   const setLoading = useGlobalStore((state) => state.setLoading);
@@ -34,7 +29,6 @@ export const useLoading = (): LoadingHook => {
     setLoading,
   };
 };
-  
 
 export const useNavigation = () => {
   const navigation = useGlobalStore((state) => state.navigation);
@@ -183,18 +177,13 @@ export const useContactForm = () => {
   const resetForm = useContactStore((state) => state.resetForm);
   const clearFormErrors = useContactStore((state) => state.clearFormErrors);
 
-  // Type-safe form field updater
-  const updateFormField = useCallback(<K extends keyof ContactForm>(field: K, value: ContactForm[K]) => {
-    updateForm(field, value);
-  }, [updateForm]);
-
   return {
     form,
     formErrors,
     isSubmitting,
     submitError,
     submitSuccess,
-    updateForm: updateFormField,
+    updateForm,
     validateForm,
     submitForm,
     resetForm,
