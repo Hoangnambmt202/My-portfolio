@@ -1,7 +1,7 @@
 import { StoreApi, UseBoundStore } from 'zustand';
 
 // Type-safe selector creator
-export const createSelectors = <S extends Record<string, []>>(
+export const createSelectors = <S extends Record<string, string>>(
   store: UseBoundStore<StoreApi<S>>
 ) => {
   const storeIn = store as UseBoundStore<StoreApi<S>>;

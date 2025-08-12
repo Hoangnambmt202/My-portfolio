@@ -126,7 +126,7 @@ Building responsive web applications requires careful planning and attention to 
 export default function BlogDetailPage() {
   const params = useParams();
   const { t } = useTranslation();
-  const { setLoading } = useLoading() as { setLoading: (loading: boolean, message?: string) => void };
+  const { setLoading } = useLoading();
   type BlogPost = typeof mockBlogPosts[number];
   const [post, setPost] = useState<BlogPost | null>(null);
   const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([]);

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { createSelectors } from './utils/selectors';
-import type { BlogPost, Comment, BlogCategory } from '@/lib/types/blog';
+import type { BlogPost, Comment, Author, BlogCategory } from '@/lib/types/blog';
 
 interface BlogState {
   // Posts

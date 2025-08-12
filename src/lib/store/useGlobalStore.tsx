@@ -1,7 +1,6 @@
 // lib/store/useGlobalStore.ts
 import { create } from 'zustand';
-import { persist } from './middleware/persist';
-import { createSelectors } from './utils/selectors';
+import { persist } from 'zustand/middleware';
 
 export type Theme = 'light' | 'dark' | 'system';
 
@@ -62,7 +61,7 @@ interface GlobalState {
   clearNotifications: () => void;
 }
 
-const useGlobalStoreBase = create<GlobalState>()(
+export const useGlobalStore = create<GlobalState>()(
   persist(
     (set, get) => ({
       // Theme & UI
@@ -73,13 +72,13 @@ const useGlobalStoreBase = create<GlobalState>()(
         const newTheme = theme === 'light' ? 'dark' : theme === 'dark' ? 'system' : 'light';
         set({ 
           theme: newTheme,
-          isDark: newTheme === 'dark' || (newTheme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+          isDark: newTheme === 'dark' || (newTheme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches)
         });
       },
       setTheme: (theme) => {
         set({ 
           theme,
-          isDark: theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+          isDark: theme === 'dark' || (theme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches)
         });
       },
       
@@ -164,5 +163,3 @@ const useGlobalStoreBase = create<GlobalState>()(
     }
   )
 );
-
-export const useGlobalStore = createSelectors(useGlobalStoreBase);

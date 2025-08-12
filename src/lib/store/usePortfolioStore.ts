@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { createSelectors } from './utils/selectors';
 import type { Project, Skill, Experience } from '@/lib/types/portfolio';
 
 interface PortfolioState {
@@ -54,7 +53,7 @@ interface PortfolioState {
   setProjectsError: (error: string | null) => void;
 }
 
-const usePortfolioStoreBase = create<PortfolioState>((set, get) => ({
+export const usePortfolioStore = create<PortfolioState>((set, get) => ({
   // Initial state
   projects: [],
   featuredProjects: [],
@@ -155,5 +154,3 @@ const usePortfolioStoreBase = create<PortfolioState>((set, get) => ({
   setExperiencesLoading: (loading) => set({ experiencesLoading: loading }),
   setProjectsError: (error) => set({ projectsError: error }),
 }));
-
-export const usePortfolioStore = createSelectors(usePortfolioStoreBase);
