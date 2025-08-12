@@ -1,6 +1,7 @@
 import { StoreApi, UseBoundStore } from 'zustand';
 
-// Type-safe selector creator for any state type
+// Type-safe selector creator for complex state types
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const createSelectors = <S extends Record<string, any>>(
   store: UseBoundStore<StoreApi<S>>
 ) => {
