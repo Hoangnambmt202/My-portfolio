@@ -12,8 +12,9 @@ export interface BlogPost extends BaseEntity {
   tags: string[];
   published: boolean;
   publishedAt?: Date;
-  readingTime: number; // in minutes
+  readingTime: number;
   views: number;
+  featured?: boolean; 
 }
 
 export interface Author {

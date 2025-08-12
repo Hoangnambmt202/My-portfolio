@@ -34,7 +34,7 @@ export const useLoading = (): LoadingHook => {
     setLoading,
   };
 };
-
+  
 
 export const useNavigation = () => {
   const navigation = useGlobalStore((state) => state.navigation);

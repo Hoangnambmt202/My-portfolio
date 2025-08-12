@@ -1,24 +1,17 @@
 import { create } from 'zustand';
 import { createSelectors } from './utils/selectors';
-import type { BlogPost, Comment, Author, BlogCategory } from '@/lib/types/blog';
+import type { BlogPost, Comment, BlogCategory } from '@/lib/types/blog';
 
-interface BlogState {
-  // Posts
+export interface BlogState {
   posts: BlogPost[];
   featuredPosts: BlogPost[];
   selectedPost: BlogPost | null;
   postsLoading: boolean;
   postsError: string | null;
-  
-  // Comments
   comments: Comment[];
   commentsLoading: boolean;
-  
-  // Categories and tags
   categories: BlogCategory[];
   tags: string[];
-  
-  // Filters and search
   filters: {
     category: BlogCategory | '';
     tag: string;
@@ -28,55 +21,41 @@ interface BlogState {
   searchQuery: string;
   sortBy: 'date' | 'views' | 'title';
   sortOrder: 'asc' | 'desc';
-  
-  // Pagination
   pagination: {
     currentPage: number;
     postsPerPage: number;
     totalPosts: number;
     totalPages: number;
   };
-  
-  // Actions - Posts
   setPosts: (posts: BlogPost[]) => void;
   addPost: (post: BlogPost) => void;
   updatePost: (id: string, updates: Partial<BlogPost>) => void;
   deletePost: (id: string) => void;
   setSelectedPost: (post: BlogPost | null) => void;
   incrementViews: (id: string) => void;
-  
-  // Actions - Comments
   setComments: (comments: Comment[]) => void;
   addComment: (comment: Comment) => void;
   updateComment: (id: string, updates: Partial<Comment>) => void;
   deleteComment: (id: string) => void;
   approveComment: (id: string) => void;
-  
-  // Actions - Filters
   setFilter: (key: keyof BlogState['filters'], value: BlogState['filters'][keyof BlogState['filters']]) => void;
   clearFilters: () => void;
   setSearchQuery: (query: string) => void;
   setSorting: (sortBy: BlogState['sortBy'], sortOrder: BlogState['sortOrder']) => void;
-  
-  // Actions - Pagination
   setCurrentPage: (page: number) => void;
   setPostsPerPage: (perPage: number) => void;
-  
-  // Computed getters
   getFilteredPosts: () => BlogPost[];
   getPostsByCategory: (category: BlogCategory) => BlogPost[];
   getPostsByTag: (tag: string) => BlogPost[];
   getPostsByAuthor: (authorEmail: string) => BlogPost[];
   getRelatedPosts: (postId: string, limit?: number) => BlogPost[];
   getCommentsForPost: (postId: string) => Comment[];
-  
-  // Loading states
   setPostsLoading: (loading: boolean) => void;
   setCommentsLoading: (loading: boolean) => void;
   setPostsError: (error: string | null) => void;
 }
 
-const useBlogStoreBase = create<BlogState>((set, get) => ({
+export const useBlogStoreBase = create<BlogState>((set, get) => ({
   // Initial state
   posts: [],
   featuredPosts: [],
