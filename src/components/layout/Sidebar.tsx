@@ -21,7 +21,7 @@ export default function Sidebar() {
   const { setCurrentPath, setNavigating } = useNavigation();
   const { t } = useTranslation();
 
-  const socialLinks = [
+  const navLinks = [
     {
       name: t("navigation.home"),
       icon: <FaHome className="w-5 h-5" />,
@@ -93,12 +93,12 @@ export default function Sidebar() {
             />
           </div>
 
-          {socialLinks.map((link) => (
+          {navLinks.map((link) => (
             <Link
               key={link.name}
               href={link.href}
               className={`p-3 rounded-full bg-white border shadow-lg ${link.color} ${
-                pathname === link.href ? "bg-blue-400 text-white" : ""
+                pathname === link.href ? "focus:bg-blue-400 focus:text-white" : ""
               } hover:scale-110 transition-transform group`}
               onClick={() => handleClick(link.href)}
             >
@@ -161,7 +161,7 @@ export default function Sidebar() {
               />
 
               <nav className="flex flex-col space-y-4">
-                {socialLinks.map((link) => (
+                {navLinks.map((link) => (
                   <Link
                     key={link.name}
                     href={link.href}
