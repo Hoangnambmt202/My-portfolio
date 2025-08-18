@@ -10,7 +10,10 @@ export const metadata: Metadata = {
 	title: "My Portfolio",
 	description: "Personal portfolio website showcasing my projects and skills",
 };
-
+export async function generateStaticParams() {
+	return [{ locale: "en" }, { locale: "vi" }];
+  }
+  
 export default function LocaleLayout({
 	children,
 
