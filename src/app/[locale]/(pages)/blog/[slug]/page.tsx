@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
@@ -32,6 +32,7 @@ Enhanced Suspense support for data fetching, with better integration with concur
 ## Key Features Deep Dive
 
 ### Concurrent Rendering
+
 \`\`\`javascript
 import { createRoot } from 'react-dom/client';
 
@@ -123,12 +124,11 @@ Building responsive web applications requires careful planning and attention to 
   }
 ];
 
-export const dynamic = "force-dynamic";
-export const dynamicParams = true;
+
 
 export default function BlogDetailPage() {
   const params = useParams();
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const { setLoading } = useLoading();
   type BlogPost = typeof mockBlogPosts[number];
   const [post, setPost] = useState<BlogPost | null>(null);
@@ -214,7 +214,7 @@ export default function BlogDetailPage() {
           <h1 className="text-4xl font-bold text-white mb-4">Post Not Found</h1>
           <p className="text-gray-400 mb-8">The blog post you&apos;re looking for doesn&apos;t exist.</p>
           <Link 
-            href="/blog"
+            href={`/${locale}/blog`}
             onClick={handleBackClick}
             className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
           >
@@ -236,7 +236,7 @@ export default function BlogDetailPage() {
           className="mb-8 pt-8"
         >
           <Link 
-            href="/blog"
+            href={`/${locale}/blog`}
             onClick={handleBackClick}
             className="inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors group"
           >
@@ -386,7 +386,7 @@ export default function BlogDetailPage() {
                     whileHover={{ y: -5 }}
                   >
                     <Link 
-                      href={`/blog/${relatedPost.slug}`}
+                      href={`/${locale}/blog/${relatedPost.slug}`}
                       onClick={() => handleRelatedPostClick(relatedPost.title)}
                       className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 block"
                     >
@@ -499,4 +499,4 @@ export default function BlogDetailPage() {
       </div>
     </div>
   );
-}
+} 

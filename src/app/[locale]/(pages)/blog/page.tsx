@@ -6,7 +6,7 @@ import { useLoading } from "@/lib/hooks/useStores";
 import { motion } from "framer-motion";
 
 export default function BlogPage() {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const { setLoading } = useLoading();
 
   // Mock data for blog posts
@@ -100,21 +100,21 @@ export default function BlogPage() {
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.3 }}
-                className="h-48 bg-gray-200 flex items-center justify-center overflow-hidden"
+                className="h-48 bg-gray-200 flex items-center justifycenter overflow-hidden"
               >
                 <span className="text-gray-500">Blog Image</span>
               </motion.div>
               
               <div className="p-6">
                 <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
-                  <span>{t('blog.publishedOn')} {post.publishedAt.toLocaleDateString()}</span>
+                <span>{t('blog.publishedOn')} {post.publishedAt.toISOString().slice(0,10)}</span>
                   <span>•</span>
                   <span>{post.readingTime} {t('blog.readingTime')}</span>
                   <span>•</span>
                   <span>{post.views} views</span>
                 </div>
 
-                <Link href={`/blog/${post.slug}`} onClick={() => handlePostClick(post.title)}>
+                <Link href={`/${locale}/blog/${post.slug}`} onClick={() => handlePostClick(post.title)}>
                   <motion.h2
                     whileHover={{ color: "#2563eb" }}
                     className="text-xl font-bold text-gray-800 mb-3 cursor-pointer transition-colors"
@@ -139,7 +139,7 @@ export default function BlogPage() {
                   ))}
                 </div>
 
-                <Link href={`/blog/${post.slug}`} onClick={() => handlePostClick(post.title)}>
+                <Link href={`/${locale}/blog/${post.slug}`} onClick={() => handlePostClick(post.title)}>
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
@@ -187,4 +187,4 @@ export default function BlogPage() {
       </div>
     </div>
   );
-}
+} 

@@ -116,7 +116,7 @@ export const useI18nStore = create<I18nState>()(
   persist(
     (set, get) => ({
       // Initial state
-      locale: 'vi', // Default to Vietnamese
+      locale: 'en', // Default to English
       availableLocales: ['en', 'vi'],
       isLoading: false,
       translations: {},
@@ -164,7 +164,6 @@ export const useI18nStore = create<I18nState>()(
         const translation = translations[targetLocale];
 
         if (!translation) {
-          console.warn(`Translations not loaded for locale: ${targetLocale}`);
           return key;
         }
 
@@ -177,7 +176,6 @@ export const useI18nStore = create<I18nState>()(
           if (value && typeof value === 'object' && k in value) {
             value = value[k];
           } else {
-            console.warn(`Translation key not found: ${key} for locale: ${targetLocale}`);
             return key;
           }
         }
