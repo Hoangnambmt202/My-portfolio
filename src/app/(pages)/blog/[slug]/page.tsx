@@ -122,7 +122,9 @@ Building responsive web applications requires careful planning and attention to 
     }
   }
 ];
-export const dynamic = "force-dynamic"; // để cho phép render bất kỳ slug nào
+
+export const dynamic = "force-dynamic";
+export const dynamicParams = true;
 
 export default function BlogDetailPage() {
   const params = useParams();
