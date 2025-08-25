@@ -122,33 +122,34 @@ export const useBlogStoreBase = create<BlogState>((set, get) => ({
   
   updatePost: (id, updates) => set((state) => {
     const posts = state.posts.map(p => 
-      p.id === id ? { ...p, ...updates } : p
+      p._id === id ? { ...p, ...updates } : p   // ✅ sửa p.id -> p._id
     );
     const featured = posts.filter(p => p.featured);
     
     return { posts, featuredPosts: featured };
   }),
   
-  deletePost: (id) => set((state) => {
-    const posts = state.posts.filter(p => p.id !== id);
-    const featured = posts.filter(p => p.featured);
-    
-    return {
-      posts,
-      featuredPosts: featured,
-      pagination: {
-        ...state.pagination,
-        totalPosts: posts.length,
-        totalPages: Math.ceil(posts.length / state.pagination.postsPerPage),
-      }
-    };
-  }),
+  
+deletePost: (id) => set((state) => {
+  const posts = state.posts.filter(p => p._id !== id);  // ✅ sửa p.id -> p._id
+  const featured = posts.filter(p => p.featured);
+  
+  return {
+    posts,
+    featuredPosts: featured,
+    pagination: {
+      ...state.pagination,
+      totalPosts: posts.length,
+      totalPages: Math.ceil(posts.length / state.pagination.postsPerPage),
+    }
+  };
+}),
   
   setSelectedPost: (post) => set({ selectedPost: post }),
   
   incrementViews: (id) => set((state) => ({
     posts: state.posts.map(p => 
-      p.id === id ? { ...p, views: p.views + 1 } : p
+      p._id === id ? { ...p, views: p.views + 1 } : p
     )
   })),
   
@@ -161,17 +162,17 @@ export const useBlogStoreBase = create<BlogState>((set, get) => ({
   
   updateComment: (id, updates) => set((state) => ({
     comments: state.comments.map(c => 
-      c.id === id ? { ...c, ...updates } : c
+      c._id === id ? { ...c, ...updates } : c
     )
   })),
   
   deleteComment: (id) => set((state) => ({
-    comments: state.comments.filter(c => c.id !== id)
+    comments: state.comments.filter(c => c._id !== id)
   })),
   
   approveComment: (id) => set((state) => ({
     comments: state.comments.map(c => 
-      c.id === id ? { ...c, approved: true } : c
+      c._id === id ? { ...c, approved: true } : c
     )
   })),
   
@@ -231,7 +232,6 @@ export const useBlogStoreBase = create<BlogState>((set, get) => ({
         return (
           post.title.toLowerCase().includes(query) ||
           post.excerpt.toLowerCase().includes(query) ||
-          post.content.toLowerCase().includes(query) ||
           post.tags.some(tag => tag.toLowerCase().includes(query))
         );
       }
@@ -261,7 +261,27 @@ export const useBlogStoreBase = create<BlogState>((set, get) => ({
     
     return filtered;
   },
-  
+  getRelatedPosts: (postId, limit = 3) => {
+    const { posts } = get();
+    const currentPost = posts.find(p => p._id === postId);  // ✅
+    if (!currentPost) return [];
+    
+    const related = posts
+      .filter(p => p._id !== postId && p.published)        // ✅
+      .map(post => {
+        let score = 0;
+        if (post.category === currentPost.category) score += 3;
+        const sharedTags = post.tags.filter(tag => currentPost.tags.includes(tag));
+        score += sharedTags.length;
+        return { post, score };
+      })
+      .filter(item => item.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, limit)
+      .map(item => item.post);
+    
+    return related;
+  },
   getPostsByCategory: (category) => {
     const { posts } = get();
     return posts.filter(p => p.category === category);
@@ -277,33 +297,7 @@ export const useBlogStoreBase = create<BlogState>((set, get) => ({
     return posts.filter(p => p.author.email === authorEmail);
   },
   
-  getRelatedPosts: (postId, limit = 3) => {
-    const { posts } = get();
-    const currentPost = posts.find(p => p.id === postId);
-    if (!currentPost) return [];
-    
-    // Find posts with similar tags or category
-    const related = posts
-      .filter(p => p.id !== postId && p.published)
-      .map(post => {
-        let score = 0;
-        
-        // Same category gets higher score
-        if (post.category === currentPost.category) score += 3;
-        
-        // Shared tags get points
-        const sharedTags = post.tags.filter(tag => currentPost.tags.includes(tag));
-        score += sharedTags.length;
-        
-        return { post, score };
-      })
-      .filter(item => item.score > 0)
-      .sort((a, b) => b.score - a.score)
-      .slice(0, limit)
-      .map(item => item.post);
-    
-    return related;
-  },
+  
   
   getCommentsForPost: (postId) => {
     const { comments } = get();
