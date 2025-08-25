@@ -88,14 +88,14 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
   
   updateProject: (id, updates) => set((state) => {
     const projects = state.projects.map(p => 
-      p.id === id ? { ...p, ...updates } : p
+      p._id === id ? { ...p, ...updates } : p
     );
     const featured = projects.filter(p => p.featured);
     return { projects, featuredProjects: featured };
   }),
   
   deleteProject: (id) => set((state) => {
-    const projects = state.projects.filter(p => p.id !== id);
+    const projects = state.projects.filter(p => p._id !== id);
     const featured = projects.filter(p => p.featured);
     return { projects, featuredProjects: featured };
   }),
