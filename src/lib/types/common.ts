@@ -1,7 +1,7 @@
 // Common TypeScript types for the portfolio
 
 export interface BaseEntity {
-  id: string;
+  _id: string;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -1,11 +1,13 @@
 // Blog related types
 import { BaseEntity } from './common';
+import type { PortableTextBlock } from "sanity";
+
 
 export interface BlogPost extends BaseEntity {
   title: string;
   slug: string;
   excerpt: string;
-  body: string;
+  body: PortableTextBlock[];
   featuredImage: string;
   author: Author;
   category: BlogCategory;

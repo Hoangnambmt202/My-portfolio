@@ -204,7 +204,7 @@ export default  function BlogDetailPage() {
 
             {/* Content */}
             <div className="prose prose-lg max-w-none">
-              <PortableText value={post.body as any} />
+              <PortableText value={post.body } />
             </div>
           </div>
         </motion.article>
