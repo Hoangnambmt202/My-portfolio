@@ -5,7 +5,7 @@ export interface BlogPost extends BaseEntity {
   title: string;
   slug: string;
   excerpt: string;
-  content: string;
+  body: string;
   featuredImage: string;
   author: Author;
   category: BlogCategory;
