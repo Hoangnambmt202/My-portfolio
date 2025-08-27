@@ -1,183 +1,256 @@
 # Portfolio Project Structure
 
-## 📁 Cấu trúc thư mục tối ưu
+## 📁 Cấu trúc thư mục hiện tại
 
 ```
 my-portfolio/
 ├── public/                    # Static assets
-│   ├── assets/
-│   │   └── imgs/             # Images
+│   └── assets/
+│       └── imgs/             # Images
+│           ├── image-1.jpg
+│           └── Nam_1.jpg
 ├── src/
+│   ├── middleware.ts         # i18n middleware
 │   ├── app/                  # Next.js App Router
-│   │   ├── (pages)/          # Route groups
-│   │   │   ├── about/
+│   │   ├── favicon.ico
+│   │   ├── layout.tsx       # Root layout
+│   │   ├── robots.ts        # SEO robots
+│   │   ├── sitemap.ts       # SEO sitemap
+│   │   ├── [locale]/        # i18n route group
+│   │   │   ├── layout.tsx
+│   │   │   └── (pages)/     # Route groups
+│   │   │       ├── page.tsx            # Home page
+│   │   │       ├── about/
+│   │   │       │   └── page.tsx
+│   │   │       ├── blog/
+│   │   │       │   ├── page.tsx
+│   │   │       │   ├── BlogList.tsx
+│   │   │       │   └── [slug]/
+│   │   │       │       ├── page.tsx
+│   │   │       │       └── BlogDetail.tsx
+│   │   │       ├── contact/
+│   │   │       └── portfolio/
+│   │   ├── admin/           # Admin dashboard
+│   │   │   ├── layout.tsx
+│   │   │   ├── page.tsx
 │   │   │   ├── blog/
-│   │   │   ├── contact/
-│   │   │   └── portfolio/
-│   │   ├── api/              # API routes
-│   │   ├── layout.tsx        # Root layout
-│   │   └── page.tsx          # Home page
+│   │   │   ├── dashboard/
+│   │   │   ├── login/
+│   │   │   ├── projects/
+│   │   │   └── settings/
+│   │   └── api/             # API routes
+│   │       ├── admin/
+│   │       │   └── posts/
+│   │       └── auth/
+│   │           └── [...nextauth]/
 │   ├── components/           # React components
-│   │   ├── ui/               # Reusable UI components
-│   │   │   ├── Loading.tsx
-│   │   │   └── index.ts
-│   │   ├── layout/           # Layout components
-│   │   │   ├── Navbar.tsx
+│   │   ├── admin/            # Admin components
+│   │   │   ├── ProjectForm.tsx
+│   │   │   └── ProjectTable.tsx
+│   │   ├── common/           # Common components
+│   │   │   └── LanguageSwitcher.tsx
+│   │   ├── elements/         # Basic elements
+│   │   │   ├── Input.tsx
+│   │   │   └── NextButton.tsx
+│   │   ├── layout/          # Layout components
+│   │   │   ├── Header.tsx
 │   │   │   ├── PageTransition.tsx
+│   │   │   ├── Sidebar.tsx
 │   │   │   └── index.ts
-│   │   ├── sections/         # Page sections
-│   │   │   ├── Hero.tsx
-│   │   │   ├── About.tsx
-│   │   │   ├── Projects.tsx
-│   │   │   ├── Contact.tsx
-│   │   │   └── index.ts
-│   │   └── common/           # Common components
+│   │   ├── providers/       # React providers
+│   │   │   └── I18nProvider.tsx
+│   │   ├── sections/        # Page sections
+│   │   │   ├── CanDoSection.tsx
+│   │   │   └── MySkillSection.tsx
+│   │   ├── Sidebar/         # Sidebar components
+│   │   │   └── Sidebar.tsx
+│   │   └── ui/              # UI components
+│   │       ├── button.tsx
+│   │       ├── card.tsx
+│   │       ├── input.tsx
+│   │       ├── Loading.tsx
+│   │       ├── table.tsx
+│   │       └── index.ts
 │   ├── lib/                  # Utility libraries
-│   │   ├── utils/            # Utility functions
-│   │   │   ├── cn.ts         # Class name utility
-│   │   │   ├── format.ts     # Formatting utilities
-│   │   │   └── index.ts
-│   │   ├── constants/        # App constants
-│   │   │   ├── app.ts        # App configuration
-│   │   │   ├── navigation.ts # Navigation items
-│   │   │   ├── social.ts     # Social media links
-│   │   │   └── index.ts
-│   │   ├── types/            # TypeScript types
-│   │   │   ├── common.ts     # Common types
-│   │   │   ├── portfolio.ts  # Portfolio types
-│   │   │   ├── blog.ts       # Blog types
-│   │   │   └── index.ts
 │   │   ├── hooks/            # Custom hooks
 │   │   │   ├── useLocalStorage.ts
-│   │   │   ├── useScrollPosition.ts
 │   │   │   ├── useMediaQuery.ts
+│   │   │   ├── useScrollPosition.ts
+│   │   │   ├── useStores.ts
+│   │   │   ├── useTranslation.ts
 │   │   │   └── index.ts
-│   │   ├── services/         # API services
-│   │   └── validations/      # Form validations
-│   └── styles/               # CSS styles
-│       ├── globals/          # Global styles
-│       │   └── index.css
-│       ├── components/       # Component styles
-│       └── pages/            # Page-specific styles
-├── package.json
-├── next.config.ts
-├── tsconfig.json
-└── README.md
+│   │   ├── i18n/            # Internationalization
+│   │   ├── sanity/          # Sanity CMS integration
+│   │   │   ├── fetchPost.ts
+│   │   │   ├── queries.ts
+│   │   │   └── sanity.ts
+│   │   ├── services/        # API services
+│   │   ├── store/           # State management
+│   │   │   ├── useBlogStore.ts
+│   │   │   ├── useContactStore.ts
+│   │   │   ├── useGlobalStore.tsx
+│   │   │   ├── useI18nStore.ts
+│   │   │   ├── usePortfolioStore.ts
+│   │   │   ├── middleware/
+│   │   │   │   └── persist.ts
+│   │   │   ├── utils/
+│   │   │   │   └── selectors.ts
+│   │   │   └── index.ts
+│   │   ├── types/           # TypeScript types
+│   │   │   ├── blog.ts
+│   │   │   ├── common.ts
+│   │   │   ├── i18n.ts
+│   │   │   ├── portfolio.ts
+│   │   │   └── index.ts
+│   │   └── utils/           # Utility functions
+│   │       ├── cn.ts
+│   │       ├── format.ts
+│   │       ├── metadata.ts
+│   │       └── index.ts
+│   ├── locales/              # i18n translations
+│   │   ├── en/              # English translations
+│   │   │   ├── about.json
+│   │   │   ├── blog.json
+│   │   │   ├── common.json
+│   │   │   ├── contact.json
+│   │   │   ├── home.json
+│   │   │   ├── navigation.json
+│   │   │   ├── notifications.json
+│   │   │   ├── portfolio.json
+│   │   │   └── validation.json
+│   │   └── vi/              # Vietnamese translations
+│   │       ├── about.json
+│   │       ├── blog.json
+│   │       ├── common.json
+│   │       ├── contact.json
+│   │       ├── home.json
+│   │       ├── navigation.json
+│   │       ├── notifications.json
+│   │       ├── portfolio.json
+│   │       └── validation.json
+│   ├── services/            # External services
+│   └── styles/              # CSS styles
+│       ├── globals.css      # Global styles
+│       ├── components/      # Component styles
+│       └── pages/          # Page-specific styles
+├── eslint.config.mjs        # ESLint configuration
+├── next-env.d.ts           # Next.js TypeScript declarations
+├── next.config.ts          # Next.js configuration
+├── package.json            # Project dependencies
+├── postcss.config.mjs      # PostCSS configuration
+├── README.md               # Project documentation
+├── STRUCTURE.md           # This file
+├── tailwind.config.js     # Tailwind CSS configuration
+├── tsconfig.json          # TypeScript configuration
+└── vercel.json            # Vercel deployment configuration
 ```
 
-## 🎯 Lợi ích của cấu trúc mới
+## 📦 Thư mục chính và chức năng
 
-### 1. **Tổ chức rõ ràng**
-- Phân tách rõ ràng giữa components, utilities, và styles
-- Mỗi thư mục có mục đích cụ thể
-- Dễ dàng tìm kiếm và bảo trì
+### 1. `/src/app/` - Next.js App Router
+- **[locale]**: Nhóm route đa ngôn ngữ (en/vi)
+- **(pages)**: Các trang chính của website
+- **admin**: Dashboard quản lý nội dung
+- **api**: API routes cho backend
 
-### 2. **Scalability**
-- Dễ dàng mở rộng khi dự án phát triển
-- Cấu trúc hỗ trợ team development
-- Tái sử dụng components hiệu quả
+### 2. `/src/components/` - React Components
+- **admin**: Components cho trang admin
+- **common**: Components dùng chung
+- **elements**: Các elements cơ bản (Input, Button)
+- **layout**: Components layout chính
+- **providers**: React context providers
+- **sections**: Các section trong trang
+- **ui**: UI components tái sử dụng
 
-### 3. **Type Safety**
-- TypeScript types được tổ chức tốt
-- Interfaces rõ ràng cho data models
-- Giảm thiểu lỗi runtime
+### 3. `/src/lib/` - Core Libraries
+- **hooks**: Custom React hooks
+- **i18n**: Cấu hình đa ngôn ngữ
+- **sanity**: Tích hợp Sanity CMS
+- **store**: State management (Zustand)
+- **types**: TypeScript definitions
+- **utils**: Utility functions
 
-### 4. **Performance**
-- Code splitting tự động với Next.js
-- Lazy loading components
-- Optimized imports
+### 4. `/src/locales/` - i18n Translations
+- **en**: English translations
+- **vi**: Vietnamese translations
 
-## 📦 Các thư mục chính
+## 🚀 Ví dụ sử dụng
 
-### `/src/components/`
-- **ui/**: Components UI cơ bản, tái sử dụng
-- **layout/**: Components layout (Navbar, Footer, etc.)
-- **sections/**: Sections của trang (Hero, About, etc.)
-- **common/**: Components dùng chung
-
-### `/src/lib/`
-- **utils/**: Utility functions
-- **constants/**: App constants và configuration
-- **types/**: TypeScript type definitions
-- **hooks/**: Custom React hooks
-- **services/**: API calls và external services
-- **validations/**: Form validation schemas
-
-### `/src/styles/`
-- **globals/**: Global CSS và variables
-- **components/**: Component-specific styles
-- **pages/**: Page-specific styles
-
-## 🚀 Cách sử dụng
-
-### Import components
+### Components Import
 ```typescript
-// Import từ index files
-import { Loading } from '@/components/ui';
-import { Navbar } from '@/components/layout';
-import { Hero, About } from '@/components/sections';
+// UI Components
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Loading } from '@/components/ui/Loading';
+
+// Layout Components
+import { Header } from '@/components/layout';
+import { LanguageSwitcher } from '@/components/common';
 ```
 
-### Import utilities
+### Hooks & Store
 ```typescript
-// Import utilities
-import { cn, formatDate } from '@/lib/utils';
-import { NAVIGATION, SOCIAL_LINKS } from '@/lib/constants';
-import { useLocalStorage } from '@/lib/hooks';
+import { useTranslation } from '@/lib/hooks/useTranslation';
+import { useMediaQuery } from '@/lib/hooks/useMediaQuery';
+import { useBlogStore } from '@/lib/store/useBlogStore';
 ```
 
-### Import types
+### Utils & Types
 ```typescript
-// Import types
-import type { Project, BlogPost } from '@/lib/types';
+import { cn } from '@/lib/utils/cn';
+import type { BlogPost } from '@/lib/types/blog';
 ```
 
-## 🔧 Cấu hình
+## ⚙️ Cấu hình hiện tại
 
-### Path aliases (tsconfig.json)
-```json
-{
-  "compilerOptions": {
-    "paths": {
-      "@/*": ["./src/*"],
-      "@/components/*": ["./src/components/*"],
-      "@/lib/*": ["./src/lib/*"],
-      "@/styles/*": ["./src/styles/*"]
-    }
-  }
-}
-```
-
-### Next.js config
+### next.config.ts
 ```typescript
-// next.config.ts
-const nextConfig = {
-  experimental: {
-    optimizePackageImports: ['framer-motion', 'react-icons']
-  }
+const nextConfig: NextConfig = {
+  images: {
+    domains: [
+      "images.careerviet.vn",
+      "cdn.vietnambiz.vn",
+      "cdn.pixabay.com",
+      "i.imgur.com",
+      "lh3.googleusercontent.com",
+    ],
+  },
 };
 ```
 
-## 📝 Best Practices
+### postcss.config.mjs
+```javascript
+module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+}
+```
 
-1. **Naming conventions**: camelCase cho files, PascalCase cho components
-2. **Index files**: Export tất cả từ index files để clean imports
-3. **Type safety**: Sử dụng TypeScript cho tất cả components
-4. **Performance**: Lazy load components khi cần thiết
-5. **Accessibility**: Đảm bảo semantic HTML và ARIA labels
-6. **SEO**: Sử dụng Next.js metadata API
-7. **Testing**: Tổ chức tests theo cấu trúc components
+## 🌟 Điểm nổi bật
 
-## 🎨 Styling
+1. **i18n Support**
+   - Đa ngôn ngữ (EN/VI)
+   - Translations được tổ chức theo module
+   - i18n middleware tự động
 
-- **Tailwind CSS v4**: Utility-first CSS framework
-- **CSS Variables**: Custom properties cho theming
-- **Component styles**: Scoped styles cho components
-- **Responsive design**: Mobile-first approach
+2. **Admin Dashboard**
+   - Quản lý blog posts
+   - Quản lý projects
+   - Authentication & Authorization
 
-## 🔄 Migration Notes
+3. **State Management**
+   - Zustand store modules
+   - Persistent state
+   - TypeScript support
 
-Các file UI hiện có đã được giữ nguyên và di chuyển vào cấu trúc mới:
-- `Loading.tsx` → `src/components/ui/Loading.tsx`
-- `Nav.tsx` → `src/components/layout/Navbar.tsx`
-- Các section components giữ nguyên trong `src/components/sections/` 
+4. **Performance**
+   - Next.js App Router
+   - Image optimization
+   - Dynamic imports
+
+5. **Developer Experience**
+   - ESLint configuration
+   - TypeScript strict mode
+   - Organized imports 
