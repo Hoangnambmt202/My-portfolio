@@ -1,8 +1,8 @@
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 import { Bell, Search } from "lucide-react";
 import AdminSidebar from "@/components/admin/AdminSidebar";
+import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 
 export default async function AdminLayout({
   children,
