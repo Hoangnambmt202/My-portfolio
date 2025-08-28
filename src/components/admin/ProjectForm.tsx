@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Project } from "@/app/admin/projects/page";
+import { Project } from "@/app/admin/(pages)/projects/page";
 import { Button } from "@/components/ui/button";
 
 export function ProjectForm({
