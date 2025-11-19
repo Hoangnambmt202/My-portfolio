@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import "@/styles/globals.css";
-
-import Sidebar from "@/components/layout/Sidebar";
 import { I18nProvider } from "@/components/providers/I18nProvider";
 
 
@@ -23,8 +21,8 @@ export default function LocaleLayout({
 }) {
 	return (
 		<I18nProvider>
-			<Sidebar />
-			<main className="bg-[#202020] min-h-screen py-8">
+			
+			<main className="bg-[#202020] min-h-screen">
 				{children}
 			</main>
 		</I18nProvider>

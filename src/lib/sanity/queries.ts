@@ -1,4 +1,4 @@
-// lib/queries.ts
+
 export const allPostsQuery = `
 *[_type == "post"] | order(publishedAt desc) {
   _id,

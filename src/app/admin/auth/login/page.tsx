@@ -4,7 +4,7 @@
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { Eye, EyeOff, Lock, User, Shield } from "lucide-react";
-
+import {showToast} from "nextjs-toast-notify";
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -14,11 +14,13 @@ export default function LoginPage() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     setIsLoading(true);
-    await signIn("credentials", {
+     await signIn("credentials", {
       username,
       password,
       callbackUrl: "/admin",
     });
+    showToast.success("Đăng nhập thành công! Chào mừng quản trị viên", {duration: 2000})
+    
     setIsLoading(false);
   };
 
@@ -50,7 +52,7 @@ export default function LoginPage() {
           <div className="space-y-6">
             {/* Username field */}
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <div className="absolute top-1/2 transform -translate-y-1/2 left-4 pointer-events-auto z-10">
                 <User className="h-5 w-5 text-black" />
               </div>
               <input
@@ -67,7 +69,7 @@ export default function LoginPage() {
 
             {/* Password field */}
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <div className="absolute top-1/2 transform -translate-y-1/2 left-4 pointer-events-auto z-10">
                 <Lock className="h-5 w-5 text-black" />
               </div>
               <input
@@ -82,6 +84,7 @@ export default function LoginPage() {
               />
               <button
                 type="button"
+                tabIndex={-1}
                 className="absolute inset-y-0 right-0 pr-4 flex items-center"
                 onClick={() => setShowPassword(!showPassword)}
               >

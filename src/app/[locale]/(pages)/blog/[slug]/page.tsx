@@ -6,9 +6,9 @@ import BlogDetail from "./BlogDetail";
 export const dynamic = "force-dynamic";
 
 export default async function BlogDetailPage(props: {
-  params: Promise<{ slug: string; locale: string }>; // 👈 params là Promise
+  params: Promise<{ slug: string; locale: string }>; 
 }) {
-  const { slug, locale } = await props.params; // 👈 phải await
+  const { slug, locale } = await props.params; 
 
   const post = await client.fetch(singlePostQuery, { slug });
 
