@@ -68,9 +68,24 @@
       }
     }
   },
+  "common": {
+    "back": "Quay lại"
+  },
   "blog": {
     "title": "Blog",
     "subtitle": "Chia sẻ kiến thức và kinh nghiệm lập trình",
+    "searchPlaceholder": "Tìm kiếm bài viết...",
+    "filterByCategory": "Danh mục",
+    "sortByDate": "Mới nhất",
+    "sortByViews": "Lượt xem",
+    "sortByTitle": "Tiêu đề",
+    "publishedOn": "Đăng ngày",
+    "readingTime": "phút đọc",
+    "views": "lượt xem",
+    "noPostsFound": "Không tìm thấy bài viết nào.",
+    "relatedPosts": "Bài viết liên quan",
+    "all": "Tất cả",
+    "loading": "Đang tải",
     "readMore": "Đọc thêm",
     "items": {
       "0": {

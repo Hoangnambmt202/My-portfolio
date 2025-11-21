@@ -2,13 +2,16 @@ import { client } from "@/lib/sanity/sanity";
 import { singlePostQuery } from "@/lib/sanity/queries";
 import { notFound } from "next/navigation";
 import BlogDetail from "./BlogDetail";
-
+import { setRequestLocale } from 'next-intl/server';
 export const dynamic = "force-dynamic";
 
-export default async function BlogDetailPage(props: {
-  params: Promise<{ slug: string; locale: string }>; 
-}) {
-  const { slug, locale } = await props.params; 
+type Props = {
+  params: Promise<{ slug: string; locale: string }>;
+};
+export default async function BlogDetailPage({ params }: Props) {
+  const { slug, locale } = await params;
+  // 2. Set locale cho server component
+  setRequestLocale(locale);
 
   const post = await client.fetch(singlePostQuery, { slug });
 
@@ -29,5 +32,5 @@ export default async function BlogDetailPage(props: {
     { slug }
   );
 
-  return <BlogDetail post={post} relatedPosts={relatedPosts} locale={locale} />;
+  return <BlogDetail post={post} relatedPosts={relatedPosts} />;
 }

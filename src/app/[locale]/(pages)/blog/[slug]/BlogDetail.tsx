@@ -1,29 +1,36 @@
 "use client";
 
-import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { PortableText } from "@portabletext/react";
-import { useTranslation } from "@/lib/hooks/useTranslation";
+import { Link } from "@/i18n/routing";
+import { useTranslations } from "next-intl";
 import { useLoading } from "@/lib/hooks/useStores";
 import { BlogPost } from "@/lib/types/blog";
 
 interface BlogDetailProps {
   post: BlogPost;
   relatedPosts: BlogPost[];
-  locale: string;
+
 }
 
-export default function BlogDetail({ post, relatedPosts, locale }: BlogDetailProps) {
-  const { t } = useTranslation();
+export default function BlogDetail({ post, relatedPosts }: BlogDetailProps) {
+ const t = useTranslations('blog');
+  const tCommon = useTranslations('common');
   const { setLoading } = useLoading();
 
-  const handleBackClick = () => {
-    setLoading(true, "Quay lại danh sách blog...");
+const handleBackClick = () => {
+    setLoading(true, `${t('loading')}...`);
   };
 
   const handleRelatedPostClick = (postTitle: string) => {
-    setLoading(true, `Đang tải "${postTitle}"...`);
+    setLoading(true, `${t('loading')} "${postTitle}"...`);
   };
+  // const formatDate = (dateString: string) => {
+  //   if (!dateString) return "";
+  //   return new Date(dateString).toLocaleDateString(locale, {
+  //      year: 'numeric', month: 'long', day: 'numeric' 
+  //   });
+  // };
 
   return (
     <div className="container mx-auto px-4">
@@ -35,10 +42,10 @@ export default function BlogDetail({ post, relatedPosts, locale }: BlogDetailPro
           transition={{ duration: 0.5 }}
           className="mb-8 pt-8"
         >
-          <Link
-            href={`/${locale}/blog`}
+         <Link
+            href="/blog" // Link tự động handle locale
             onClick={handleBackClick}
-            className="inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors group"
+            className="inline-flex items-center text-cyan-400 hover:text-cyan-300 transition-colors group"
           >
             <motion.svg
               whileHover={{ x: -4 }}
@@ -55,7 +62,7 @@ export default function BlogDetail({ post, relatedPosts, locale }: BlogDetailPro
                 d="M15 19l-7-7 7-7"
               />
             </motion.svg>
-            <span className="group-hover:underline">{t("common.back")}</span>
+            <span className="group-hover:underline">{tCommon('back')}</span>
           </Link>
         </motion.div>
 
@@ -81,13 +88,13 @@ export default function BlogDetail({ post, relatedPosts, locale }: BlogDetailPro
               )}
               <span>•</span>
               <span>
-                {t("blog.publishedOn")}{" "}
+                {t("publishedOn")}{" "}
                 {post.publishedAt ? new Date(post.publishedAt).toISOString().slice(0, 10) : ""}
               </span>
               <span>•</span>
-              <span>{post.readingTime} {t("blog.readingTime")}</span>
+              <span>{post.readingTime} {t("readingTime")}</span>
               <span>•</span>
-              <span>{post.views ?? 0} views</span>
+              <span>{post.views ?? 0} {t("views")}</span>
             </div>
 
             {/* Title */}
@@ -126,7 +133,7 @@ export default function BlogDetail({ post, relatedPosts, locale }: BlogDetailPro
               className="mb-12"
             >
               <h2 className="text-2xl font-bold text-white mb-8">
-                Related Posts
+              {t("relatedPosts")}
               </h2>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {relatedPosts.map((rp, i) => (
@@ -137,7 +144,7 @@ export default function BlogDetail({ post, relatedPosts, locale }: BlogDetailPro
                     transition={{ delay: 1 + i * 0.1, duration: 0.5 }}
                   >
                     <Link
-                      href={`/${locale}/blog/${rp.slug}`}
+                      href={`/blog/${rp.slug}`}
                       onClick={() => handleRelatedPostClick(rp.title)}
                       className="bg-white rounded-lg shadow-lg block hover:shadow-xl transition"
                     >
@@ -152,9 +159,9 @@ export default function BlogDetail({ post, relatedPosts, locale }: BlogDetailPro
                           {rp.excerpt}
                         </p>
                         <div className="flex items-center text-xs text-gray-500">
-                          <span>{rp.readingTime} {t("blog.readingTime")}</span>
+                          <span>{rp.readingTime} {t("readingTime")}</span>
                           <span className="mx-2">•</span>
-                          <span>{rp.views ?? 0} views</span>
+                          <span>{rp.views ?? 0} {t("views")}</span>
                         </div>
                       </div>
                     </Link>

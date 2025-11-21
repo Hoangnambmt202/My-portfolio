@@ -1,33 +1,35 @@
 
 "use client";
 import Link from "next/link";
-import { Header } from "@/components/layout/Header";
-import { useTranslation } from "@/lib/hooks/useTranslation";
+
 import { useLoading } from "@/lib/hooks/useStores";
 import { motion } from "framer-motion";
 
+import { useTranslations , useLocale} from "next-intl";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default  function BlogList({ posts }: { posts: any[] }) {
-  const { t, locale } = useTranslation();
+ 
   const { setLoading } = useLoading();
+const t = useTranslations('blog');
+const locale = useLocale();
 
  
 
   const categories = [
-    { key: 'all', label: t('common.all') },
+    { key: 'all', label: t('all') },
     { key: 'technology', label: 'Technology' },
     { key: 'tutorial', label: 'Tutorial' },
     { key: 'thoughts', label: 'Thoughts' },
   ];
 
   const handlePostClick = (postTitle: string) => {
-    setLoading(true, `Đang tải "${postTitle}"...`);
+    setLoading(true, `${t('loading')} "${postTitle}"...`);
   };
 
   return (
     <div className="container mx-auto px-4">
       <div className="max-w-6xl">
-        <Header backdrop={t('blog.backdrop')} title={t('blog.myBlog')} />
+        
 
         {/* Search and Filter */}
         <motion.div
@@ -39,13 +41,13 @@ export default  function BlogList({ posts }: { posts: any[] }) {
           <div className="flex-1">
             <input
               type="text"
-              placeholder={t('blog.searchPlaceholder')}
+              placeholder={t('searchPlaceholder')}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-800"
             />
           </div>
           <div className="flex gap-4">
             <select className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-800">
-              <option value="">{t('blog.filterByCategory')}</option>
+              <option value="">{t('filterByCategory')}</option>
               {categories.map((category) => (
                 <option key={category.key} value={category.key}>
                   {category.label}
@@ -53,9 +55,9 @@ export default  function BlogList({ posts }: { posts: any[] }) {
               ))}
             </select>
             <select className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-800">
-              <option value="date">{t('blog.sortByDate')}</option>
-              <option value="views">{t('blog.sortByViews')}</option>
-              <option value="title">{t('blog.sortByTitle')}</option>
+              <option value="date">{t('sortByDate')}</option>
+              <option value="views">{t('sortByViews')}</option>
+              <option value="title">{t('sortByTitle')}</option>
             </select>
           </div>
         </motion.div>
@@ -80,11 +82,11 @@ export default  function BlogList({ posts }: { posts: any[] }) {
             
               <div className="p-6">
                 <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
-                <span>{t('blog.publishedOn')}   {new Date(post.publishedAt).toLocaleDateString()}</span>
+                <span>{t('publishedOn')}   {new Date(post.publishedAt).toLocaleDateString()}</span>
                   <span>•</span>
-                  <span>{post.readingTime} {t('blog.readingTime')}</span>
+                  <span>{post.readingTime} {t('readingTime')}</span>
                   <span>•</span>
-                  <span>{post.views} views</span>
+                  <span>{post.views} {t('views')}</span>
                 </div>
 
                 <Link href={`/${locale}/blog/${post.slug.current}`} onClick={() => handlePostClick(post.title)}>
@@ -154,7 +156,7 @@ export default  function BlogList({ posts }: { posts: any[] }) {
             animate={{ opacity: 1 }}
             className="text-center py-12"
           >
-            <p className="text-gray-500 text-lg">{t('blog.noPostsFound')}</p>
+            <p className="text-gray-500 text-lg">{t('noPostsFound')}</p>
           </motion.div>
         )}
       </div>

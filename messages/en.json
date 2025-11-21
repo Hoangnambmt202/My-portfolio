@@ -68,9 +68,24 @@
       }
     }
   },
+  "common": {
+    "back": "Back"
+  },
   "blog": {
     "title": "Blog",
     "subtitle": "Sharing knowledge and programming experience",
+    "searchPlaceholder": "Search posts...",
+    "filterByCategory": "Category",
+    "sortByDate": "Latest",
+    "sortByViews": "Views",
+    "sortByTitle": "Title",
+    "publishedOn": "Published on",
+    "readingTime": "min read",
+    "views": "views",
+    "noPostsFound": "No posts found.",
+    "relatedPosts": "Related Posts",
+    "all": "All",
+    "loading": "Loading",
     "readMore": "Read more",
     "items": {
       "0": {
