@@ -1,13 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useLoading } from "@/lib/hooks/useStores";
+
 
 export const NextButton = ({ content, class: className, href }: { content: string; class: string; href: string }) => {
-  const { setLoading } = useLoading();
+
 
   const handleClick = () => {
-    setLoading(true, `Đang chuyển đến ${content.toLowerCase()}...`);
+    // setLoading(true, `Đang chuyển đến ${content.toLowerCase()}...`);
   };
 
   return (
