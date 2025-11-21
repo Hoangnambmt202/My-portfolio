@@ -2,14 +2,14 @@
 "use client";
 import Link from "next/link";
 
-import { useLoading } from "@/lib/hooks/useStores";
+
 import { motion } from "framer-motion";
 
 import { useTranslations , useLocale} from "next-intl";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default  function BlogList({ posts }: { posts: any[] }) {
  
-  const { setLoading } = useLoading();
+
 const t = useTranslations('blog');
 const locale = useLocale();
 
@@ -22,9 +22,9 @@ const locale = useLocale();
     { key: 'thoughts', label: 'Thoughts' },
   ];
 
-  const handlePostClick = (postTitle: string) => {
-    setLoading(true, `${t('loading')} "${postTitle}"...`);
-  };
+  // const handlePostClick = (postTitle: string) => {
+  //   setLoading(true, `${t('loading')} "${postTitle}"...`);
+  // };
 
   return (
     <div className="container mx-auto px-4">
@@ -89,7 +89,7 @@ const locale = useLocale();
                   <span>{post.views} {t('views')}</span>
                 </div>
 
-                <Link href={`/${locale}/blog/${post.slug.current}`} onClick={() => handlePostClick(post.title)}>
+                <Link href={`/${locale}/blog/${post.slug.current}`} >
                   <motion.h2
                     whileHover={{ color: "#2563eb" }}
                     className="text-xl font-bold text-gray-800 mb-3 cursor-pointer transition-colors"
@@ -114,7 +114,7 @@ const locale = useLocale();
                   ))} */}
                 </div>
 
-                <Link href={`/${locale}/blog/${post.slug.current}`} onClick={() => handlePostClick(post.title)}>
+                <Link href={`/${locale}/blog/${post.slug.current}`} >
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}

@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { PortableText } from "@portabletext/react";
 import { Link } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
-import { useLoading } from "@/lib/hooks/useStores";
+
 import { BlogPost } from "@/lib/types/blog";
 
 interface BlogDetailProps {
@@ -16,15 +16,15 @@ interface BlogDetailProps {
 export default function BlogDetail({ post, relatedPosts }: BlogDetailProps) {
  const t = useTranslations('blog');
   const tCommon = useTranslations('common');
-  const { setLoading } = useLoading();
+
 
 const handleBackClick = () => {
-    setLoading(true, `${t('loading')}...`);
+    // setLoading(true, `${t('loading')}...`);
   };
 
-  const handleRelatedPostClick = (postTitle: string) => {
-    setLoading(true, `${t('loading')} "${postTitle}"...`);
-  };
+  // const handleRelatedPostClick = (postTitle: string) => {
+  //   setLoading(true, `${t('loading')} "${postTitle}"...`);
+  // };
   // const formatDate = (dateString: string) => {
   //   if (!dateString) return "";
   //   return new Date(dateString).toLocaleDateString(locale, {
@@ -145,7 +145,7 @@ const handleBackClick = () => {
                   >
                     <Link
                       href={`/blog/${rp.slug}`}
-                      onClick={() => handleRelatedPostClick(rp.title)}
+                      // onClick={() => handleRelatedPostClick(rp.title)}
                       className="bg-white rounded-lg shadow-lg block hover:shadow-xl transition"
                     >
                       <div className="h-32 bg-gray-200 flex items-center justify-center">

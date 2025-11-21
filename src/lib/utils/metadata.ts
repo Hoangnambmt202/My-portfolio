@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import type { Locale } from '@/lib/types/i18n';
 
 interface MetadataConfig {
   title: string;
@@ -130,98 +129,98 @@ export function generateMetadata(config: MetadataConfig): Metadata {
 }
 
 // Predefined metadata for common pages
-export const pageMetadata = {
-  home: (locale: Locale): MetadataConfig => ({
-    title: locale === 'vi' 
-      ? 'Pham Ngoc Hoang Nam - Fullstack Developer' 
-      : 'Pham Ngoc Hoang Nam - Fullstack Developer',
-    description: locale === 'vi'
-      ? 'Portfolio của Pham Ngoc Hoang Nam - Fullstack Developer chuyên về React, Node.js, và các công nghệ web hiện đại. Khám phá các dự án và kinh nghiệm của tôi.'
-      : 'Portfolio of Pham Ngoc Hoang Nam - Fullstack Developer specializing in React, Node.js, and modern web technologies. Explore my projects and experience.',
-    keywords: [
-      'Pham Ngoc Hoang Nam',
-      'Fullstack Developer',
-      'React Developer',
-      'Node.js Developer',
-      'Web Developer',
-      'Portfolio',
-      'JavaScript',
-      'TypeScript',
-      'Next.js',
-    ],
-    url: '/',
-    locale,
-  }),
+// export const pageMetadata = {
+//   home: (locale: Locale): MetadataConfig => ({
+//     title: locale === 'vi' 
+//       ? 'Pham Ngoc Hoang Nam - Fullstack Developer' 
+//       : 'Pham Ngoc Hoang Nam - Fullstack Developer',
+//     description: locale === 'vi'
+//       ? 'Portfolio của Pham Ngoc Hoang Nam - Fullstack Developer chuyên về React, Node.js, và các công nghệ web hiện đại. Khám phá các dự án và kinh nghiệm của tôi.'
+//       : 'Portfolio of Pham Ngoc Hoang Nam - Fullstack Developer specializing in React, Node.js, and modern web technologies. Explore my projects and experience.',
+//     keywords: [
+//       'Pham Ngoc Hoang Nam',
+//       'Fullstack Developer',
+//       'React Developer',
+//       'Node.js Developer',
+//       'Web Developer',
+//       'Portfolio',
+//       'JavaScript',
+//       'TypeScript',
+//       'Next.js',
+//     ],
+//     url: '/',
+//     locale,
+//   }),
 
-  about: (locale: Locale): MetadataConfig => ({
-    title: locale === 'vi' ? 'Giới thiệu - Pham Ngoc Hoang Nam' : 'About - Pham Ngoc Hoang Nam',
-    description: locale === 'vi'
-      ? 'Tìm hiểu về Pham Ngoc Hoang Nam - Fullstack Developer với kinh nghiệm trong React, Node.js, và phát triển web. Xem kỹ năng, kinh nghiệm và thông tin liên hệ.'
-      : 'Learn about Pham Ngoc Hoang Nam - Fullstack Developer with experience in React, Node.js, and web development. View skills, experience, and contact information.',
-    keywords: [
-      'About',
-      'Skills',
-      'Experience',
-      'Fullstack Developer',
-      'React',
-      'Node.js',
-      'Web Development',
-    ],
-    url: '/about',
-    locale,
-  }),
+//   about: (locale: Locale): MetadataConfig => ({
+//     title: locale === 'vi' ? 'Giới thiệu - Pham Ngoc Hoang Nam' : 'About - Pham Ngoc Hoang Nam',
+//     description: locale === 'vi'
+//       ? 'Tìm hiểu về Pham Ngoc Hoang Nam - Fullstack Developer với kinh nghiệm trong React, Node.js, và phát triển web. Xem kỹ năng, kinh nghiệm và thông tin liên hệ.'
+//       : 'Learn about Pham Ngoc Hoang Nam - Fullstack Developer with experience in React, Node.js, and web development. View skills, experience, and contact information.',
+//     keywords: [
+//       'About',
+//       'Skills',
+//       'Experience',
+//       'Fullstack Developer',
+//       'React',
+//       'Node.js',
+//       'Web Development',
+//     ],
+//     url: '/about',
+//     locale,
+//   }),
 
-  portfolio: (locale: Locale): MetadataConfig => ({
-    title: locale === 'vi' ? 'Dự án - Portfolio' : 'Projects - Portfolio',
-    description: locale === 'vi'
-      ? 'Khám phá các dự án web và ứng dụng di động mà tôi đã phát triển. Từ e-commerce đến ứng dụng doanh nghiệp, xem portfolio đầy đủ của tôi.'
-      : 'Explore web and mobile projects I have developed. From e-commerce to enterprise applications, view my complete portfolio.',
-    keywords: [
-      'Portfolio',
-      'Projects',
-      'Web Development',
-      'Mobile Development',
-      'React Projects',
-      'Node.js Projects',
-    ],
-    url: '/portfolio',
-    locale,
-  }),
+//   portfolio: (locale: Locale): MetadataConfig => ({
+//     title: locale === 'vi' ? 'Dự án - Portfolio' : 'Projects - Portfolio',
+//     description: locale === 'vi'
+//       ? 'Khám phá các dự án web và ứng dụng di động mà tôi đã phát triển. Từ e-commerce đến ứng dụng doanh nghiệp, xem portfolio đầy đủ của tôi.'
+//       : 'Explore web and mobile projects I have developed. From e-commerce to enterprise applications, view my complete portfolio.',
+//     keywords: [
+//       'Portfolio',
+//       'Projects',
+//       'Web Development',
+//       'Mobile Development',
+//       'React Projects',
+//       'Node.js Projects',
+//     ],
+//     url: '/portfolio',
+//     locale,
+//   }),
 
-  blog: (locale: Locale): MetadataConfig => ({
-    title: locale === 'vi' ? 'Blog - Chia sẻ kiến thức' : 'Blog - Knowledge Sharing',
-    description: locale === 'vi'
-      ? 'Blog chia sẻ kiến thức về lập trình web, React, Node.js, và các công nghệ mới nhất. Tutorials, tips và kinh nghiệm thực tế từ một Fullstack Developer.'
-      : 'Blog sharing knowledge about web programming, React, Node.js, and latest technologies. Tutorials, tips and practical experience from a Fullstack Developer.',
-    keywords: [
-      'Blog',
-      'Programming',
-      'Web Development',
-      'React Tutorial',
-      'Node.js Tutorial',
-      'JavaScript',
-      'TypeScript',
-    ],
-    url: '/blog',
-    locale,
-  }),
+//   blog: (locale: Locale): MetadataConfig => ({
+//     title: locale === 'vi' ? 'Blog - Chia sẻ kiến thức' : 'Blog - Knowledge Sharing',
+//     description: locale === 'vi'
+//       ? 'Blog chia sẻ kiến thức về lập trình web, React, Node.js, và các công nghệ mới nhất. Tutorials, tips và kinh nghiệm thực tế từ một Fullstack Developer.'
+//       : 'Blog sharing knowledge about web programming, React, Node.js, and latest technologies. Tutorials, tips and practical experience from a Fullstack Developer.',
+//     keywords: [
+//       'Blog',
+//       'Programming',
+//       'Web Development',
+//       'React Tutorial',
+//       'Node.js Tutorial',
+//       'JavaScript',
+//       'TypeScript',
+//     ],
+//     url: '/blog',
+//     locale,
+//   }),
 
-  contact: (locale: Locale): MetadataConfig => ({
-    title: locale === 'vi' ? 'Liên hệ - Pham Ngoc Hoang Nam' : 'Contact - Pham Ngoc Hoang Nam',
-    description: locale === 'vi'
-      ? 'Liên hệ với Pham Ngoc Hoang Nam để thảo luận về dự án, cơ hội hợp tác hoặc tư vấn phát triển web. Email: nam23062002@gmail.com'
-      : 'Contact Pham Ngoc Hoang Nam to discuss projects, collaboration opportunities or web development consulting. Email: nam23062002@gmail.com',
-    keywords: [
-      'Contact',
-      'Hire Developer',
-      'Web Development Services',
-      'Freelance Developer',
-      'Consultation',
-    ],
-    url: '/contact',
-    locale,
-  }),
-};
+//   contact: (locale: Locale): MetadataConfig => ({
+//     title: locale === 'vi' ? 'Liên hệ - Pham Ngoc Hoang Nam' : 'Contact - Pham Ngoc Hoang Nam',
+//     description: locale === 'vi'
+//       ? 'Liên hệ với Pham Ngoc Hoang Nam để thảo luận về dự án, cơ hội hợp tác hoặc tư vấn phát triển web. Email: nam23062002@gmail.com'
+//       : 'Contact Pham Ngoc Hoang Nam to discuss projects, collaboration opportunities or web development consulting. Email: nam23062002@gmail.com',
+//     keywords: [
+//       'Contact',
+//       'Hire Developer',
+//       'Web Development Services',
+//       'Freelance Developer',
+//       'Consultation',
+//     ],
+//     url: '/contact',
+//     locale,
+//   }),
+// };
 
 // Generate blog post metadata
 export function generateBlogPostMetadata(
