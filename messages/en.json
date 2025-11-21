@@ -1,0 +1,120 @@
+{
+  "nav": {
+    "portfolio": "Portfolio",
+    "services": "Services",
+    "blog": "Blog",
+    "contact": "Contact",
+    "phone": "0914837433"
+  },
+  "hero": {
+    "badge": "Hello, I'm ready to work",
+    "role": "Full-Stack Developer",
+    "description": "Building amazing digital products with modern technologies, focusing on user experience and performance."
+  },
+  "portfolio": {
+    "title": "Portfolio",
+    "subtitle": "Some featured projects I have worked on",
+    "viewDetails": "View Details",
+    "items": {
+      "0": {
+        "title": "E-Commerce Platform",
+        "description": "E-commerce platform with React & Node.js"
+      },
+      "1": {
+        "title": "Mobile Banking App",
+        "description": "Mobile banking app with React Native"
+      },
+      "2": {
+        "title": "AI Dashboard",
+        "description": "Data analysis dashboard with AI integration"
+      },
+      "3": {
+        "title": "Real-time Chat",
+        "description": "Realtime chat system with WebSocket"
+      }
+    }
+  },
+  "services": {
+    "title": "Services",
+    "subtitle": "Professional software development services",
+    "items": {
+      "0": {
+        "title": "Web Development",
+        "description": "Building responsive, modern websites with React, Vue, Angular",
+        "f1": "Single Page Apps",
+        "f2": "Progressive Web Apps",
+        "f3": "API Integration"
+      },
+      "1": {
+        "title": "Mobile Development",
+        "description": "Building native and cross-platform mobile apps",
+        "f1": "iOS & Android",
+        "f2": "React Native",
+        "f3": "Flutter"
+      },
+      "2": {
+        "title": "Backend Development",
+        "description": "Designing and developing APIs, microservices, databases",
+        "f1": "RESTful API",
+        "f2": "GraphQL",
+        "f3": "Microservices"
+      },
+      "3": {
+        "title": "Consulting",
+        "description": "System architecture consulting, code review, mentoring",
+        "f1": "System Design",
+        "f2": "Code Review",
+        "f3": "Team Training"
+      }
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Sharing knowledge and programming experience",
+    "readMore": "Read more",
+    "items": {
+      "0": {
+        "title": "Optimizing React App Performance with Code Splitting",
+        "excerpt": "Explore code splitting and lazy loading techniques to improve performance..."
+      },
+      "1": {
+        "title": "Microservices Architecture: Best Practices 2025",
+        "excerpt": "Detailed guide on designing and deploying effective microservices..."
+      },
+      "2": {
+        "title": "TypeScript Tips & Tricks for Developers",
+        "excerpt": "TypeScript tips and tricks for cleaner and type-safe code..."
+      }
+    }
+  },
+  "contact": {
+    "title": "Contact",
+    "subtitle": "Have an interesting project? Contact me!",
+    "form": {
+      "name": "Your Name",
+      "namePlaceholder": "John Doe",
+      "email": "Email",
+      "emailPlaceholder": "email@example.com",
+      "subject": "Subject",
+      "subjectPlaceholder": "E-commerce Website Project",
+      "message": "Message",
+      "messagePlaceholder": "Describe your project in detail...",
+      "send": "Send Message"
+    },
+    "info": {
+      "email": "Email",
+      "github": "GitHub",
+      "linkedin": "LinkedIn"
+    }
+  },
+  "footer": {
+    "aboutTitle": "👨‍💻 About Me",
+    "aboutDesc": "I'm a Full-Stack Developer specializing in building clean, scalable and modern web applications using JavaScript, Next.js, Vue.js, and Laravel.",
+    "quickLinks": "📌 Quick Links",
+    "social": "Social",
+    "newsletter": "📩 Newsletter",
+    "newsletterDesc": "Subscribe to get the latest updates.",
+    "join": "Join",
+    "copyright": "Built by Hoang Nam — All Rights Reserved."
+  }
+}

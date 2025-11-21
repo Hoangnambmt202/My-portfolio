@@ -2,13 +2,15 @@
 import { useState, useEffect } from "react";
 import { Menu, X, Terminal, Phone } from "lucide-react";
 import { motion, useScroll, useSpring } from "framer-motion";
-import Link from "next/link";
+import { Link } from "@/i18n/routing"; // Link từ next-intl
+import { useTranslations } from "next-intl";
+import { LanguageSwitcher } from "@/components/common/LanguageSwitcher"; // Import component đã sửa
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const t = useTranslations('nav'); // Namespace 'nav'
 
-  // 1. Logic tính toán tiến trình cuộn trang
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
@@ -21,17 +23,16 @@ export default function Header() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth", // Cuộn mượt mà
-    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
+
   const menuItems = [
-    { name: "Portfolio", href: "#portfolio" },
-    { name: "Dịch vụ", href: "#services" },
-    { name: "Blog", href: "#blog" },
-    { name: "Liên hệ", href: "#contact" },
+    { name: t('portfolio'), href: "#portfolio" },
+    { name: t('services'), href: "#services" },
+    { name: t('blog'), href: "#blog" },
+    { name: t('contact'), href: "#contact" },
   ];
 
   return (
@@ -44,11 +45,7 @@ export default function Header() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-20">
         {/* Logo */}
-        <Link
-          href={""}
-          onClick={scrollToTop}
-          className="flex items-center space-x-2 group cursor-pointer"
-        >
+        <Link href="/" onClick={scrollToTop} className="flex items-center space-x-2 group cursor-pointer">
           <Terminal className="w-8 h-8 text-cyan-400 group-hover:rotate-12 transition-transform duration-300" />
           <span className="text-2xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
             Nam DATA
@@ -66,23 +63,28 @@ export default function Header() {
               {item.name}
             </a>
           ))}
+          
+          {/* Nút chuyển đổi ngôn ngữ */}
+          <div className="ml-2">
+            <LanguageSwitcher size="sm" variant="dropdown" showLabel={false} />
+          </div>
+
           <button className="ml-4 px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg font-medium hover:scale-105 transition-transform shadow-lg shadow-cyan-500/20">
             <Phone className="inline w-4 h-4 mr-2" />
-            0914837433
+            {t('phone')}
           </button>
         </nav>
 
         {/* Mobile menu button */}
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2 text-slate-300 hover:text-cyan-400 transition-colors"
-        >
-          {mobileMenuOpen ? (
-            <X className="w-6 h-6" />
-          ) : (
-            <Menu className="w-6 h-6" />
-          )}
-        </button>
+        <div className="flex items-center gap-4 md:hidden">
+          <LanguageSwitcher size="sm" showLabel={false} />
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="p-2 text-slate-300 hover:text-cyan-400 transition-colors"
+          >
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile menu */}
@@ -101,7 +103,6 @@ export default function Header() {
         </div>
       )}
 
-      {/* 2. Thanh tiến trình (Progress Bar) nằm ở đáy Header */}
       <motion.div
         className="absolute bottom-0 left-0 right-0 h-[3px] bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 origin-left"
         style={{ scaleX }}

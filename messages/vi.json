@@ -1,0 +1,120 @@
+{
+  "nav": {
+    "portfolio": "Portfolio",
+    "services": "Dịch vụ",
+    "blog": "Blog",
+    "contact": "Liên hệ",
+    "phone": "0914837433"
+  },
+  "hero": {
+    "badge": "Xin chào, tôi đã sẵn sàng làm việc",
+    "role": "Lập trình viên Full-stack",
+    "description": "Xây dựng những sản phẩm kỹ thuật số tuyệt vời với công nghệ hiện đại, tập trung vào trải nghiệm người dùng và hiệu suất."
+  },
+  "portfolio": {
+    "title": "Portfolio",
+    "subtitle": "Một số dự án tiêu biểu mà tôi đã thực hiện",
+    "viewDetails": "Xem chi tiết",
+    "items": {
+      "0": {
+        "title": "Nền tảng thương mại điện tử",
+        "description": "Nền tảng thương mại điện tử với React & Node.js"
+      },
+      "1": {
+        "title": "Ứng dụng ngân hàng di động",
+        "description": "Ứng dụng ngân hàng di động với React Native"
+      },
+      "2": {
+        "title": "AI Dashboard",
+        "description": "Dashboard phân tích dữ liệu với AI integration"
+      },
+      "3": {
+        "title": "Real-time Chat",
+        "description": "Hệ thống chat realtime với WebSocket"
+      }
+    }
+  },
+  "services": {
+    "title": "Dịch vụ",
+    "subtitle": "Các dịch vụ phát triển phần mềm chuyên nghiệp",
+    "items": {
+      "0": {
+        "title": "Phát triển Web",
+        "description": "Phát triển website responsive, hiện đại với React, Vue, Angular",
+        "f1": "Single Page Apps",
+        "f2": "Progressive Web Apps",
+        "f3": "API Integration"
+      },
+      "1": {
+        "title": "Phát triển Mobile",
+        "description": "Xây dựng ứng dụng di động native và cross-platform",
+        "f1": "iOS & Android",
+        "f2": "React Native",
+        "f3": "Flutter"
+      },
+      "2": {
+        "title": "Phát triển Backend",
+        "description": "Thiết kế và phát triển API, microservices, database",
+        "f1": "RESTful API",
+        "f2": "GraphQL",
+        "f3": "Microservices"
+      },
+      "3": {
+        "title": "Tư vấn giải pháp",
+        "description": "Tư vấn kiến trúc hệ thống, code review, mentoring",
+        "f1": "Thiết kế hệ thống",
+        "f2": "Code Review",
+        "f3": "Đào tạo nhân sự"
+      }
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Chia sẻ kiến thức và kinh nghiệm lập trình",
+    "readMore": "Đọc thêm",
+    "items": {
+      "0": {
+        "title": "Tối ưu hiệu suất React App với Code Splitting",
+        "excerpt": "Khám phá các kỹ thuật code splitting và lazy loading để cải thiện performance..."
+      },
+      "1": {
+        "title": "Microservices Architecture: Best Practices 2025",
+        "excerpt": "Hướng dẫn chi tiết về cách thiết kế và triển khai microservices hiệu quả..."
+      },
+      "2": {
+        "title": "TypeScript Tips & Tricks cho Developer",
+        "excerpt": "Những mẹo và thủ thuật TypeScript giúp code clean và type-safe hơn..."
+      }
+    }
+  },
+  "contact": {
+    "title": "Liên hệ",
+    "subtitle": "Bạn có dự án thú vị? Hãy liên hệ với tôi!",
+    "form": {
+      "name": "Tên của bạn",
+      "namePlaceholder": "Nguyễn Văn A",
+      "email": "Email",
+      "emailPlaceholder": "email@example.com",
+      "subject": "Tiêu đề",
+      "subjectPlaceholder": "Dự án website thương mại điện tử",
+      "message": "Nội dung",
+      "messagePlaceholder": "Mô tả chi tiết dự án của bạn...",
+      "send": "Gửi tin nhắn"
+    },
+    "info": {
+      "email": "Email",
+      "github": "GitHub",
+      "linkedin": "LinkedIn"
+    }
+  },
+  "footer": {
+    "aboutTitle": "👨‍💻 Về tôi",
+    "aboutDesc": "Tôi là Full-Stack Developer chuyên xây dựng các ứng dụng web hiện đại, clean code và mở rộng được bằng JavaScript, Next.js, Vue.js và Laravel.",
+    "quickLinks": "📌 Liên kết nhanh",
+    "social": "Mạng xã hội",
+    "newsletter": "📩 Bản tin",
+    "newsletterDesc": "Đăng ký để nhận thông tin mới nhất.",
+    "join": "Tham gia",
+    "copyright": "Được xây dựng bởi Hoang Nam — All Rights Reserved."
+  }
+}

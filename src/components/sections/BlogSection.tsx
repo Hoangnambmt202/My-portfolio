@@ -1,7 +1,7 @@
 import { Calendar, BookOpen, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { cubicBezier } from "framer-motion";
-
+import { useTranslations } from "next-intl";
 const fadeInUp = {
   hidden: { opacity: 0, y: 60 },
   visible: { 
@@ -25,6 +25,7 @@ const staggerFastContainer = {
   }
 };
 export default function BlogSection() {
+  const t = useTranslations('blog');
    const blogPosts = [
     {
       title: "Tối ưu hiệu suất React App với Code Splitting",
@@ -79,7 +80,7 @@ export default function BlogSection() {
             transition={{ duration: 0.6 }}
             className="text-4xl font-bold text-white mb-4"
           >
-            Blog
+            {t('title')}
           </motion.h2>
           <motion.p 
             initial={{ opacity: 0 }}
@@ -88,7 +89,7 @@ export default function BlogSection() {
             transition={{ delay: 0.2, duration: 0.6 }}
             className="text-slate-400 max-w-2xl mx-auto"
           >
-            Chia sẻ kiến thức và kinh nghiệm lập trình
+           {t('subtitle')}
           </motion.p>
         </motion.div>
 
@@ -138,7 +139,7 @@ export default function BlogSection() {
                   whileHover={{ x: 5 }}
                   transition={{ duration: 0.2 }}
                 >
-                  Đọc thêm <ArrowRight className="w-3 h-3" />
+                {t('readMore')} <ArrowRight className="w-3 h-3" />
                 </motion.button>
               </div>
             </motion.div>

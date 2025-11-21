@@ -1,7 +1,0 @@
-{
-  "required": "Trường này là bắt buộc",
-  "invalidEmail": "Vui lòng nhập địa chỉ email hợp lệ",
-  "minLength": "Phải có ít nhất {min} ký tự",
-  "maxLength": "Không được vượt quá {max} ký tự",
-  "invalidPhone": "Vui lòng nhập số điện thoại hợp lệ"
-}

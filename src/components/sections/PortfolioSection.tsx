@@ -1,6 +1,6 @@
 import { Code2, ExternalLink } from "lucide-react";
 import { cubicBezier, motion } from "framer-motion";
-
+import { useTranslations } from "next-intl";
 const fadeInUp = {
   hidden: { opacity: 0, y: 60 },
   visible: { 
@@ -25,6 +25,7 @@ const staggerContainer = {
 };
 
 export default function PortfolioSection() {
+  const t = useTranslations('portfolio');
   const projects = [
     {
       title: "E-Commerce Platform",
@@ -82,7 +83,7 @@ export default function PortfolioSection() {
             transition={{ duration: 0.7, ease: "easeOut" }}
             className="text-4xl font-bold text-white mb-4"
           >
-            Portfolio
+            {t('title')}
           </motion.h2>
           <motion.p 
             initial={{ opacity: 0 }}
@@ -91,7 +92,7 @@ export default function PortfolioSection() {
             transition={{ delay: 0.2, duration: 0.6 }}
             className="text-slate-400 max-w-2xl mx-auto"
           >
-            Một số dự án tiêu biểu mà tôi đã thực hiện
+           {t('subtitle')}
           </motion.p>
         </motion.div>
 
@@ -149,7 +150,7 @@ export default function PortfolioSection() {
                   transition={{ duration: 0.2 }}
                   className="flex items-center space-x-2 text-white font-medium hover:text-cyan-400 transition-colors"
                 >
-                  <span>Xem chi tiết</span>
+                  <span>{t('viewDetails')}</span>
                   <ExternalLink className="w-4 h-4" />
                 </motion.button>
               </div>

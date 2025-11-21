@@ -1,6 +1,6 @@
 import { Code2, Rocket, Zap, Users, ArrowRight } from "lucide-react";
 import { cubicBezier, motion } from "framer-motion";
-
+import { useTranslations } from "next-intl";
 const fadeInUp = {
   hidden: { opacity: 0, y: 60 },
   visible: { 
@@ -25,6 +25,7 @@ const staggerContainer = {
 };
 
 export default function ServicesSection() {
+  const t = useTranslations('services');
   const services = [
     {
       icon: <Code2 className="w-8 h-8" />,
@@ -82,7 +83,7 @@ export default function ServicesSection() {
             transition={{ duration: 0.6, ease: "easeOut" }}
             className="text-4xl font-bold text-white mb-4"
           >
-            Dịch vụ
+            {t('title')}
           </motion.h2>
           <motion.p 
             initial={{ opacity: 0 }}
@@ -91,7 +92,7 @@ export default function ServicesSection() {
             transition={{ delay: 0.2, duration: 0.6 }}
             className="text-slate-400 max-w-2xl mx-auto"
           >
-            Các dịch vụ phát triển phần mềm chuyên nghiệp
+            {t('subtitle')}
           </motion.p>
         </motion.div>
 

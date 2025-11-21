@@ -1,7 +1,7 @@
 import { Facebook, Github, Linkedin, Youtube } from "lucide-react";
 import { cubicBezier, motion } from "framer-motion";
 import { FaTiktok } from "react-icons/fa";
-
+import { useTranslations } from "next-intl";
 const heroStagger = {
     hidden: { opacity: 0 },
     visible: {
@@ -46,7 +46,7 @@ const heroStagger = {
     }
   ]
 export default function HeroSection() {
-   
+   const t = useTranslations('hero');
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 text-center overflow-hidden bg-slate-900" id="hero">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -79,7 +79,7 @@ export default function HeroSection() {
         >
           <motion.div variants={heroItem}>
             <span className="inline-block py-1 px-3 rounded-full bg-slate-800 text-cyan-400 text-sm font-medium mb-6 border border-slate-700 shadow-lg shadow-cyan-500/10">
-              Hello, I&apos;m ready to work
+            {t('badge')}
             </span>
           </motion.div>
           
@@ -87,14 +87,14 @@ export default function HeroSection() {
             variants={heroItem}
             className="text-5xl md:text-8xl font-bold mb-6 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent tracking-tight"
           >
-            Full-Stack Developer
+            {t('role')}
           </motion.h1>
           
           <motion.p 
             variants={heroItem}
             className="text-xl text-slate-400 mb-12 max-w-2xl mx-auto leading-relaxed"
           >
-            Xây dựng những sản phẩm kỹ thuật số tuyệt vời với công nghệ hiện đại, tập trung vào trải nghiệm người dùng và hiệu suất.
+           {t('description')}
           </motion.p>
           
           <motion.div variants={heroItem} className="flex justify-center space-x-6">

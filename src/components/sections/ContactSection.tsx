@@ -1,6 +1,6 @@
 import { Mail, Github, Linkedin, Send } from "lucide-react";
 import { cubicBezier, motion } from "framer-motion";
-
+import { useTranslations } from "next-intl";
 const fadeInUp = {
   hidden: { opacity: 0, y: 60 },
   visible: { 
@@ -61,7 +61,7 @@ export default function ContactSection() {
     borderColor: "rgba(34, 211, 238, 0.6)",
     transition: { duration: 0.2 }
   };
-
+const t = useTranslations('contact');
   return (
     <section id="contact" className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-slate-900 to-slate-950">
       <div className="max-w-4xl mx-auto">
@@ -79,7 +79,7 @@ export default function ContactSection() {
             transition={{ duration: 0.7 }}
             className="text-4xl font-bold text-white mb-4"
           >
-            Liên hệ
+            {t('title')}
           </motion.h2>
           <motion.p 
             initial={{ opacity: 0 }}
@@ -88,7 +88,7 @@ export default function ContactSection() {
             transition={{ delay: 0.2, duration: 0.6 }}
             className="text-slate-400 max-w-2xl mx-auto"
           >
-            Bạn có dự án thú vị? Hãy liên hệ với tôi!
+            {t('subtitle')}
           </motion.p>
         </motion.div>
 
@@ -108,20 +108,20 @@ export default function ContactSection() {
               variants={staggerContainer}
             >
               <motion.div variants={fadeInLeft} className="space-y-2">
-                <label className="block text-slate-300 text-sm font-medium ml-1">Tên của bạn</label>
+                <label className="block text-slate-300 text-sm font-medium ml-1">{t('form.name')}</label>
                 <motion.input
                   whileFocus={inputFocus}
                   type="text"
-                  placeholder="Nguyễn Văn A"
+                  placeholder={t('form.namePlaceholder')}
                   className="w-full px-5 py-4 bg-slate-900/50 border border-slate-700 rounded-xl text-white focus:outline-none transition-colors placeholder:text-slate-600"
                 />
               </motion.div>
               <motion.div variants={fadeInRight} className="space-y-2">
-                <label className="block text-slate-300 text-sm font-medium ml-1">Email</label>
+                <label className="block text-slate-300 text-sm font-medium ml-1">{t('form.email')}</label>
                 <motion.input
                   whileFocus={inputFocus}
                   type="email"
-                  placeholder="email@example.com"
+                  placeholder={t('form.emailPlaceholder')}
                   className="w-full px-5 py-4 bg-slate-900/50 border border-slate-700 rounded-xl text-white focus:outline-none transition-colors placeholder:text-slate-600"
                 />
               </motion.div>
@@ -134,11 +134,11 @@ export default function ContactSection() {
               transition={{ delay: 0.2, duration: 0.6 }}
               className="space-y-2"
             >
-              <label className="block text-slate-300 text-sm font-medium ml-1">Tiêu đề</label>
+              <label className="block text-slate-300 text-sm font-medium ml-1">{t('form.subject')}</label>
               <motion.input
                 whileFocus={inputFocus}
                 type="text"
-                placeholder="Dự án website thương mại điện tử"
+                placeholder={t('form.subjectPlaceholder')}
                 className="w-full px-5 py-4 bg-slate-900/50 border border-slate-700 rounded-xl text-white focus:outline-none transition-colors placeholder:text-slate-600"
               />
             </motion.div>
@@ -150,11 +150,11 @@ export default function ContactSection() {
               transition={{ delay: 0.3, duration: 0.6 }}
               className="space-y-2"
             >
-              <label className="block text-slate-300 text-sm font-medium ml-1">Nội dung</label>
+              <label className="block text-slate-300 text-sm font-medium ml-1">{t('form.message')}</label>
               <motion.textarea
                 whileFocus={inputFocus}
                 rows={5}
-                placeholder="Mô tả chi tiết dự án của bạn..."
+                placeholder={t('form.messagePlaceholder')}
                 className="w-full px-5 py-4 bg-slate-900/50 border border-slate-700 rounded-xl text-white focus:outline-none resize-none transition-colors placeholder:text-slate-600"
               />
             </motion.div>
@@ -169,7 +169,7 @@ export default function ContactSection() {
               className="w-full px-6 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-xl font-bold text-lg shadow-lg transition-all flex items-center justify-center space-x-2"
             >
               <Send className="w-5 h-5" />
-              <span>Gửi tin nhắn</span>
+              <span>{t('form.send')}</span>
             </motion.button>
           </form>
         </motion.div>
