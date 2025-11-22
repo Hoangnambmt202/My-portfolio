@@ -63,9 +63,14 @@ export default function PortfolioSection() {
   };
 
   const projectCard = {
-    hidden: { opacity: 0, y: isMobile ? 20 : 50, rotateX: isMobile ? 0 : -15 },
-    visible: { opacity: 1, y: 0, rotateX: 0, transition: { duration: 0.5, ease: "easeOut" } },
-  };
+  hidden: { opacity: 0, y: isMobile ? 20 : 50, rotateX: isMobile ? 0 : -15 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    rotateX: 0, 
+    transition: { duration: 0.5, ease: cubicBezier(0.25, 0.46, 0.45, 0.94) } 
+  },
+};
 
   return (
     <section id="portfolio" className="py-14 lg:py-24 px-4 sm:px-6 lg:px-8 bg-slate-950">
