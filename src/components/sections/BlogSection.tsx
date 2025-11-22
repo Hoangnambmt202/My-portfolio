@@ -64,21 +64,21 @@ export default function BlogSection() {
   };
 
   return (
-    <section id="blog" className="py-24 px-4 sm:px-6 lg:px-8 bg-slate-900">
-      <div className="max-w-7xl mx-auto">
+    <section id="blog" className="py-14 lg:py-24 px-4 sm:px-6 lg:px-8 bg-slate-900">
+      <div className="max-w-4xl md:max-w-7xl lg:max-w-7xl mx-auto">
         <motion.div 
           initial="hidden"
           whileInView="visible"
           viewport={{ once: false, margin: "-100px", amount: 0.3 }}
           variants={fadeInUp}
-          className="text-center mb-16"
+          className="text-center mb-10 lg:mb-16"
         >
           <motion.h2 
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: false, amount: 0.5 }}
             transition={{ duration: 0.6 }}
-            className="text-4xl font-bold text-white mb-4"
+            className="text-3xl lg:text-4xl font-bold text-white mb-4"
           >
             {t('title')}
           </motion.h2>

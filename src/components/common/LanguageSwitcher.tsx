@@ -1,10 +1,16 @@
 "use client";
-import { useState, useEffect, useRef, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { createPortal } from "react-dom";
-// Thay thế import cũ bằng import từ next-intl
 import { useLocale } from "next-intl";
-import { usePathname, useRouter } from "@/i18n/routing"; // Đảm bảo import từ file routing cấu hình của bạn
+import { usePathname, useRouter } from "@/i18n/routing";
+
+import {
+  useFloating,
+  offset,
+  flip,
+  shift,
+  autoUpdate,
+} from "@floating-ui/react";
 
 interface LanguageSwitcherProps {
   variant?: "dropdown" | "toggle";
@@ -19,15 +25,12 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
   showLabel = true,
   className = "",
 }) => {
-  // Sử dụng hooks của next-intl
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
 
   const [isOpen, setIsOpen] = useState(false);
-  const [portalRoot, setPortalRoot] = useState<Element | null>(null);
-  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const languageInfo = {
     en: { name: "English", nativeName: "English", flag: "ENG" },
@@ -41,9 +44,12 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
     lg: "text-lg px-4 py-3",
   };
 
-  useEffect(() => {
-    setPortalRoot(document.body);
-  }, []);
+  // Floating UI — xử lý dropdown theo đúng vị trí nút
+  const { refs, floatingStyles } = useFloating({
+    placement: "left-start",
+    middleware: [offset(8), flip(), shift()],
+    whileElementsMounted: autoUpdate,
+  });
 
   const handleLanguageChange = (newLocale: string) => {
     if (newLocale !== locale) {
@@ -53,8 +59,6 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
       });
     }
   };
-
-  // Phần Render giữ nguyên (chỉ sửa prop disabled thành isPending)
 
   // Toggle variant
   if (variant === "toggle") {
@@ -85,9 +89,9 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
 
   return (
     <div className={`relative ${className}`}>
-      {/* Trigger Button */}
+      {/* Button */}
       <button
-        ref={buttonRef}
+        ref={refs.setReference}
         onClick={() => setIsOpen(!isOpen)}
         disabled={isPending}
         className={`${sizeClasses[size]} bg-white border border-gray-300 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 flex items-center space-x-2 disabled:opacity-50`}
@@ -115,79 +119,65 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
         </motion.svg>
       </button>
 
-      {/* Dropdown in Portal */}
-      {portalRoot &&
-        createPortal(
-          <AnimatePresence>
-            {isOpen && (
-              <>
-                <div
-                  className="fixed inset-0 z-[9998]"
-                  onClick={() => setIsOpen(false)}
-                />
-                <motion.div
-                  initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                  transition={{ duration: 0.15 }}
-                  className="absolute bg-white border border-gray-200 rounded-lg shadow-lg z-[9999] w-[160px]"
-                  style={{
-                    position: "absolute",
-                    top:
-                      (buttonRef.current?.getBoundingClientRect().bottom ?? 0) +
-                      window.scrollY +
-                      8,
-                    left:
-                      (buttonRef.current?.getBoundingClientRect().right ?? 0) -
-                      160 +
-                      window.scrollX,
-                  }}
+      {/* Dropdown — Floating UI */}
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            {/* Overlay */}
+            <div
+              onClick={() => setIsOpen(false)}
+              className="fixed inset-0 z-[998]"
+            />
+
+            {/* Menu */}
+            <motion.div
+              ref={refs.setFloating}
+              style={floatingStyles}
+              initial={{ opacity: 0, y: -8, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -8, scale: 0.95 }}
+              transition={{ duration: 0.18 }}
+              className="z-[999] w-[160px] bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden"
+            >
+              {availableLocales.map((lang) => (
+                <button
+                  key={lang}
+                  onClick={() => handleLanguageChange(lang)}
+                  className={`w-full px-4 py-3 flex items-center text-left transition-colors ${
+                    locale === lang
+                      ? "bg-blue-50 text-blue-600"
+                      : "text-gray-700 hover:bg-gray-50"
+                  }`}
                 >
-                  {availableLocales.map((lang) => (
-                    <button
-                      key={lang}
-                      onClick={() => handleLanguageChange(lang)}
-                      disabled={isPending}
-                      className={`w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors duration-150 flex items-center space-x-3 disabled:opacity-50 ${
-                        locale === lang
-                          ? "bg-blue-50 text-blue-600"
-                          : "text-gray-700"
-                      } ${lang === availableLocales[0] ? "rounded-t-lg" : ""} ${
-                        lang === availableLocales[availableLocales.length - 1]
-                          ? "rounded-b-lg"
-                          : ""
-                      }`}
+                  <span className="text-lg">{languageInfo[lang].flag}</span>
+                  <div className="ml-3">
+                    <div className="font-medium">
+                      {languageInfo[lang].nativeName}
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      {languageInfo[lang].name}
+                    </div>
+                  </div>
+
+                  {locale === lang && (
+                    <svg
+                      className="w-4 h-4 ml-auto text-blue-600"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
                     >
-                      <span className="text-lg">{languageInfo[lang].flag}</span>
-                      <div className="flex flex-col">
-                        <span className="font-medium">
-                          {languageInfo[lang].nativeName}
-                        </span>
-                        <span className="text-xs text-gray-500">
-                          {languageInfo[lang].name}
-                        </span>
-                      </div>
-                      {locale === lang && (
-                        <svg
-                          className="w-4 h-4 ml-auto text-blue-600"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      )}
-                    </button>
-                  ))}
-                </motion.div>
-              </>
-            )}
-          </AnimatePresence>,
-          portalRoot
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0001.414-1.414L8 12.586l7.293-7.293a1 1 001.414 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  )}
+                </button>
+              ))}
+            </motion.div>
+          </>
         )}
+      </AnimatePresence>
     </div>
   );
 };

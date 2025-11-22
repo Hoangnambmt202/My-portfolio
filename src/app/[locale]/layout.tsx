@@ -8,7 +8,7 @@ import { getMessages } from "next-intl/server";
 export const metadata: Metadata = {
   title: "My Portfolio",
   description: "Personal portfolio website showcasing my projects and skills",
-   viewport: "width=device-width, initial-scale=1",
+
 };
 
 type Props = {

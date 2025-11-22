@@ -70,7 +70,7 @@ export default function HeroSection() {
         />
       </div>
 
-      <div className="max-w-7xl mx-auto relative z-10">
+      <div className="max-w-4xl md:max-w-7xl lg:max-w-7xl mx-auto relative z-10">
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -78,14 +78,14 @@ export default function HeroSection() {
           variants={heroStagger}
         >
           <motion.div variants={heroItem}>
-            <span className="inline-block py-1 px-3 rounded-full bg-slate-800 text-cyan-400 text-sm font-medium mb-6 border border-slate-700 shadow-lg shadow-cyan-500/10">
+            <span className="inline-block py-1 px-3 rounded-full text-gradient text-sm font-medium mb-6 border border-slate-700 shadow-lg shadow-cyan-500/10">
             {t('badge')}
             </span>
           </motion.div>
           
           <motion.h1 
             variants={heroItem}
-            className="text-5xl md:text-8xl font-bold mb-6 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent tracking-tight"
+            className="text-5xl md:text-8xl font-bold mb-6 text-gradient tracking-tight"
           >
             {t('role')}
           </motion.h1>

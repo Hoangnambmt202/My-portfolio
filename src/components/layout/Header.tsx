@@ -7,9 +7,10 @@ import { useTranslations } from "next-intl";
 import { LanguageSwitcher } from "@/components/common/LanguageSwitcher"; // Import component đã sửa
 
 export default function Header() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const t = useTranslations('nav'); // Namespace 'nav'
+  const t = useTranslations("nav"); // Namespace 'nav'
 
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
@@ -19,20 +20,18 @@ export default function Header() {
   });
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    document.body.style.overflow = mobileMenuOpen ? "hidden" : "auto";
+  }, [mobileMenuOpen]);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const menuItems = [
-    { name: t('portfolio'), href: "#portfolio" },
-    { name: t('services'), href: "#services" },
-    { name: t('blog'), href: "#blog" },
-    { name: t('contact'), href: "#contact" },
+    { name: t("portfolio"), href: "#portfolio" },
+    { name: t("services"), href: "#services" },
+    { name: t("blog"), href: "#blog" },
+    { name: t("contact"), href: "#contact" },
   ];
 
   return (
@@ -45,11 +44,13 @@ export default function Header() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-20">
         {/* Logo */}
-        <Link href="/" onClick={scrollToTop} className="flex items-center space-x-2 group cursor-pointer">
+        <Link
+          href=""
+          onClick={scrollToTop}
+          className="flex items-center space-x-2 group cursor-pointer"
+        >
           <Terminal className="w-8 h-8 text-cyan-400 group-hover:rotate-12 transition-transform duration-300" />
-          <span className="text-2xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
-            Nam DATA
-          </span>
+          <span className="text-2xl font-bold text-gradient">Nam DATA</span>
         </Link>
 
         {/* Desktop menu */}
@@ -63,7 +64,7 @@ export default function Header() {
               {item.name}
             </a>
           ))}
-          
+
           {/* Nút chuyển đổi ngôn ngữ */}
           <div className="ml-2">
             <LanguageSwitcher size="sm" variant="dropdown" showLabel={false} />
@@ -71,7 +72,7 @@ export default function Header() {
 
           <button className="ml-4 px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg font-medium hover:scale-105 transition-transform shadow-lg shadow-cyan-500/20">
             <Phone className="inline w-4 h-4 mr-2" />
-            {t('phone')}
+            {t("phone")}
           </button>
         </nav>
 
@@ -82,14 +83,18 @@ export default function Header() {
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="p-2 text-slate-300 hover:text-cyan-400 transition-colors"
           >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {mobileMenuOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
           </button>
         </div>
       </div>
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-slate-900/98 border-t border-cyan-500/20 py-6 px-4 absolute top-20 left-0 right-0 shadow-2xl">
+        <div className="md:hidden bg-slate-900/98 border-t border-cyan-500/20 py-6 px-4 absolute top-full left-0 right-0 shadow-2xl">
           {menuItems.map((item) => (
             <a
               key={item.name}

@@ -122,7 +122,7 @@ export default function Footer() {
 
       {/* COPYRIGHT */}
       <div className="text-center text-slate-500 text-sm mt-10 border-t border-slate-800 pt-6">
-        {t('copyright')} © {year} {t('allRightsReserved')}
+        {t('copyright')} © {year}
       </div>
     </motion.footer>
   );
