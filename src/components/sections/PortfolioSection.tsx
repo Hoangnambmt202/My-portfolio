@@ -97,7 +97,7 @@ export default function PortfolioSection() {
         </motion.div>
 
         <motion.div 
-          className="grid md:grid-cols-2 gap-8"
+          className="grid md:grid-cols-3 lg:grid-cols-4 gap-8 items-stretch"
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
@@ -111,7 +111,7 @@ export default function PortfolioSection() {
               transition={{ duration: 0.3 }}
               className="group bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 hover:border-slate-600 transition-colors shadow-xl hover:shadow-2xl hover:shadow-cyan-500/10"
             >
-              <div className={`w-full h-56 bg-gradient-to-br ${p.color} flex items-center justify-center relative overflow-hidden`}>
+              <div className={`w-full aspect-[4/3] bg-gradient-to-br ${p.color} flex items-center justify-center relative overflow-hidden`}>
                 <motion.div
                   initial={{ scale: 1, rotate: 0 }}
                   whileHover={{ scale: 1.3, rotate: 20 }}
