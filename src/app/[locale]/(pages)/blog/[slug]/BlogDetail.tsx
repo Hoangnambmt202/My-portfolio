@@ -4,21 +4,19 @@ import { motion, AnimatePresence } from "framer-motion";
 import { PortableText } from "@portabletext/react";
 import { Link } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
-
-import { BlogPost } from "@/lib/types/blog";
+import Image from "next/image";
+import { Post } from "@/types/post";
+import { urlFor } from "@/sanity/lib/sanityImageUrl";
 
 interface BlogDetailProps {
-  post: BlogPost;
-  relatedPosts: BlogPost[];
-
+  post: Post;
 }
 
-export default function BlogDetail({ post, relatedPosts }: BlogDetailProps) {
- const t = useTranslations('blog');
-  const tCommon = useTranslations('common');
+export default function BlogDetail({ post }: BlogDetailProps) {
+  const t = useTranslations("blog");
+  const tCommon = useTranslations("common");
 
-
-const handleBackClick = () => {
+  const handleBackClick = () => {
     // setLoading(true, `${t('loading')}...`);
   };
 
@@ -28,7 +26,7 @@ const handleBackClick = () => {
   // const formatDate = (dateString: string) => {
   //   if (!dateString) return "";
   //   return new Date(dateString).toLocaleDateString(locale, {
-  //      year: 'numeric', month: 'long', day: 'numeric' 
+  //      year: 'numeric', month: 'long', day: 'numeric'
   //   });
   // };
 
@@ -42,8 +40,8 @@ const handleBackClick = () => {
           transition={{ duration: 0.5 }}
           className="mb-8 pt-8"
         >
-         <Link
-            href="/blog" // Link tự động handle locale
+          <Link
+            href="/"
             onClick={handleBackClick}
             className="inline-flex items-center text-cyan-400 hover:text-cyan-300 transition-colors group"
           >
@@ -62,7 +60,7 @@ const handleBackClick = () => {
                 d="M15 19l-7-7 7-7"
               />
             </motion.svg>
-            <span className="group-hover:underline">{tCommon('back')}</span>
+            <span className="group-hover:underline">{tCommon("back")}</span>
           </Link>
         </motion.div>
 
@@ -74,7 +72,18 @@ const handleBackClick = () => {
           className="bg-white rounded-lg shadow-lg overflow-hidden mb-12"
         >
           <div className="h-64 md:h-96 bg-gray-200 flex items-center justify-center">
-            <span className="text-gray-500">Featured Image</span>
+            {/* Image */}
+            {post.image ? (
+              <Image
+                src={urlFor(post.image).width(1200).height(800).url()}
+                alt={post.title}
+                width={800}
+                height={600}
+                className="object-cover w-full h-full"
+              />
+            ) : (
+              <div className="text-gray-500">No Image Available</div>
+            )}
           </div>
 
           <div className="p-8">
@@ -89,12 +98,18 @@ const handleBackClick = () => {
               <span>•</span>
               <span>
                 {t("publishedOn")}{" "}
-                {post.publishedAt ? new Date(post.publishedAt).toISOString().slice(0, 10) : ""}
+                {post.publishedAt
+                  ? new Date(post.publishedAt).toISOString().slice(0, 10)
+                  : ""}
               </span>
               <span>•</span>
-              <span>{post.readingTime} {t("readingTime")}</span>
+              <span>
+                {post.readTime} {t("readTime")}
+              </span>
               <span>•</span>
-              <span>{post.views ?? 0} {t("views")}</span>
+              <span>
+                {post.views ?? 0} {t("views")}
+              </span>
             </div>
 
             {/* Title */}
@@ -103,7 +118,7 @@ const handleBackClick = () => {
             </h1>
 
             {/* Tags */}
-            {post.tags?.length > 0 && (
+            {/* {post.tags?.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-8">
                 {post.tags.map((tag: string, i: number) => (
                   <span
@@ -114,7 +129,7 @@ const handleBackClick = () => {
                   </span>
                 ))}
               </div>
-            )}
+            )} */}
 
             {/* Content */}
             <div className="prose prose-lg max-w-none">
@@ -124,53 +139,7 @@ const handleBackClick = () => {
         </motion.article>
 
         {/* Related posts */}
-        <AnimatePresence>
-          {relatedPosts.length > 0 && (
-            <motion.section
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.9, duration: 0.5 }}
-              className="mb-12"
-            >
-              <h2 className="text-2xl font-bold text-white mb-8">
-              {t("relatedPosts")}
-              </h2>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {relatedPosts.map((rp, i) => (
-                  <motion.div
-                    key={rp._id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 1 + i * 0.1, duration: 0.5 }}
-                  >
-                    <Link
-                      href={`/blog/${rp.slug}`}
-                      // onClick={() => handleRelatedPostClick(rp.title)}
-                      className="bg-white rounded-lg shadow-lg block hover:shadow-xl transition"
-                    >
-                      <div className="h-32 bg-gray-200 flex items-center justify-center">
-                        <span className="text-gray-500 text-sm">Image</span>
-                      </div>
-                      <div className="p-4">
-                        <h3 className="font-bold text-gray-800 mb-2 line-clamp-2 hover:text-blue-600 transition-colors">
-                          {rp.title}
-                        </h3>
-                        <p className="text-gray-600 text-sm line-clamp-2 mb-3">
-                          {rp.excerpt}
-                        </p>
-                        <div className="flex items-center text-xs text-gray-500">
-                          <span>{rp.readingTime} {t("readingTime")}</span>
-                          <span className="mx-2">•</span>
-                          <span>{rp.views ?? 0} {t("views")}</span>
-                        </div>
-                      </div>
-                    </Link>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.section>
-          )}
-        </AnimatePresence>
+        <AnimatePresence></AnimatePresence>
       </div>
     </div>
   );

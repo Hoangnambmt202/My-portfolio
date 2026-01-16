@@ -7,7 +7,6 @@ import { useTranslations } from "next-intl";
 import { LanguageSwitcher } from "@/components/common/LanguageSwitcher"; // Import component đã sửa
 
 export default function Header() {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const t = useTranslations("nav"); // Namespace 'nav'
@@ -21,6 +20,16 @@ export default function Header() {
 
   useEffect(() => {
     document.body.style.overflow = mobileMenuOpen ? "hidden" : "auto";
+    document.addEventListener("scroll", () => {
+      if(window.scrollY === 0 && !mobileMenuOpen) {
+        setScrolled(false);
+        return;
+      }
+      else {
+        setScrolled(true);
+      }
+     
+    })
   }, [mobileMenuOpen]);
 
   const scrollToTop = () => {
@@ -50,7 +59,7 @@ export default function Header() {
           className="flex items-center space-x-2 group cursor-pointer"
         >
           <Terminal className="w-8 h-8 text-cyan-400 group-hover:rotate-12 transition-transform duration-300" />
-          <span className="text-2xl font-bold text-gradient">Nam DATA</span>
+          <span className="text-2xl font-bold text-gradient">CoderToData</span>
         </Link>
 
         {/* Desktop menu */}

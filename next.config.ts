@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
       "cdn.pixabay.com",
       "i.imgur.com",
       "lh3.googleusercontent.com",
+      "cdn.sanity.io",
     ],
   },
 };

@@ -1,36 +1,28 @@
-import { client } from "@/lib/sanity/sanity";
-import { singlePostQuery } from "@/lib/sanity/queries";
+import { sanityFetch } from "@/sanity/lib/live";
+import { POST_DETAIL_QUERY } from "@/sanity/lib/queries";
 import { notFound } from "next/navigation";
 import BlogDetail from "./BlogDetail";
-import { setRequestLocale } from 'next-intl/server';
-export const dynamic = "force-dynamic";
 
 type Props = {
-  params: Promise<{ slug: string; locale: string }>;
+  params: Promise<{
+    locale: string;
+    slug: string;
+  }>;
 };
-export default async function BlogDetailPage({ params }: Props) {
-  const { slug, locale } = await params;
-  // 2. Set locale cho server component
-  setRequestLocale(locale);
 
-  const post = await client.fetch(singlePostQuery, { slug });
+
+export const dynamic = "force-dynamic";
+
+export default async function BlogDetailPage({ params }: Props) {
+  const { slug } = await params;
+  const { data: post } = await sanityFetch({
+    query: POST_DETAIL_QUERY,
+    params: { slug },
+  });
 
   if (!post) {
     notFound();
   }
 
-  const relatedPosts = await client.fetch(
-    `*[_type == "post" && slug.current != $slug][0..2]{
-      _id, 
-      title, 
-      "slug": slug.current, 
-      excerpt, 
-      publishedAt,
-      "readingTime": round(length(pt::text(content)) / 5 / 180),
-      views
-    }`,
-    { slug }
-  );
-
-  return <BlogDetail post={post} relatedPosts={relatedPosts} />;
+  return <BlogDetail post={post} />;
 }

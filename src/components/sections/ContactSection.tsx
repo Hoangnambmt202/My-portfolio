@@ -1,3 +1,4 @@
+'use client'
 import { Mail, Github, Linkedin, Send } from "lucide-react";
 import { cubicBezier, motion } from "framer-motion";
 import { useTranslations } from "next-intl";
@@ -196,7 +197,7 @@ export default function ContactSection() {
           whileInView="visible"
           viewport={{ once: true, margin: "-80px" }}
           variants={staggerContainer}
-          className="mt-16 flex flex-col justify-center gap-8 "
+          className="mt-16  flex-col md:flex justify-center gap-8 "
         >
           {[
             { Icon: Mail, label: "Email", value: "nam23062002@gmail.com" },

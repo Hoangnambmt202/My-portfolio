@@ -1,3 +1,5 @@
+import BackToTopButton from "@/components/common/BackToTopButton";
+import { SanityLive } from "@/sanity/lib/live";
 import "@/styles/globals.css";
 import type { Metadata } from "next";
 import { Inter, Poppins, Roboto } from "next/font/google";
@@ -35,6 +37,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <body className="bg-[#202020] min-h-screen">
         {children}
+      <BackToTopButton/>
+      <SanityLive />
       </body>
     </html>
   );

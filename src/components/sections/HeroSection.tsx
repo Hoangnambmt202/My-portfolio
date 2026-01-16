@@ -1,3 +1,4 @@
+'use client'
 import { Facebook, Github, Linkedin, Youtube } from "lucide-react";
 import { cubicBezier, motion } from "framer-motion";
 import { FaTiktok } from "react-icons/fa";
