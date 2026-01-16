@@ -13,7 +13,7 @@ export interface Post {
   category?: string;
   date?: string;
   image?: SanityImageSource;
-  readTime?: string;
+  readingTime?: string;
   slug: {
     current: string;
   };

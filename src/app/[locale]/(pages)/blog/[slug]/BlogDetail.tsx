@@ -104,7 +104,7 @@ export default function BlogDetail({ post }: BlogDetailProps) {
               </span>
               <span>•</span>
               <span>
-                {post.readTime} {t("readTime")}
+                {post.readingTime} {t("readingTime")}
               </span>
               <span>•</span>
               <span>

@@ -24,7 +24,7 @@ export const POST_DETAIL_QUERY = `
   body,
   excerpt,
   publishedAt,
-  readTime,
+  readingTime,
   views,
   tags,
   slug,

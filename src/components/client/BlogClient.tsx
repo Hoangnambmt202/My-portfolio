@@ -132,7 +132,7 @@ export default function BlogClient({ posts }: { posts: Post[] }) {
               <div className="flex items-center justify-between pt-4 border-t border-slate-700/50 mt-auto">
                 <span className="text-slate-500 text-sm flex items-center space-x-1">
                   <BookOpen className="w-3 h-3" />
-                  <span>{post.readTime}</span>
+                  <span>{post.readingTime}</span>
                 </span>
                 <motion.div
                   className="text-cyan-400 hover:text-cyan-300 transition-colors text-sm font-medium flex items-center gap-1"
