@@ -1,72 +1,81 @@
-'use client'
+"use client";
 import { Facebook, Github, Linkedin, Youtube } from "lucide-react";
 import { cubicBezier, motion } from "framer-motion";
 import { FaTiktok } from "react-icons/fa";
 import { useTranslations } from "next-intl";
 const heroStagger = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.25 },
-    }
-  };
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.25 },
+  },
+};
 
-  const heroItem = {
-    hidden: { opacity: 0, y: 50 },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
-      transition: { 
-        duration: 0.9, 
-        ease: cubicBezier(0.25, 0.46, 0.45, 0.94),
-      } 
-    }
-  };
+const heroItem = {
+  hidden: { opacity: 0, y: 50 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.9,
+      ease: cubicBezier(0.25, 0.46, 0.45, 0.94),
+    },
+  },
+};
 
-  const socialList = [
-    {
-      Icon: Github,
-      href: "http://github.com/Hoangnambmt202",
-
-    },
-    {
-      Icon: Linkedin,
-      href: "https://www.linkedin.com/in/pham-ngoc-hoang-nam",
-    },
-    {
-      Icon: Facebook,
-      href: "https://www.facebook.com/pham.ngoc.hoang.nam",
-    },
-    {
-      Icon: Youtube,
-      href: "https://www.youtube.com/@CoderToData",
-    },
-    {
-      Icon: FaTiktok,
-      href: "https://www.tiktok.com/@codertodata",
-    }
-  ]
+const socialList = [
+  {
+    Icon: Github,
+    href: "http://github.com/Hoangnambmt202",
+  },
+  {
+    Icon: Linkedin,
+    href: "https://www.linkedin.com/in/pham-ngoc-hoang-nam",
+  },
+  {
+    Icon: Facebook,
+    href: "https://www.facebook.com/pham.ngoc.hoang.nam",
+  },
+  {
+    Icon: Youtube,
+    href: "https://www.youtube.com/@CoderToData",
+  },
+  {
+    Icon: FaTiktok,
+    href: "https://www.tiktok.com/@codertodata",
+  },
+];
 export default function HeroSection() {
-   const t = useTranslations('hero');
+  const t = useTranslations("hero");
   return (
-    <section className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 text-center overflow-hidden bg-slate-900" id="hero">
+    <section
+      className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 text-center overflow-hidden bg-slate-900"
+      id="hero"
+    >
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div 
-          animate={{ 
+        <motion.div
+          animate={{
             scale: [1, 1.2, 1],
             rotate: [0, 90, 0],
-            opacity: [0.1, 0.2, 0.1] 
+            opacity: [0.1, 0.2, 0.1],
           }}
           transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+          style={{ willChange: "transform" }}
           className="absolute -top-40 -right-40 w-96 h-96 bg-purple-500 rounded-full blur-3xl opacity-20"
         />
-        <motion.div 
-          animate={{ 
+        <motion.div
+          animate={{
             scale: [1, 1.5, 1],
             rotate: [0, -90, 0],
-            opacity: [0.1, 0.2, 0.1] 
+            opacity: [0.1, 0.2, 0.1],
           }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear", delay: 1 }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "linear",
+            delay: 1,
+          }}
+          style={{ willChange: "transform" }}
           className="absolute top-40 -left-40 w-72 h-72 bg-cyan-500 rounded-full blur-3xl opacity-20"
         />
       </div>
@@ -75,30 +84,33 @@ export default function HeroSection() {
         <motion.div
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: false, amount: 0.3 }}
+          viewport={{ once: true, amount: 0.3 }}
           variants={heroStagger}
         >
           <motion.div variants={heroItem}>
             <span className="inline-block py-1 px-3 rounded-full text-gradient text-sm font-medium mb-6 border border-slate-700 shadow-lg shadow-cyan-500/10">
-            {t('badge')}
+              {t("badge")}
             </span>
           </motion.div>
-          
-          <motion.h1 
+
+          <motion.h1
             variants={heroItem}
             className="text-5xl md:text-8xl font-bold mb-6 text-gradient tracking-tight"
           >
-            {t('role')}
+            {t("role")}
           </motion.h1>
-          
-          <motion.p 
+
+          <motion.p
             variants={heroItem}
             className="text-xl text-slate-400 mb-12 max-w-2xl mx-auto leading-relaxed"
           >
-           {t('description')}
+            {t("description")}
           </motion.p>
-          
-          <motion.div variants={heroItem} className="flex justify-center space-x-6">
+
+          <motion.div
+            variants={heroItem}
+            className="flex justify-center space-x-6"
+          >
             {socialList.map((item, index) => (
               <motion.a
                 key={index}

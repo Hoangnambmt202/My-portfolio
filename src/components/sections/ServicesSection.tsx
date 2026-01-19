@@ -86,14 +86,14 @@ export default function ServicesSection() {
         <motion.div
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: false, margin: "-100px", amount: 0.3 }}
+          viewport={{ once: true, margin: "-100px", amount: 0.3 }}
           variants={fadeInUp}
           className="text-center mb-8 lg:mb-16"
         >
           <motion.h2
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: false, amount: 0.5 }}
+            viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             className=" text-3xl lg:text-4xl font-bold text-white mb-2 lg:mb-4"
           >
@@ -102,7 +102,7 @@ export default function ServicesSection() {
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            viewport={{ once: false, amount: 0.5 }}
+            viewport={{ once: true, amount: 0.5 }}
             transition={{ delay: 0.2, duration: 0.6 }}
             className="text-slate-400 max-w-2xl mx-auto"
           >
@@ -116,7 +116,7 @@ export default function ServicesSection() {
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: false, margin: "-80px", amount: 0.2 }}
+          viewport={{ once: true, margin: "-50px", amount: 0.1 }}
         >
           {services.map((s, i) => (
             <motion.div
@@ -144,20 +144,13 @@ export default function ServicesSection() {
               </p>
               <ul className="space-y-1 sm:space-y-2">
                 {s.features.map((f, idx) => (
-                  <motion.li
+                  <li
                     key={idx}
-                    initial={{ opacity: 0, x: isMobile ? 0 : -15 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: false, amount: 0.5 }}
-                    transition={{
-                      delay: isMobile ? 0 : idx * 0.08,
-                      duration: 0.4,
-                    }}
-                    className="flex items-center space-x-2 text-slate-300 text-sm sm:text-base"
+                    className="flex items-center space-x-2 text-slate-300 text-sm sm:text-base group/item"
                   >
-                    <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 text-cyan-400" />
+                    <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 text-cyan-400 group-hover/item:translate-x-1 transition-transform" />
                     <span>{f}</span>
-                  </motion.li>
+                  </li>
                 ))}
               </ul>
             </motion.div>

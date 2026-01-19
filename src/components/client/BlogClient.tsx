@@ -7,6 +7,7 @@ import { Link } from "@/i18n/routing";
 import Image from "next/image";
 import { Post } from "@/types/post";
 import { urlFor } from "@/sanity/lib/sanityImageUrl";
+import { formatDate } from "@/lib/utils";
 const fadeInUp = {
   hidden: { opacity: 0, y: 60 },
   visible: {
@@ -31,7 +32,6 @@ const staggerFastContainer = {
 };
 export default function BlogClient({ posts }: { posts: Post[] }) {
   const t = useTranslations("blog");
-
   const blogCard = {
     hidden: { opacity: 0, x: -60, scale: 0.9 },
     visible: {
@@ -54,14 +54,14 @@ export default function BlogClient({ posts }: { posts: Post[] }) {
         <motion.div
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: false, margin: "-100px", amount: 0.3 }}
+          viewport={{ once: true, margin: "-100px", amount: 0.3 }}
           variants={fadeInUp}
           className="text-center mb-10 lg:mb-16"
         >
           <motion.h2
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: false, amount: 0.5 }}
+            viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.6 }}
             className="text-3xl lg:text-4xl font-bold text-white mb-4"
           >
@@ -70,7 +70,7 @@ export default function BlogClient({ posts }: { posts: Post[] }) {
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            viewport={{ once: false, amount: 0.5 }}
+            viewport={{ once: true, amount: 0.5 }}
             transition={{ delay: 0.2, duration: 0.6 }}
             className="text-slate-400 max-w-2xl mx-auto"
           >
@@ -83,7 +83,7 @@ export default function BlogClient({ posts }: { posts: Post[] }) {
           variants={staggerFastContainer}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: false, margin: "-80px", amount: 0.2 }}
+          viewport={{ once: true, margin: "-80px", amount: 0.2 }}
         >
           {posts.map((post: Post, i: number) => (
             <motion.div
@@ -94,52 +94,50 @@ export default function BlogClient({ posts }: { posts: Post[] }) {
               className="group bg-slate-800/30 backdrop-blur-sm rounded-2xl p-6 border border-slate-700/50 hover:border-cyan-500/50 transition-colors cursor-pointer hover:bg-slate-800/80 flex flex-col hover:shadow-xl hover:shadow-cyan-500/10"
             >
               <div className="flex items-center justify-between mb-4">
-                <motion.span
-                  initial={{ scale: 0 }}
-                  whileInView={{ scale: 1 }}
-                  viewport={{ once: false, amount: 0.5 }}
-                  transition={{
-                    delay: i * 0.1 + 0.3,
-                    type: "spring",
-                    stiffness: 200,
-                  }}
-                  className="px-3 py-1 bg-cyan-500/10 text-cyan-400 rounded-full text-xs font-bold border border-cyan-500/20"
-                >
+                <span className="px-3 py-1 bg-cyan-500/10 text-cyan-400 rounded-full text-xs font-bold border border-cyan-500/20">
                   {post.category || "Chưa có danh mục"}
-                </motion.span>
+                </span>
                 <span className="text-slate-500 text-sm flex items-center space-x-1">
                   <Calendar className="w-3 h-3" />
-                  <span>{post.publishedAt}</span>
+                  <span>{formatDate(post.publishedAt)}</span>
                 </span>
               </div>
 
-            <div className="overflow-hidden rounded-lg mb-4">
-              <Image
-                src={urlFor(post.image).width(400).height(300).url()}
-                alt={post.title}
-                width={100}
-                height={100}
-                className="w-full h-48 object-cover"
-              />
-              <h3 className="text-xl font-bold text-cyan-400 hover:text-cyan-300 text-center group-hover:text-cyan-400 transition-colors line-clamp-2 mt-2">
-                {post.title}
-              </h3>
-            </div>
+              <div className="overflow-hidden rounded-lg mb-4">
+                {post.image && (
+                  <Image
+                    src={urlFor(post.image).width(400).height(300).url()}
+                    alt={post.title}
+                    width={400}
+                    height={300}
+                    className="w-full h-48 object-cover"
+                  />
+                )}
+
+                <h3 className="text-xl font-bold text-cyan-400 hover:text-cyan-300 text-center group-hover:text-cyan-400 transition-colors line-clamp-2 mt-2">
+                  {post.title}
+                </h3>
+              </div>
               <p className="text-slate-400 mb-4 line-clamp-3 text-sm flex-grow">
-                {post.description || "Chưa có mô tả cho bài viết này."}
+                {post.excerpt || "Chưa có mô tả cho bài viết này."}
               </p>
 
               <div className="flex items-center justify-between pt-4 border-t border-slate-700/50 mt-auto">
                 <span className="text-slate-500 text-sm flex items-center space-x-1">
                   <BookOpen className="w-3 h-3" />
-                  <span>{post.readingTime}</span>
+                  <span>
+                    {post.readTime ? `${post.readTime} phút` : "Không giới hạn"}
+                  </span>
                 </span>
                 <motion.div
                   className="text-cyan-400 hover:text-cyan-300 transition-colors text-sm font-medium flex items-center gap-1"
                   whileHover={{ x: 5 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Link href={`/blog/${post?.slug?.current}`} className="flex gap-2 items-center">
+                  <Link
+                    href={`/blog/${post?.slug?.current}`}
+                    className="flex gap-2 items-center"
+                  >
                     {t("readMore")} <ArrowRight className="w-3 h-3" />
                   </Link>
                 </motion.div>

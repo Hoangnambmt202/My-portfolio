@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { Mail, Github, Linkedin, Send } from "lucide-react";
 import { cubicBezier, motion } from "framer-motion";
 import { useTranslations } from "next-intl";
@@ -72,14 +72,14 @@ export default function ContactSection() {
         <motion.div
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: false, margin: "-100px", amount: 0.3 }}
+          viewport={{ once: true, margin: "-100px", amount: 0.3 }}
           variants={fadeInUp}
           className="text-center mb-10 lg:mb-16"
         >
           <motion.h2
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.5 }}
+            viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.7 }}
             className="text-3xl lg:text-4xl font-bold text-white mb-4"
           >
@@ -88,7 +88,7 @@ export default function ContactSection() {
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            viewport={{ once: false, amount: 0.5 }}
+            viewport={{ once: true, amount: 0.5 }}
             transition={{ delay: 0.2, duration: 0.6 }}
             className="text-slate-400 max-w-2xl mx-auto"
           >
@@ -99,7 +99,7 @@ export default function ContactSection() {
         <motion.div
           initial={{ opacity: 0, scale: 0.9, y: 40 }}
           whileInView={{ opacity: 1, scale: 1, y: 0 }}
-          viewport={{ once: false, margin: "-80px", amount: 0.3 }}
+          viewport={{ once: true, margin: "-80px", amount: 0.3 }}
           transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
           className="bg-slate-800/40 backdrop-blur-xl rounded-3xl p-4 lg:p-8 md:p-12 border border-slate-700/50 shadow-2xl"
         >
@@ -108,7 +108,7 @@ export default function ContactSection() {
               className="grid md:grid-cols-2 gap-6"
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: false, amount: 0.5 }}
+              viewport={{ once: true, amount: 0.5 }}
               variants={staggerContainer}
             >
               <motion.div variants={fadeInLeft} className="space-y-2">
@@ -138,7 +138,7 @@ export default function ContactSection() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, amount: 0.5 }}
+              viewport={{ once: true, amount: 0.5 }}
               transition={{ delay: 0.2, duration: 0.6 }}
               className="space-y-2"
             >
@@ -229,7 +229,9 @@ export default function ContactSection() {
                 <item.Icon className="w-6 h-6 text-slate-400 group-hover:text-cyan-400 transition-colors" />
               </a>
               <p className="text-slate-400 text-sm">{item.label}</p>
-              <span className="text-white font-medium underline ">{item.value}</span>
+              <span className="text-white font-medium underline ">
+                {item.value}
+              </span>
             </motion.div>
           ))}
         </motion.div>

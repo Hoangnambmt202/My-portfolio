@@ -7,6 +7,8 @@ import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { Post } from "@/types/post";
 import { urlFor } from "@/sanity/lib/sanityImageUrl";
+import { portableTextComponents } from "@/components/elements/portableTextComponents";
+import { formatDate } from "@/lib/utils";
 
 interface BlogDetailProps {
   post: Post;
@@ -16,18 +18,8 @@ export default function BlogDetail({ post }: BlogDetailProps) {
   const t = useTranslations("blog");
   const tCommon = useTranslations("common");
 
-  const handleBackClick = () => {
-    // setLoading(true, `${t('loading')}...`);
-  };
+  // const handleBackClick = () => {
 
-  // const handleRelatedPostClick = (postTitle: string) => {
-  //   setLoading(true, `${t('loading')} "${postTitle}"...`);
-  // };
-  // const formatDate = (dateString: string) => {
-  //   if (!dateString) return "";
-  //   return new Date(dateString).toLocaleDateString(locale, {
-  //      year: 'numeric', month: 'long', day: 'numeric'
-  //   });
   // };
 
   return (
@@ -42,7 +34,6 @@ export default function BlogDetail({ post }: BlogDetailProps) {
         >
           <Link
             href="/"
-            onClick={handleBackClick}
             className="inline-flex items-center text-cyan-400 hover:text-cyan-300 transition-colors group"
           >
             <motion.svg
@@ -97,14 +88,12 @@ export default function BlogDetail({ post }: BlogDetailProps) {
               )}
               <span>•</span>
               <span>
-                {t("publishedOn")}{" "}
-                {post.publishedAt
-                  ? new Date(post.publishedAt).toISOString().slice(0, 10)
-                  : ""}
+                {t("publishedAt")}{" "}
+                {post.publishedAt ? formatDate(post.publishedAt) : ""}
               </span>
               <span>•</span>
               <span>
-                {post.readingTime} {t("readingTime")}
+                {post.readTime} {t("readTime")}
               </span>
               <span>•</span>
               <span>
@@ -133,7 +122,10 @@ export default function BlogDetail({ post }: BlogDetailProps) {
 
             {/* Content */}
             <div className="prose prose-lg max-w-none">
-              <PortableText value={post.body} />
+              <PortableText
+                value={post.body}
+                components={portableTextComponents}
+              />
             </div>
           </div>
         </motion.article>

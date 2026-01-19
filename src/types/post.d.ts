@@ -1,4 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
+import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
+
+export interface SanityImageBlock {
+  _type: "image";
+  asset: {
+    _ref: string;
+    _type: "reference";
+  };
+  alt?: string;
+}
+
+export interface SanityCodeBlock {
+  _type: "code";
+  language?: string;
+  code: string;
+  filename?: string;
+}
+
 export interface Post {
   _id: string;
   title: string;
@@ -13,9 +32,9 @@ export interface Post {
   category?: string;
   date?: string;
   image?: SanityImageSource;
-  readingTime?: string;
+  readTime?: string;
   slug: {
     current: string;
   };
-    publishedAt: string;
+  publishedAt: string;
 }

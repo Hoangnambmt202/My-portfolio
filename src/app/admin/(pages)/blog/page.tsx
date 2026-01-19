@@ -1,11 +1,10 @@
-"use client";
 import { Button } from "@/components/ui/button";
+import { sanityFetch } from "@/sanity/lib/live";
+import { POSTS_QUERY } from "@/sanity/lib/queries";
+import { Post } from "@/types/post";
 
-export default function BlogManager() {
-  const posts = [
-    { id: 1, title: "Hello Blog", views: 123, date: "2025-08-10" },
-    { id: 2, title: "Next.js Admin Guide", views: 89, date: "2025-08-15" },
-  ];
+export default async function BlogManager() {
+  const { data: posts } = await sanityFetch({ query: POSTS_QUERY, params: {} });
 
   return (
     <div>
@@ -18,20 +17,25 @@ export default function BlogManager() {
         <thead className="bg-gray-100 text-left">
           <tr>
             <th className="p-3">Title</th>
-            <th className="p-3">Views</th>
+            <th className="p-3">category</th>
             <th className="p-3">Date</th>
             <th className="p-3">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {posts.map((p) => (
-            <tr key={p.id} className="border-t hover:bg-gray-50">
-              <td className="p-3">{p.title}</td>
-              <td className="p-3">{p.views}</td>
-              <td className="p-3">{p.date}</td>
+          {posts.map((post: Post) => (
+            <tr key={post._id} className="border-t hover:bg-gray-50">
+              <td className="p-3">{post.title}</td>
+              <td className="p-3">{post.category}</td>
+              <td className="p-3">{post.publishedAt}</td>
+              <td className="p-3">{post.views}</td>
               <td className="p-3">
-                <Button variant="outline" size="sm" className="mr-2">Edit</Button>
-                <Button variant="danger" size="sm">Delete</Button>
+                <Button variant="outline" size="sm" className="mr-2">
+                  Edit
+                </Button>
+                <Button variant="danger" size="sm">
+                  Delete
+                </Button>
               </td>
             </tr>
           ))}

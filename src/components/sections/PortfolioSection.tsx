@@ -48,7 +48,11 @@ export default function PortfolioSection() {
   // Animation
   const fadeInUp = {
     hidden: { opacity: 0, y: 60 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: cubicBezier(0.25, 0.46, 0.45, 0.94) } },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: cubicBezier(0.25, 0.46, 0.45, 0.94) },
+    },
   };
 
   const staggerContainer = {
@@ -63,30 +67,33 @@ export default function PortfolioSection() {
   };
 
   const projectCard = {
-  hidden: { opacity: 0, y: isMobile ? 20 : 50, rotateX: isMobile ? 0 : -15 },
-  visible: { 
-    opacity: 1, 
-    y: 0, 
-    rotateX: 0, 
-    transition: { duration: 0.5, ease: cubicBezier(0.25, 0.46, 0.45, 0.94) } 
-  },
-};
+    hidden: { opacity: 0, y: isMobile ? 20 : 50, rotateX: isMobile ? 0 : -15 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      rotateX: 0,
+      transition: { duration: 0.5, ease: cubicBezier(0.25, 0.46, 0.45, 0.94) },
+    },
+  };
 
   return (
-    <section id="portfolio" className="py-14 lg:py-24 px-4 sm:px-6 lg:px-8 bg-slate-950">
+    <section
+      id="portfolio"
+      className="py-14 lg:py-24 px-4 sm:px-6 lg:px-8 bg-slate-950"
+    >
       <div className="max-w-7xl mx-auto">
         {/* Heading */}
         <motion.div
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: false, margin: "-100px", amount: 0.3 }}
+          viewport={{ once: true, margin: "-100px", amount: 0.3 }}
           variants={fadeInUp}
           className="text-center mb-8 lg:mb-16"
         >
           <motion.h2
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.5 }}
+            viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.7, ease: "easeOut" }}
             className="text-3xl lg:text-4xl font-bold text-white mb-4"
           >
@@ -95,7 +102,7 @@ export default function PortfolioSection() {
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            viewport={{ once: false, amount: 0.5 }}
+            viewport={{ once: true, amount: 0.5 }}
             transition={{ delay: 0.2, duration: 0.6 }}
             className="text-slate-400 max-w-2xl mx-auto"
           >
@@ -109,7 +116,7 @@ export default function PortfolioSection() {
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: false, margin: "-80px", amount: 0.2 }}
+          viewport={{ once: true, margin: "-50px", amount: 0.1 }}
         >
           {projects.map((p, i) => (
             <motion.div
@@ -137,20 +144,18 @@ export default function PortfolioSection() {
                 <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 sm:mb-3 group-hover:text-cyan-400 transition-colors">
                   {p.title}
                 </h3>
-                <p className="text-slate-400 text-sm sm:text-base mb-4 sm:mb-6">{p.description}</p>
+                <p className="text-slate-400 text-sm sm:text-base mb-4 sm:mb-6">
+                  {p.description}
+                </p>
 
                 <div className="flex flex-wrap gap-1 sm:gap-2 mb-4 sm:mb-6">
                   {p.tags.map((tag, idx) => (
-                    <motion.span
+                    <span
                       key={idx}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: false, amount: 0.5 }}
-                      transition={{ delay: isMobile ? 0 : idx * 0.1, duration: 0.4 }}
-                      className="px-2 py-1 sm:px-3 sm:py-1 bg-slate-800 text-cyan-400 rounded-full text-xs sm:text-xs md:text-sm font-medium border border-slate-700"
+                      className="px-2 py-1 sm:px-3 sm:py-1 bg-slate-800 text-cyan-400 rounded-full text-xs sm:text-xs md:text-sm font-medium border border-slate-700 hover:border-cyan-500/50 transition-colors"
                     >
                       {tag}
-                    </motion.span>
+                    </span>
                   ))}
                 </div>
 
