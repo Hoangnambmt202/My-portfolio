@@ -4,7 +4,8 @@
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { Eye, EyeOff, Lock, User, Shield } from "lucide-react";
-import {showToast} from "nextjs-toast-notify";
+import { showToast } from "nextjs-toast-notify";
+import LoaderInline from "@/components/common/LoaderInline";
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -14,13 +15,15 @@ export default function LoginPage() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     setIsLoading(true);
-     await signIn("credentials", {
+    await signIn("credentials", {
       username,
       password,
       callbackUrl: "/admin",
     });
-    showToast.success("Đăng nhập thành công! Chào mừng quản trị viên", {duration: 2000})
-    
+    showToast.success("Đăng nhập thành công! Chào mừng quản trị viên", {
+      duration: 2000,
+    });
+
     setIsLoading(false);
   };
 
@@ -73,8 +76,8 @@ export default function LoginPage() {
                 <Lock className="h-5 w-5 text-black" />
               </div>
               <input
-              id="password"
-              name="password"
+                id="password"
+                name="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="Mật khẩu"
                 className="w-full pl-12 pr-12 py-4 bg-white bg-opacity-10 border border-gray-500 border-opacity-20 rounded-xl text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-300 backdrop-blur-sm"
@@ -104,7 +107,7 @@ export default function LoginPage() {
             >
               {isLoading ? (
                 <div className="flex items-center justify-center">
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                  <LoaderInline />
                   Đang đăng nhập...
                 </div>
               ) : (
