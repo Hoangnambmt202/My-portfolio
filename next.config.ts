@@ -2,15 +2,35 @@ import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin();
+
 const nextConfig: NextConfig = {
   images: {
-    domains: [
-      "images.careerviet.vn",
-      "cdn.vietnambiz.vn",
-      "cdn.pixabay.com",
-      "i.imgur.com",
-      "lh3.googleusercontent.com",
-      "cdn.sanity.io",
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.careerviet.vn",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.vietnambiz.vn",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.pixabay.com",
+      },
+      {
+        protocol: "https",
+        hostname: "i.imgur.com",
+      },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.sanity.io",
+        pathname: "/images/**",
+      },
     ],
   },
 };

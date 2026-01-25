@@ -63,4 +63,20 @@ export const portableTextComponents: PortableTextComponents = {
     bullet: ({ children }) => <li className="mb-2">{children}</li>,
     number: ({ children }) => <li className="mb-2">{children}</li>,
   },
+  marks: {
+    link: ({ children, value }) => {
+      const rel = !value.href.startsWith("/")
+        ? "noreferrer noopener"
+        : undefined;
+      return (
+        <a
+          href={value.href}
+          rel={rel}
+          className="text-cyan-400 hover:underline"
+        >
+          {children}
+        </a>
+      );
+    },
+  },
 };

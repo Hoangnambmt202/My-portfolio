@@ -3,6 +3,7 @@ import * as React from "react";
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: "default" | "outline" | "danger";
   size?: "sm" | "md" | "lg";
+  onClick?: () => void;
 };
 
 export function Button({
@@ -10,6 +11,7 @@ export function Button({
   variant = "default",
   size = "md",
   className = "",
+  onClick,
   ...props
 }: ButtonProps) {
   const base = "rounded-md font-medium transition-colors focus:outline-none";
@@ -30,6 +32,7 @@ export function Button({
     <button
       className={`${base} ${variants[variant]} ${sizes[size]} ${className}`}
       {...props}
+      onClick={onClick}
     >
       {children}
     </button>

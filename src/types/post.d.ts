@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
-
 export interface SanityImageBlock {
   _type: "image";
   asset: {
@@ -17,22 +15,40 @@ export interface SanityCodeBlock {
   code: string;
   filename?: string;
 }
-
+export interface Author {
+  name: string;
+  slug: {
+    current: string;
+  };
+  bio?: string;
+  avatar?: SanityImageSource;
+}
+export interface Category {
+  title: string;
+  slug: {
+    current: string;
+  };
+  description?: string;
+}
+export interface Image {
+  _type: "image";
+  asset: {
+    _ref: string;
+    _type: "reference";
+  };
+}
 export interface Post {
   _id: string;
   title: string;
   body?: any;
   views?: number;
   tags?: string[];
-  author?: {
-    name: string;
-  };
+  author?: Author;
   excerpt: string;
   description?: string;
-  category?: string;
+  category?: Category[];
   date?: string;
-  image?: SanityImageSource;
-  readTime?: string;
+  image?: Image;
   slug: {
     current: string;
   };

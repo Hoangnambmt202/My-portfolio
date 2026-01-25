@@ -5,7 +5,7 @@ import { PortableText } from "@portabletext/react";
 import { Link } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { Post } from "@/types/post";
+import { Category, Post } from "@/types/post";
 import { urlFor } from "@/sanity/lib/sanityImageUrl";
 import { portableTextComponents } from "@/components/elements/portableTextComponents";
 import { formatDate } from "@/lib/utils";
@@ -17,11 +17,7 @@ interface BlogDetailProps {
 export default function BlogDetail({ post }: BlogDetailProps) {
   const t = useTranslations("blog");
   const tCommon = useTranslations("common");
-
-  // const handleBackClick = () => {
-
-  // };
-
+  console.log(post.body);
   return (
     <div className="container mx-auto px-4">
       <div className="max-w-4xl mx-auto">
@@ -82,7 +78,18 @@ export default function BlogDetail({ post }: BlogDetailProps) {
             <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 mb-6">
               {post.author && (
                 <div className="flex items-center">
-                  <div className="w-8 h-8 bg-gray-300 rounded-full mr-2"></div>
+                  {post.author.avatar && (
+                    <Image
+                      className="w-8 h-8 bg-gray-300 rounded-full mr-2"
+                      src={urlFor(post.author.avatar)
+                        .width(100)
+                        .height(100)
+                        .url()}
+                      alt={post.author.name}
+                      width={100}
+                      height={100}
+                    />
+                  )}
                   <span>{post.author.name}</span>
                 </div>
               )}
@@ -93,11 +100,10 @@ export default function BlogDetail({ post }: BlogDetailProps) {
               </span>
               <span>•</span>
               <span>
-                {post.readTime} {t("readTime")}
-              </span>
-              <span>•</span>
-              <span>
-                {post.views ?? 0} {t("views")}
+                {t("category")}{" "}
+                {post.category
+                  ?.map((category: Category) => category.title)
+                  .join(", ") ?? "Chưa có danh mục"}{" "}
               </span>
             </div>
 
@@ -105,7 +111,6 @@ export default function BlogDetail({ post }: BlogDetailProps) {
             <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
               {post.title}
             </h1>
-
             {/* Tags */}
             {/* {post.tags?.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-8">
@@ -119,7 +124,6 @@ export default function BlogDetail({ post }: BlogDetailProps) {
                 ))}
               </div>
             )} */}
-
             {/* Content */}
             <div className="prose prose-lg max-w-none">
               <PortableText

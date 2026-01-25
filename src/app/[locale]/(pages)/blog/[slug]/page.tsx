@@ -64,6 +64,5 @@ export default async function BlogDetailPage({ params }: Props) {
   if (!post) {
     notFound();
   }
-
   return <BlogDetail post={post} />;
 }

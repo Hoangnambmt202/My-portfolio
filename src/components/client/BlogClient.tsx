@@ -1,11 +1,11 @@
 "use client";
-import { Calendar, BookOpen, ArrowRight } from "lucide-react";
+import { Calendar, ArrowRight, User } from "lucide-react";
 import { motion } from "framer-motion";
 import { cubicBezier } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import Image from "next/image";
-import { Post } from "@/types/post";
+import { Category, Post } from "@/types/post";
 import { urlFor } from "@/sanity/lib/sanityImageUrl";
 import { formatDate } from "@/lib/utils";
 const fadeInUp = {
@@ -85,9 +85,9 @@ export default function BlogClient({ posts }: { posts: Post[] }) {
           whileInView="visible"
           viewport={{ once: true, margin: "-80px", amount: 0.2 }}
         >
-          {posts.map((post: Post, i: number) => (
+          {posts.map((post: Post) => (
             <motion.div
-              key={i}
+              key={post._id}
               variants={blogCard}
               whileHover={{ y: -10, scale: 1.03 }}
               transition={{ duration: 0.3 }}
@@ -95,7 +95,9 @@ export default function BlogClient({ posts }: { posts: Post[] }) {
             >
               <div className="flex items-center justify-between mb-4">
                 <span className="px-3 py-1 bg-cyan-500/10 text-cyan-400 rounded-full text-xs font-bold border border-cyan-500/20">
-                  {post.category || "Chưa có danh mục"}
+                  {post.category
+                    ?.map((category: Category) => category.title)
+                    .join(", ") || "Chưa có danh mục"}
                 </span>
                 <span className="text-slate-500 text-sm flex items-center space-x-1">
                   <Calendar className="w-3 h-3" />
@@ -106,7 +108,10 @@ export default function BlogClient({ posts }: { posts: Post[] }) {
               <div className="overflow-hidden rounded-lg mb-4">
                 {post.image && (
                   <Image
-                    src={urlFor(post.image).width(400).height(300).url()}
+                    src={urlFor(post.image.asset._ref)
+                      .width(400)
+                      .height(300)
+                      .url()}
                     alt={post.title}
                     width={400}
                     height={300}
@@ -124,10 +129,8 @@ export default function BlogClient({ posts }: { posts: Post[] }) {
 
               <div className="flex items-center justify-between pt-4 border-t border-slate-700/50 mt-auto">
                 <span className="text-slate-500 text-sm flex items-center space-x-1">
-                  <BookOpen className="w-3 h-3" />
-                  <span>
-                    {post.readTime ? `${post.readTime} phút` : "Không giới hạn"}
-                  </span>
+                  <User className="w-3 h-3" />
+                  <span>{post.author?.name}</span>
                 </span>
                 <motion.div
                   className="text-cyan-400 hover:text-cyan-300 transition-colors text-sm font-medium flex items-center gap-1"
