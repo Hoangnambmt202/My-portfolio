@@ -15,24 +15,8 @@
     "title": "Portfolio",
     "subtitle": "Some featured projects I have worked on",
     "viewDetails": "View Details",
-    "items": {
-      "0": {
-        "title": "E-Commerce Platform",
-        "description": "E-commerce platform with React & Node.js"
-      },
-      "1": {
-        "title": "Mobile Banking App",
-        "description": "Mobile banking app with React Native"
-      },
-      "2": {
-        "title": "AI Dashboard",
-        "description": "Data analysis dashboard with AI integration"
-      },
-      "3": {
-        "title": "Real-time Chat",
-        "description": "Realtime chat system with WebSocket"
-      }
-    }
+    "sourceCode": "View Source",
+    "liveDemo": "Visit"
   },
   "services": {
     "title": "Services",

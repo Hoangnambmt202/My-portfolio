@@ -17,7 +17,6 @@ interface BlogDetailProps {
 export default function BlogDetail({ post }: BlogDetailProps) {
   const t = useTranslations("blog");
   const tCommon = useTranslations("common");
-  console.log(post.body);
   return (
     <div className="container mx-auto px-4">
       <div className="max-w-4xl mx-auto">

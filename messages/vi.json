@@ -15,24 +15,8 @@
     "title": "Portfolio",
     "subtitle": "Một số dự án tiêu biểu mà tôi đã thực hiện",
     "viewDetails": "Xem chi tiết",
-    "items": {
-      "0": {
-        "title": "Nền tảng thương mại điện tử",
-        "description": "Nền tảng thương mại điện tử với React & Node.js"
-      },
-      "1": {
-        "title": "Ứng dụng ngân hàng di động",
-        "description": "Ứng dụng ngân hàng di động với React Native"
-      },
-      "2": {
-        "title": "AI Dashboard",
-        "description": "Dashboard phân tích dữ liệu với AI integration"
-      },
-      "3": {
-        "title": "Real-time Chat",
-        "description": "Hệ thống chat realtime với WebSocket"
-      }
-    }
+    "sourceCode": "Source code",
+    "liveDemo": "Website"
   },
   "services": {
     "title": "Dịch vụ",
