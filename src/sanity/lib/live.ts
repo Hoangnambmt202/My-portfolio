@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/sanity/lib/live.ts
 
 import { defineLive } from "next-sanity/live";
@@ -12,7 +13,7 @@ import { client } from "@/sanity/lib/client";
 
 // export the sanityFetch helper and the SanityLive component
 export const { sanityFetch, SanityLive } = defineLive({
-  client,
+  client: client as any,
   serverToken: false,
   browserToken: false,
-})
+});
