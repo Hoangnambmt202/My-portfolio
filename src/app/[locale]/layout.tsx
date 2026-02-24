@@ -6,14 +6,13 @@ import { routing } from "@/i18n/routing";
 import { getMessages } from "next-intl/server";
 
 export const metadata: Metadata = {
-  title: "My Portfolio",
+  title: "Coder To Data",
   description: "Personal portfolio website showcasing my projects and skills",
-
 };
 
 type Props = {
   children: React.ReactNode;
-  params:  Promise<{ locale: string }>;
+  params: Promise<{ locale: string }>;
 };
 
 export default async function LocaleLayout({ children, params }: Props) {

@@ -1,8 +1,8 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import AdminSidebar from "@/components/admin/AdminSidebar";
+import AdminSidebar from "@/components/admin/layout/AdminSidebar";
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
-import AdminHeader from "@/components/admin/layout/AdminHeader";
+// import AdminHeader from "@/components/admin/layout/AdminHeader";
 
 export default async function AdminLayout({
   children,
@@ -21,20 +21,13 @@ export default async function AdminLayout({
       <AdminSidebar session={session} />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col lg:ml-0">
+      <main className="flex-1 flex flex-col lg:ml-0">
         {/* Top Header */}
-        <AdminHeader />
+        {/* <AdminHeader /> */}
 
         {/* Page Content */}
-        <main className="flex-1 p-4 lg:p-8 overflow-auto">
-          <div className="max-w-7xl mx-auto">
-            {/* Content Container with Glass Effect */}
-            <div className="bg-white/60 backdrop-blur-sm rounded-2xl border border-white/20 shadow-xl p-6 lg:p-8 min-h-[calc(100vh-12rem)]">
-              {children}
-            </div>
-          </div>
-        </main>
-      </div>
+        {children}
+      </main>
     </div>
   );
 }

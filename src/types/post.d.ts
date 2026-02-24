@@ -45,9 +45,13 @@ export interface Post {
   tags?: string[];
   author?: Author;
   excerpt: string;
+  status: "draft" | "published" | "scheduled";
   description?: string;
   category?: Category[];
-  date?: string;
+  date: {
+    _type: string;
+    current: string;
+  };
   image?: Image;
   slug: {
     current: string;

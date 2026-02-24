@@ -3,10 +3,10 @@ import { routing } from "./i18n/routing";
 
 export default createMiddleware({
   ...routing,
-  defaultLocale: "vi",
-  localeDetection: false
+  defaultLocale: "en",
+  localeDetection: false,
 });
 
 export const config = {
-  matcher: ["/", "/(vi|en)/:path*"], 
+  matcher: ["/", "/(en|vi)/:path*"],
 };
