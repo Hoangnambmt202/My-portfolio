@@ -13,6 +13,7 @@ import {
   LogOut,
   UserRoundCog,
   BriefcaseMedical,
+  FileUser,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -64,6 +65,13 @@ const navigationItems: NavigationItem[] = [
     href: "/admin/experiences",
     label: "Experiences",
     icon: BriefcaseMedical,
+    badge: "5",
+  },
+  {
+    id: "resume",
+    href: "/admin/resume",
+    label: "Resume / CV",
+    icon: FileUser,
     badge: "5",
   },
 ];
@@ -146,7 +154,7 @@ export default function AdminSidebar({ session }: SidebarProps) {
 
       {/* Sidebar */}
       <nav
-        className="flex flex-col w-64 items-start justify-center relative self-stretch bg-[#111a22] border-r [border-right-style:solid] border-slate-800"
+        className="flex flex-col w-64 items-start justify-center relative self-stretch bg-[#111a22] border-r [border-right-style:solid] border-slate-800 "
         role="navigation"
         aria-label="Main navigation"
       >
@@ -214,9 +222,9 @@ export default function AdminSidebar({ session }: SidebarProps) {
               </div>
 
               {secondaryNavigationItems.map((item) => (
-                <button
+                <Link
+                  href={item.href}
                   key={item.id}
-                  onClick={() => handleNavigationClick(item.id)}
                   className={`flex items-center gap-3 px-3 py-2.5 relative self-stretch w-full flex-[0_0_auto] rounded-lg ${
                     activeItem === item.id ? "bg-[#233648]" : ""
                   }`}
@@ -237,7 +245,7 @@ export default function AdminSidebar({ session }: SidebarProps) {
                       {item.label}
                     </span>
                   </div>
-                </button>
+                </Link>
               ))}
             </div>
           </div>

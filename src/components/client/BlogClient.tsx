@@ -7,7 +7,7 @@ import { Link } from "@/i18n/routing";
 import Image from "next/image";
 import { Category, Post } from "@/types/post";
 import { urlFor } from "@/sanity/lib/sanityImageUrl";
-import { formatDate } from "@/lib/utils";
+import { formatDate } from "@/lib/utils/format";
 const fadeInUp = {
   hidden: { opacity: 0, y: 60 },
   visible: {
