@@ -17,10 +17,8 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-
-interface SidebarProps {
-  session: any;
-}
+import { signOut } from "next-auth/react";
+import { useAdminSessionStore } from "@/stores/admin-session.store";
 interface NavigationItem {
   id: string;
   href: string;
@@ -85,12 +83,16 @@ const secondaryNavigationItems: NavigationItem[] = [
   },
 ];
 
-export default function AdminSidebar({ session }: SidebarProps) {
+export default function AdminSidebar() {
   const [activeItem, setActiveItem] = useState<string>("dashboard");
   // const [isCollapsed, setIsCollapsed] = useState(false);
-  console.log(session);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const pathname = usePathname();
+  useEffect(() => {
+    setIsMobileOpen(false);
+  }, [pathname]);
+  const user = useAdminSessionStore((s) => s.user);
+  const clear = useAdminSessionStore((s) => s.clear);
 
   // Handle responsive behavior
   // useEffect(() => {
@@ -108,9 +110,6 @@ export default function AdminSidebar({ session }: SidebarProps) {
   // }, []);
 
   // Close mobile menu when route changes
-  useEffect(() => {
-    setIsMobileOpen(false);
-  }, [pathname]);
 
   // const toggleCollapse = () => {
   //   setIsCollapsed(!isCollapsed);
@@ -123,8 +122,9 @@ export default function AdminSidebar({ session }: SidebarProps) {
     setActiveItem(itemId);
   };
 
-  const handleLogOutClick = () => {
-    console.log("Log Out clicked");
+  const handleLogOutClick = async () => {
+    clear();
+    await signOut({ callbackUrl: "/admin/auth/login" });
   };
 
   // const isActiveRoute = (href: string) => {
@@ -154,33 +154,27 @@ export default function AdminSidebar({ session }: SidebarProps) {
 
       {/* Sidebar */}
       <nav
-        className="flex flex-col w-64 items-start justify-center relative self-stretch bg-[#111a22] border-r [border-right-style:solid] border-slate-800 "
+        className="flex flex-col w-64 items-start justify-center relative self-stretch bg-[#111a22] border-r [border-right-style:solid] border-slate-800 h-screen"
         role="navigation"
         aria-label="Main navigation"
       >
         <div className="flex flex-col items-start justify-between p-4 relative flex-1 self-stretch w-full grow">
           <div className="flex flex-col items-start gap-6 relative self-stretch w-full flex-[0_0_auto]">
-            <header className="flex items-center gap-3 px-2 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <header className="flex items-center gap-3 px-2 py-0 relative self-stretch w-full">
               <Image
                 width={40}
                 height={40}
                 className="relative w-10 h-10 rounded-full"
-                alt="DevPortfolio logo"
-                src="/assets/imgs/Nam_1.jpg"
+                alt="Admin avatar"
+                src={user?.image || "/assets/imgs/Nam_1.jpg"}
               />
 
-              <div className="inline-flex flex-col items-start relative flex-[0_0_auto]">
-                <div className="flex flex-col items-start relative self-stretch w-full flex-[0_0_auto]">
-                  <h1 className="relative flex items-center justify-center w-[97.14px] h-5 mt-[-1.00px] [font-family:'Manrope-Bold',Helvetica] font-bold text-white text-base tracking-[0] leading-5 whitespace-nowrap">
-                    DevPortfolio
-                  </h1>
-                </div>
+              <div className="inline-flex flex-col items-start">
+                <h1 className="font-bold text-white text-sm">
+                  {user?.name || "Administrator"}
+                </h1>
 
-                <div className="flex flex-col items-start relative self-stretch w-full flex-[0_0_auto]">
-                  <p className="relative flex items-center justify-center w-[84.77px] h-3 mt-[-1.00px] [font-family:'Manrope-Medium',Helvetica] font-medium text-[#92adc9] text-xs tracking-[0] leading-3 whitespace-nowrap">
-                    Admin Console
-                  </p>
-                </div>
+                <p className="text-[#92adc9] text-xs">{user?.role}</p>
               </div>
             </header>
 

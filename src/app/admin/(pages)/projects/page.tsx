@@ -1,125 +1,39 @@
 "use client";
+import ProjectList from "@/components/admin/project/ProjectList";
+import LoaderBlock from "@/components/common/LoaderBlock";
 import {
   ChevronDown,
   ChevronRight,
-  ExternalLink,
   FilterIcon,
   FolderOpen,
   Globe,
-  Lock,
   Pencil,
   Plus,
   Search,
-  Trash2,
 } from "lucide-react";
-import Image from "next/image";
+
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { Suspense, useState } from "react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type Status = "live" | "draft" | "private";
-
-interface Project {
-  id: number;
-  name: string;
-  category: string;
-  image: string;
-  status: Status;
-  lastUpdated: string;
-}
-
-// ─── Data ─────────────────────────────────────────────────────────────────────
-
-const PROJECTS: Project[] = [
-  {
-    id: 1,
-    name: "Finance Dashboard UI",
-    category: "Fintech · React",
-    image:
-      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=80&h=80&fit=crop",
-    status: "live",
-    lastUpdated: "Oct 24, 2023",
-  },
-  {
-    id: 2,
-    name: "Portfolio V1",
-    category: "Personal · HTML/CSS",
-    image:
-      "https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=80&h=80&fit=crop",
-    status: "draft",
-    lastUpdated: "Nov 01, 2023",
-  },
-  {
-    id: 3,
-    name: "E-Commerce Analytics",
-    category: "SaaS · Vue.js",
-    image:
-      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=80&h=80&fit=crop",
-    status: "live",
-    lastUpdated: "Sep 12, 2023",
-  },
-  {
-    id: 4,
-    name: "Mobile Banking App",
-    category: "Mobile · React Native",
-    image:
-      "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?w=80&h=80&fit=crop",
-    status: "private",
-    lastUpdated: "Aug 05, 2023",
-  },
-  {
-    id: 5,
-    name: "Corporate Landing",
-    category: "Web · Tailwind",
-    image:
-      "https://images.unsplash.com/photo-1497366216548-37526070297c?w=80&h=80&fit=crop",
-    status: "live",
-    lastUpdated: "Jul 22, 2023",
-  },
-];
-
-const ITEMS_PER_PAGE = 5;
+type ProjectStatus = "DRAFT" | "PUBLISHED" | "ARCHIVED";
 
 // ─── Config ───────────────────────────────────────────────────────────────────
-
-const STATUS_CONFIG: Record<
-  Status,
-  {
-    label: string;
-    bg: string;
-    border: string;
-    text: string;
-    dot: string;
-    Icon: React.ElementType;
-  }
-> = {
-  live: {
-    label: "Live",
-    bg: "bg-green-500/10",
-    border: "border-green-500/20",
-    text: "text-green-400",
-    dot: "bg-green-400",
-    Icon: Globe,
-  },
-  draft: {
+export const STATUS_CONFIG = {
+  DRAFT: {
     label: "Draft",
-    bg: "bg-amber-500/10",
-    border: "border-amber-500/20",
-    text: "text-amber-400",
-    dot: "bg-amber-400",
-    Icon: Pencil,
+    color: "text-gray-500",
   },
-  private: {
-    label: "Private",
-    bg: "bg-red-500/10",
-    border: "border-red-500/20",
-    text: "text-red-400",
-    dot: "bg-red-400",
-    Icon: Lock,
+  PUBLISHED: {
+    label: "Published",
+    color: "text-green-500",
+  },
+  ARCHIVED: {
+    label: "Archived",
+    color: "text-red-500",
   },
 };
-
 const STATS = [
   {
     label: "Total Projects",
@@ -176,118 +90,20 @@ function StatCard({
   );
 }
 
-function StatusBadge({ status }: { status: Status }) {
-  const { label, bg, border, text, dot } = STATUS_CONFIG[status];
-  return (
-    <span
-      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold ${bg} ${text} border ${border}`}
-    >
-      <span className={`w-1.5 h-1.5 rounded-full ${dot}`} />
-      {label}
-    </span>
-  );
-}
-
-function ProjectRow({
-  project,
-  isLast,
-}: {
-  project: Project;
-  isLast: boolean;
-}) {
-  return (
-    <article
-      className={`group flex items-center gap-4 px-5 py-4 transition-colors duration-150 hover:bg-white/[0.03] ${
-        !isLast ? "border-b border-slate-700/30" : ""
-      }`}
-    >
-      {/* Thumbnail */}
-      <div className="shrink-0 w-10 h-10 rounded-lg overflow-hidden border border-white/[0.06]">
-        <Image
-          width={40}
-          height={40}
-          className="w-full h-full object-cover"
-          alt={`${project.name} thumbnail`}
-          src={project.image}
-        />
-      </div>
-
-      {/* Name / Category */}
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-bold text-white truncate">{project.name}</p>
-        <p className="text-xs text-slate-500 truncate">{project.category}</p>
-      </div>
-
-      {/* Status */}
-      <div className="w-28 shrink-0">
-        <StatusBadge status={project.status} />
-      </div>
-
-      {/* Last updated */}
-      <time className="w-32 shrink-0 text-sm text-slate-400">
-        {project.lastUpdated}
-      </time>
-
-      {/* Actions */}
-      <div className="shrink-0 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
-        <button
-          aria-label={`View ${project.name}`}
-          className="p-1.5 rounded-lg text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors"
-        >
-          <ExternalLink size={14} />
-        </button>
-        <button
-          aria-label={`Edit ${project.name}`}
-          className="p-1.5 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors"
-        >
-          <Pencil size={14} />
-        </button>
-        <button
-          aria-label={`Delete ${project.name}`}
-          className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
-        >
-          <Trash2 size={14} />
-        </button>
-      </div>
-    </article>
-  );
-}
-
 // ─── Main Component ───────────────────────────────────────────────────────────
 
-export default function ProjectDashboardSection() {
+export default function ProjectDashboardSection({
+  searchParams,
+}: {
+  searchParams: { page?: string; status?: string; search?: string };
+}) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<"all" | Status>("all");
-  const [currentPage, setCurrentPage] = useState(1);
-
-  // Filter + search
-  const filtered = useMemo(() => {
-    return PROJECTS.filter((p) => {
-      const matchesSearch =
-        p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.category.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesStatus = statusFilter === "all" || p.status === statusFilter;
-      return matchesSearch && matchesStatus;
-    });
-  }, [searchQuery, statusFilter]);
-
-  // Pagination
-  const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
-  const safePage = Math.min(currentPage, totalPages);
-  const paginated = filtered.slice(
-    (safePage - 1) * ITEMS_PER_PAGE,
-    safePage * ITEMS_PER_PAGE,
+  const [statusFilter, setStatusFilter] = useState<"all" | ProjectStatus>(
+    "all",
   );
-
-  const handleSearch = (val: string) => {
-    setSearchQuery(val);
-    setCurrentPage(1);
-  };
-
-  const handleStatusFilter = (val: string) => {
-    setStatusFilter(val as "all" | Status);
-    setCurrentPage(1);
-  };
+  const currentPage = Number(searchParams.page) || 1;
+  const status = searchParams.status || "all";
+  const search = searchParams.search || "";
 
   return (
     <div className="relative flex flex-col flex-1 min-h-screen bg-slate-900 overflow-y-auto">
@@ -361,7 +177,6 @@ export default function ProjectDashboardSection() {
               type="search"
               placeholder="Search projects..."
               value={searchQuery}
-              onChange={(e) => handleSearch(e.target.value)}
               className="w-full pl-9 pr-4 py-2.5 bg-slate-800/50 border border-slate-700 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition"
             />
           </div>
@@ -375,13 +190,15 @@ export default function ProjectDashboardSection() {
             <select
               id="status-filter"
               value={statusFilter}
-              onChange={(e) => handleStatusFilter(e.target.value)}
+              onChange={(e) =>
+                setStatusFilter(e.target.value as "all" | ProjectStatus)
+              }
               className="w-full appearance-none pl-9 pr-8 py-2.5 bg-slate-800/50 border border-slate-700 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition cursor-pointer"
             >
               <option value="all">All Statuses</option>
-              <option value="live">Live</option>
-              <option value="draft">Draft</option>
-              <option value="private">Private</option>
+              <option value="DRAFT">Draft</option>
+              <option value="PUBLISHED">Published</option>
+              <option value="ARCHIVED">Archived</option>
             </select>
             <ChevronDown
               size={14}
@@ -389,7 +206,6 @@ export default function ProjectDashboardSection() {
             />
           </div>
         </div>
-
         {/* Table */}
         <section
           className="flex flex-col bg-slate-800/40 rounded-xl border border-white/[0.06] backdrop-blur-sm overflow-hidden"
@@ -413,38 +229,24 @@ export default function ProjectDashboardSection() {
 
           {/* Rows */}
           <div>
-            {paginated.length > 0 ? (
-              paginated.map((project, i) => (
-                <ProjectRow
-                  key={project.id}
-                  project={project}
-                  isLast={i === paginated.length - 1}
-                />
-              ))
-            ) : (
-              <div className="flex flex-col items-center justify-center py-16 text-slate-500">
-                <FolderOpen size={32} className="mb-3 opacity-40" />
-                <p className="text-sm">No projects match your filters.</p>
-              </div>
-            )}
+            <Suspense fallback={<LoaderBlock />}>
+              <ProjectList page={currentPage} search={search} status={status} />
+            </Suspense>
           </div>
 
           {/* Pagination */}
-          <nav
+          {/* <nav
             className="flex items-center justify-between px-5 py-3 bg-slate-800/60 border-t border-slate-700/50"
             aria-label="Pagination"
           >
             <p className="text-sm text-slate-400">
               Showing{" "}
               <span className="font-semibold text-white">
-                {filtered.length === 0
+                {totalPages === 0
                   ? 0
-                  : `${(safePage - 1) * ITEMS_PER_PAGE + 1}–${Math.min(safePage * ITEMS_PER_PAGE, filtered.length)}`}
+                  : `${(safePage - 1) * ITEMS_PER_PAGE + 1}–${Math.min(safePage * ITEMS_PER_PAGE, total)}`}
               </span>{" "}
-              of{" "}
-              <span className="font-semibold text-white">
-                {filtered.length}
-              </span>{" "}
+              of <span className="font-semibold text-white">{total}</span>{" "}
               projects
             </p>
 
@@ -484,7 +286,7 @@ export default function ProjectDashboardSection() {
                 Next
               </button>
             </div>
-          </nav>
+          </nav> */}
         </section>
 
         {/* Footer */}

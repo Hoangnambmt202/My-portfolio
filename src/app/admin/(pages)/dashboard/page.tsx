@@ -129,8 +129,8 @@ export default function AdminDashboard() {
   >("30days");
 
   return (
-    <div className="relative flex-1 self-stretch grow bg-[#111a22]">
-      <div className="flex flex-col max-w-[1200px] w-full items-start gap-8 p-8 relative">
+    <div className="relative flex-1 self-stretch grow bg-[#111a22] overflow-y-auto">
+      <div className="flex flex-col max-w-[1200px] w-full items-start gap-8 p-8 relative h-full ">
         <header className="flex flex-col items-start gap-1 relative self-stretch w-full flex-[0_0_auto]">
           <nav
             className="flex pt-0 pb-2 px-0 self-stretch w-full flex-[0_0_auto] flex-col items-start relative"

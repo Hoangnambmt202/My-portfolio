@@ -1,0 +1,175 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// prisma/schema.prisma
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  role      Role     @default(USER)
+  avatar    String?
+  bio       String?   @db.Text
+  location      String?
+  socialLinks   Json?
+  createdAt DateTime @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Quan hệ
+  projects      Project[]
+  experiences   Experience[]
+  skills        Skill[]
+  resumes       Resume[]
+}
+// Settings: Cấu hình chung cho toàn bộ website (SEO, trạng thái site)
+model Settings {
+  id              Int      @id @default(1) // Chỉ có 1 record duy nhất
+  siteName        String   @default("My Portfolio")
+  siteDescription String?  @db.Text
+  seoKeywords     String?
+  contactEmail    String?
+  isOpenToWork    Boolean  @default(true)
+  footerText      String?
+  themeConfig     Json?    // Lưu config về màu sắc, font chữ
+}
+model Project {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String
+  content     String?
+  thumbnail   String?
+  images      String[] // array url cloudinary
+  techStack   String[]
+  demoUrl     String?
+  liveUrl     String?
+  githubUrl   String?
+  isFeatured    Boolean   @default(false)
+  tags          String[]
+  userId        String
+  user          User      @relation(fields: [userId], references: [id])
+  status      ProjectStatus @default(DRAFT)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Post {
+  id          String     @id @default(cuid())
+  title       String
+  slug        String     @unique
+  excerpt     String?
+  content     String     // MDX or HTML
+  thumbnail   String?
+  tags        String[]
+  published   Boolean    @default(false)
+  views       Int        @default(0)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+
+model Experience {
+  id          String   @id @default(cuid())
+  company     String
+  position    String
+  location    String?
+  description String?
+  startDate   DateTime
+  endDate     DateTime?
+  isCurrent     Boolean  @default(false)
+  type        ExpType  @default(WORK)
+  userId        String
+  user          User      @relation(fields: [userId], references: [id])
+  order       Int      @default(0)
+}
+
+// Skill: Kỹ năng chuyên môn
+model Skill {
+  id            String    @id @default(cuid())
+  name          String
+  icon          String?   // Tên icon (Lucide, FontAwesome) hoặc URL ảnh
+  category      String    // "Frontend", "Backend", "Database", "Tools"
+  level         Int       @default(1) // 1-5 hoặc 1-100
+  order    Int        @default(0)
+  
+  userId        String
+  user          User      @relation(fields: [userId], references: [id])
+}
+
+// Resume: Quản lý các bản Resume (PDF hoặc các phiên bản khác nhau)
+model Resume {
+  id            String    @id @default(cuid())
+  title         String    // Ví dụ: "Web Developer Resume - English"
+  fileUrl       String
+  version       String?
+  isPrimary     Boolean   @default(false)
+  
+  userId        String
+  user          User      @relation(fields: [userId], references: [id])
+  
+  createdAt     DateTime  @default(now())
+}
+
+model Message {
+  id        String        @id @default(cuid())
+  name      String
+  email     String
+  subject   String?
+  content   String
+  read      Boolean       @default(false)
+  replied   Boolean       @default(false)
+  createdAt DateTime      @default(now())
+}
+
+model Media {
+  id        String   @id @default(cuid())
+  url       String
+  publicId  String   // cloudinary public_id
+  name      String
+  size      Int
+  type      String   // image/video
+  createdAt DateTime @default(now())
+}
+
+enum ProjectStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum Role {
+  ADMIN
+  USER
+  GUEST
+  DEVELOPER
+}
+
+enum SkillCategory {
+  FRONTEND
+  BACKEND
+  DATABASE
+  DEVOPS
+  TOOL
+  OTHER
+}
+
+enum ExpType {
+  WORK
+  EDUCATION
+  FREELANCE
+}

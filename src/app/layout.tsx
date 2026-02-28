@@ -4,6 +4,7 @@ import BackToTopButton from "@/components/common/BackToTopButton";
 import { SanityLive } from "@/sanity/lib/live";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "@/styles/globals.css";
+import Providers from "./providers";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -39,8 +40,13 @@ export default function RootLayout({
     <html
       className={`${inter.variable} ${poppins.variable} ${roboto.variable}`}
     >
-      <body className="bg-[#202020] min-h-screen">
-        {children}
+      <body
+        className="bg-[#202020] min-h-screen scrollbar-thin
+          scrollbar-thumb-gray-400
+          scrollbar-track-transparent
+          scrollbar-thumb-rounded-full"
+      >
+        <Providers>{children}</Providers>
         <BackToTopButton />
         <SanityLive />
         <SpeedInsights />

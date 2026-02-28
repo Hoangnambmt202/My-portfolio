@@ -1,4 +1,4 @@
 // Common types
-export * from './common';
-export * from './portfolio';
-export * from './blog'; 
+export * from "./common";
+export * from "./project";
+export * from "./blog";

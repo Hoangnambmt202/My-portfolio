@@ -1,7 +1,12 @@
-import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { z } from "zod";
 
-export const authOptions: NextAuthOptions = {
+const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6),
+});
+
+export const authOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -10,8 +15,17 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        // logic login
-        return { id: "1", name: "Nam", email: credentials?.email || "" };
+        const parsed = loginSchema.safeParse(credentials);
+        if (!parsed.success) return null;
+
+        const { email } = parsed.data;
+
+        // giả lập user
+        return {
+          id: "1",
+          name: "Nam",
+          email, // 👈 chắc chắn là string
+        };
       },
     }),
   ],
