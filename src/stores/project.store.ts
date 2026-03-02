@@ -28,11 +28,10 @@ interface ProjectCreateState {
   addTech: (tech: string) => void;
   removeTech: (tech: string) => void;
 
-  submit: () => Promise<boolean>;
   reset: () => void;
 }
 
-export const useProjectStore = create<ProjectCreateState>((set, get) => ({
+export const useProjectStore = create<ProjectCreateState>((set) => ({
   title: "",
   description: "",
   content: "",
@@ -54,47 +53,6 @@ export const useProjectStore = create<ProjectCreateState>((set, get) => ({
     set((state) => ({
       techStack: state.techStack.filter((t) => t !== tech),
     })),
-
-  submit: async () => {
-    const { title, description, content, techStack, status } = get();
-
-    if (!title || !description) {
-      set({ error: "Title & description are required" });
-      return false;
-    }
-
-    set({ loading: true, error: undefined });
-
-    try {
-      const res = await fetch("/api/projects", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include", // 👈 quan trọng cho NextAuth
-        body: JSON.stringify({
-          title,
-          description,
-          content,
-          techStack,
-          status,
-          featured: false,
-          images: [],
-          order: 0,
-          slug: title.toLowerCase().replace(/\s+/g, "-"),
-        }),
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error ?? "Create project failed");
-      }
-
-      set({ loading: false });
-      return true;
-    } catch (err: any) {
-      set({ loading: false, error: err.message });
-      return false;
-    }
-  },
 
   reset: () =>
     set({

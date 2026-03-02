@@ -1,6 +1,3 @@
-"use client";
-
-import React from "react";
 import {
   Plus,
   Calendar,
@@ -13,8 +10,13 @@ import {
   Trash2,
   ChevronRight,
 } from "lucide-react";
+import { Metadata } from "next";
 import Link from "next/link";
 
+export const metadata: Metadata = {
+  title: "CoderToData | Experiences History",
+  description: "Manage your experiences history",
+};
 // --- Types ---
 interface ExperienceItem {
   id: string;
@@ -28,7 +30,7 @@ interface ExperienceItem {
   icon: React.ReactNode;
 }
 
-const ExperienceManagement: React.FC = () => {
+const ExperienceManagement = () => {
   const experiences: ExperienceItem[] = [
     {
       id: "1",

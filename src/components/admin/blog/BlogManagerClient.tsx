@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import {
   Plus,
   Search,
@@ -38,6 +38,8 @@ ChartJS.register(
 );
 import { Line } from "react-chartjs-2";
 import { Post } from "@/types/post";
+import Breadcrumb from "@/components/ui/Breadcrumb";
+import PostTableSkeleton from "@/app/admin/(pages)/blog/skeletons/PostTableSkeleton";
 
 const BlogManagement = ({ posts }: { posts: Post[] }) => {
   const [activeTab, setActiveTab] = useState("All Posts");
@@ -48,28 +50,31 @@ const BlogManagement = ({ posts }: { posts: Post[] }) => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-200 font-sans selection:bg-blue-500/30">
+    <div className="min-h-screen bg-slate-950 text-slate-200 font-sans selection:bg-blue-500/30 overflow-y-auto">
       {/* Top Gradient Accent */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-96 bg-blue-600/10 blur-[120px] pointer-events-none" />
 
       <main className="max-w-[1600px] mx-auto px-3 sm:px-5 lg:px-7 py-4 md:py-6 relative z-10 space-y-4">
         {/* Header Section */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <h1 className="text-xl md:text-2xl font-black text-white tracking-tight uppercase">
-              Blog Intelligence
-            </h1>
-            <p className="text-slate-500 font-medium mt-0.5 text-xs md:text-sm">
-              Track content performance and manage your digital library.
-            </p>
+        <div className="flex flex-col justify-between gap-4">
+          <Breadcrumb />
+          <div className="flex gap-2 justify-between items-center">
+            <div>
+              <h1 className="text-xl md:text-4xl font-black text-white tracking-tight uppercase">
+                Blog Intelligence
+              </h1>
+              <p className="text-slate-500 font-medium mt-0.5 text-xs md:text-sm">
+                Track content performance and manage your digital library.
+              </p>
+            </div>
+            <button className="flex items-center justify-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold transition-all shadow-lg shadow-blue-900/40 active:scale-95 group w-full sm:w-auto text-sm">
+              <Plus
+                size={15}
+                className="group-hover:rotate-90 transition-transform"
+              />
+              <span>Create New Post</span>
+            </button>
           </div>
-          <button className="flex items-center justify-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold transition-all shadow-lg shadow-blue-900/40 active:scale-95 group w-full sm:w-auto text-sm">
-            <Plus
-              size={15}
-              className="group-hover:rotate-90 transition-transform"
-            />
-            <span>Create New Post</span>
-          </button>
         </div>
 
         {/* Analytics Overview Card */}
@@ -257,78 +262,83 @@ const BlogManagement = ({ posts }: { posts: Post[] }) => {
           </div>
 
           {/* Mobile Card List */}
-          <div className="md:hidden divide-y divide-slate-800/50">
-            {posts.map((post) => (
-              <div
-                key={post._id}
-                className="px-4 py-4 flex items-center gap-3 relative"
-              >
-                <div className="size-10 rounded-xl bg-gradient-to-br from-slate-700 to-slate-800 shrink-0 shadow-lg" />
-                <div className="min-w-0 flex-1">
-                  <h4 className="font-bold text-white text-sm truncate">
-                    {post.title}
-                  </h4>
-                  <div className="flex items-center gap-2 mt-1">
-                    <StatusBadge status={post.status} />
-                    <span className="text-[10px] text-slate-600">
-                      {post.date?.current}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2 mt-1.5">
-                    <span className="text-xs text-slate-400 font-bold">
-                      {post.views} views
-                    </span>
-                    <div className="h-6 w-16">
-                      <Sparkline
-                        data={[12, 18, 14, 22, 19, 26, 30]}
-                        color="#3b82f6"
-                      />
+          <Suspense fallback={<PostTableSkeleton />}>
+            <div className="md:hidden divide-y divide-slate-800/50">
+              {posts.map((post) => (
+                <div
+                  key={post._id}
+                  className="px-4 py-4 flex items-center gap-3 relative"
+                >
+                  <div className="size-10 rounded-xl bg-gradient-to-br from-slate-700 to-slate-800 shrink-0 shadow-lg" />
+                  <div className="min-w-0 flex-1">
+                    <h4 className="font-bold text-white text-sm truncate">
+                      {post.title}
+                    </h4>
+                    <div className="flex items-center gap-2 mt-1">
+                      <StatusBadge status={post.status} />
+                      <span className="text-[10px] text-slate-600">
+                        {post.date?.current}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 mt-1.5">
+                      <span className="text-xs text-slate-400 font-bold">
+                        {post.views} views
+                      </span>
+                      <div className="h-6 w-16">
+                        <Sparkline
+                          data={[12, 18, 14, 22, 19, 26, 30]}
+                          color="#3b82f6"
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-                {/* Mobile action dropdown */}
-                <div className="relative shrink-0">
-                  <button
-                    onClick={() => toggleAction(post._id)}
-                    className="p-2 rounded-lg text-slate-500 hover:text-white hover:bg-slate-800 transition-all"
-                  >
-                    <MoreVertical size={16} />
-                  </button>
-                  {openActionId === post._id && (
-                    <div className="absolute right-0 top-9 z-20 bg-slate-900 border border-slate-700 rounded-xl shadow-xl w-36 overflow-hidden">
-                      <button
-                        onClick={() => setOpenActionId(null)}
-                        className="absolute top-2 right-2 text-slate-600 hover:text-slate-300"
-                      >
-                        <X size={12} />
-                      </button>
-                      {[
-                        { icon: <Edit3 size={14} />, label: "Edit" },
-                        { icon: <ExternalLink size={14} />, label: "Preview" },
-                        {
-                          icon: <Trash2 size={14} />,
-                          label: "Delete",
-                          danger: true,
-                        },
-                      ].map(({ icon, label, danger }) => (
+                  {/* Mobile action dropdown */}
+                  <div className="relative shrink-0">
+                    <button
+                      onClick={() => toggleAction(post._id)}
+                      className="p-2 rounded-lg text-slate-500 hover:text-white hover:bg-slate-800 transition-all"
+                    >
+                      <MoreVertical size={16} />
+                    </button>
+                    {openActionId === post._id && (
+                      <div className="absolute right-0 top-9 z-20 bg-slate-900 border border-slate-700 rounded-xl shadow-xl w-36 overflow-hidden">
                         <button
-                          key={label}
-                          className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-xs font-bold transition-colors ${
-                            danger
-                              ? "text-slate-400 hover:text-red-400 hover:bg-red-400/10"
-                              : "text-slate-400 hover:text-blue-400 hover:bg-blue-400/10"
-                          }`}
+                          onClick={() => setOpenActionId(null)}
+                          className="absolute top-2 right-2 text-slate-600 hover:text-slate-300"
                         >
-                          {icon}
-                          {label}
+                          <X size={12} />
                         </button>
-                      ))}
-                    </div>
-                  )}
+                        {[
+                          { icon: <Edit3 size={14} />, label: "Edit" },
+                          {
+                            icon: <ExternalLink size={14} />,
+                            label: "Preview",
+                          },
+                          {
+                            icon: <Trash2 size={14} />,
+                            label: "Delete",
+                            danger: true,
+                          },
+                        ].map(({ icon, label, danger }) => (
+                          <button
+                            key={label}
+                            className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-xs font-bold transition-colors ${
+                              danger
+                                ? "text-slate-400 hover:text-red-400 hover:bg-red-400/10"
+                                : "text-slate-400 hover:text-blue-400 hover:bg-blue-400/10"
+                            }`}
+                          >
+                            {icon}
+                            {label}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </Suspense>
 
           {/* Pagination */}
           <div className="px-4 py-3 flex items-center justify-between bg-slate-950/30 border-t border-slate-800">

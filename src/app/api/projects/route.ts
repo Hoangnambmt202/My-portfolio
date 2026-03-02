@@ -50,7 +50,6 @@ export async function POST(req: Request) {
         { status: 401 },
       );
     }
-
     const body = await req.json();
     const parsed = projectSchema.safeParse(body);
 

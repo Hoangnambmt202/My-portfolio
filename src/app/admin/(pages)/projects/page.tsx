@@ -1,9 +1,6 @@
-"use client";
 import ProjectList from "@/components/admin/project/ProjectList";
-import LoaderBlock from "@/components/common/LoaderBlock";
 import {
   ChevronDown,
-  ChevronRight,
   FilterIcon,
   FolderOpen,
   Globe,
@@ -13,12 +10,15 @@ import {
 } from "lucide-react";
 
 import Link from "next/link";
-import { Suspense, useState } from "react";
+import { Suspense } from "react";
+import ProjectTableSkeleton from "./skeletons/ProjectTableSkeleton";
+import Breadcrumb from "@/components/ui/Breadcrumb";
+import { Metadata } from "next";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-type ProjectStatus = "DRAFT" | "PUBLISHED" | "ARCHIVED";
-
+export const metadata: Metadata = {
+  title: "CoderToData | Projects",
+  description: "Manage your projects",
+};
 // ─── Config ───────────────────────────────────────────────────────────────────
 export const STATUS_CONFIG = {
   DRAFT: {
@@ -92,55 +92,20 @@ function StatCard({
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
-export default function ProjectDashboardSection({
-  searchParams,
-}: {
-  searchParams: { page?: string; status?: string; search?: string };
-}) {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<"all" | ProjectStatus>(
-    "all",
-  );
-  const currentPage = Number(searchParams.page) || 1;
-  const status = searchParams.status || "all";
-  const search = searchParams.search || "";
-
+export default function ProjectDashboardSection() {
   return (
     <div className="relative flex flex-col flex-1 min-h-screen bg-slate-900 overflow-y-auto">
       {/* Top gradient */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-96 bg-gradient-to-b from-blue-500/10 to-transparent" />
 
-      {/* ── Breadcrumb nav ── */}
-      <nav
-        className="sticky top-0 z-20 flex items-center px-6 py-4 bg-slate-950/80 border-b border-slate-800 backdrop-blur-md"
-        aria-label="Breadcrumb"
-      >
-        <ol className="flex items-center gap-2 list-none text-sm">
-          <li>
-            <Link
-              href="/dashboard"
-              className="text-slate-400 hover:text-white transition-colors"
-            >
-              Dashboard
-            </Link>
-          </li>
-          <li aria-hidden="true">
-            <ChevronRight size={14} className="text-slate-600" />
-          </li>
-          <li>
-            <span className="font-medium text-white" aria-current="page">
-              Projects
-            </span>
-          </li>
-        </ol>
-      </nav>
-
       {/* ── Main content ── */}
-      <div className="relative flex flex-col gap-8 max-w-screen-xl w-full mx-auto p-10">
+      <div className="relative flex flex-col gap-4 max-w-screen-xl w-full mx-auto px-6 py-4">
         {/* Header */}
+        <Breadcrumb />
+
         <header className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-extrabold text-white tracking-tight">
+            <h1 className="text-4xl font-extrabold text-white tracking-tight">
               Project Management
             </h1>
             <p className="mt-1 text-base text-slate-400">
@@ -176,7 +141,7 @@ export default function ProjectDashboardSection({
               id="search-projects"
               type="search"
               placeholder="Search projects..."
-              value={searchQuery}
+              // value={searchQuery}
               className="w-full pl-9 pr-4 py-2.5 bg-slate-800/50 border border-slate-700 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition"
             />
           </div>
@@ -189,10 +154,6 @@ export default function ProjectDashboardSection({
             />
             <select
               id="status-filter"
-              value={statusFilter}
-              onChange={(e) =>
-                setStatusFilter(e.target.value as "all" | ProjectStatus)
-              }
               className="w-full appearance-none pl-9 pr-8 py-2.5 bg-slate-800/50 border border-slate-700 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition cursor-pointer"
             >
               <option value="all">All Statuses</option>
@@ -229,8 +190,8 @@ export default function ProjectDashboardSection({
 
           {/* Rows */}
           <div>
-            <Suspense fallback={<LoaderBlock />}>
-              <ProjectList page={currentPage} search={search} status={status} />
+            <Suspense fallback={<ProjectTableSkeleton />}>
+              <ProjectList page={1} status={""} />
             </Suspense>
           </div>
 

@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Search,
   Plus,
@@ -15,6 +14,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import NewSkillModal from "@/components/admin/skill/NewSkillModal";
+import Breadcrumb from "@/components/ui/Breadcrumb";
 
 // --- Types ---
 // interface Skill {
@@ -40,7 +40,6 @@ const SkillsManagement = () => {
 
   const handleAddNewSkill = () => {
     setIsOpenModal(true);
-    console.log(isOpenModal);
   };
   const groups: SkillGroup[] = [
     {
@@ -79,6 +78,7 @@ const SkillsManagement = () => {
       <main className="flex-1 flex flex-col overflow-hidden bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-blue-900/10 via-slate-950 to-slate-950">
         {/* Top Header */}
         <header className="h-20 border-b border-slate-800/50 flex items-center justify-between px-8 bg-slate-950/50 backdrop-blur-xl z-20">
+          <Breadcrumb />
           <div className="relative w-96 group">
             <Search
               className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-blue-400 transition-colors"

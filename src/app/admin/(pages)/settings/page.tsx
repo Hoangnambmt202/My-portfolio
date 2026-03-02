@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState } from "react";
 import {
   User,
@@ -19,7 +17,12 @@ import { GeneralTab } from "./tabs/GeneralTab";
 import { AppearanceTab } from "./tabs/AppearanceTab";
 import { SeoTab } from "./tabs/SeoTab";
 import { IntegrationsTab } from "./tabs/IntegrationsTab";
+import { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "CoderToData | Settings",
+  description: "Manage your settings page",
+};
 // ─── Tab definitions ──────────────────────────────
 const TABS = [
   { id: "profile", label: "Profile", icon: User },

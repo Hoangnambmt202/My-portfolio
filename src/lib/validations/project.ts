@@ -11,7 +11,7 @@ export const projectSchema = z.object({
   techStack: z.array(z.string()).default([]),
   demoUrl: z.string().url().optional().or(z.literal("")),
   githubUrl: z.string().url().optional().or(z.literal("")),
-  featured: z.boolean().default(false),
+  isFeatured: z.boolean().default(false),
   status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"]).default("DRAFT"),
   order: z.number().default(0),
 });

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
 import {
   Save,
   X,
@@ -13,6 +15,9 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useProjectStore } from "@/stores/project.store";
+import { ProjectStatus } from "@/lib/types";
+import { projectsApi } from "@/lib/api/project";
+import { showToast } from "nextjs-toast-notify";
 
 const CreateProjectClient = () => {
   const {
@@ -22,19 +27,37 @@ const CreateProjectClient = () => {
     techStack,
     loading,
     error,
+    status,
     setField,
     addTech,
     removeTech,
-    submit,
   } = useProjectStore();
   const handleSubmit = async () => {
-    const ok = await submit();
-    if (ok) {
-      alert("Project created successfully 🚀");
+    try {
+      const res = await projectsApi.create({
+        title,
+        description,
+        content,
+        techStack,
+        status,
+        images: [],
+        order: 0,
+        slug: title.toLowerCase().replace(/\s+/g, "-"),
+      });
+
+      if (!res.success) {
+        throw new Error(res.error ?? "Create project failed");
+      }
+      if (res.success) {
+        showToast.success("Tạo project thành công", { duration: 1500 });
+      }
+    } catch (err: any) {
+      console.log(err);
+      return false;
     }
   };
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-200 font-sans selection:bg-blue-500/30">
+    <div className="min-h-screen bg-slate-950 text-slate-200 font-sans selection:bg-blue-500/30 overflow-y-auto">
       {/* Top Header Section */}
       <header className="sticky top-0 z-10 border-b border-slate-800 bg-slate-950/80 backdrop-blur-md">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -226,10 +249,16 @@ const CreateProjectClient = () => {
                   <label className="block text-xs font-bold text-slate-500 uppercase mb-2">
                     Visibility
                   </label>
-                  <select className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all">
-                    <option>Public</option>
-                    <option>Private</option>
-                    <option>Password Protected</option>
+                  <select
+                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
+                    onChange={(e) =>
+                      setField("status", e.target.value as ProjectStatus)
+                    }
+                    value={status}
+                  >
+                    <option value={"PUBLISHED"}>Published</option>
+                    <option value={"ARCHIVED"}>Archived</option>
+                    <option value={"DRAFT"}>DRAFT</option>
                   </select>
                 </div>
               </div>

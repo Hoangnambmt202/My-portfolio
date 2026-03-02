@@ -19,6 +19,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 import { useAdminSessionStore } from "@/stores/admin-session.store";
+import { useAdminNavigationStore } from "@/stores/AdminNavigation.store";
 interface NavigationItem {
   id: string;
   href: string;
@@ -84,13 +85,22 @@ const secondaryNavigationItems: NavigationItem[] = [
 ];
 
 export default function AdminSidebar() {
-  const [activeItem, setActiveItem] = useState<string>("dashboard");
+  const activeId = useAdminNavigationStore((s) => s.activeId);
+  const setActiveId = useAdminNavigationStore((s) => s.setActiveId);
   // const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const pathname = usePathname();
   useEffect(() => {
+    const active =
+      getActiveItemFromPathname(pathname, navigationItems) ||
+      getActiveItemFromPathname(pathname, secondaryNavigationItems);
+
+    if (active) {
+      setActiveId(active);
+    }
+
     setIsMobileOpen(false);
-  }, [pathname]);
+  }, [pathname, setActiveId]);
   const user = useAdminSessionStore((s) => s.user);
   const clear = useAdminSessionStore((s) => s.clear);
 
@@ -118,22 +128,19 @@ export default function AdminSidebar() {
   const toggleMobile = () => {
     setIsMobileOpen(!isMobileOpen);
   };
-  const handleNavigationClick = (itemId: string) => {
-    setActiveItem(itemId);
-  };
-
   const handleLogOutClick = async () => {
     clear();
     await signOut({ callbackUrl: "/admin/auth/login" });
   };
 
-  // const isActiveRoute = (href: string) => {
-  //   if (href === "/admin") {
-  //     return pathname === "/admin";
-  //   }
-  //   return pathname.startsWith(href);
-  // };
-
+  const getActiveItemFromPathname = (
+    pathname: string,
+    items: { id: string; href: string }[],
+  ) => {
+    return items.find(
+      (item) => pathname === item.href || pathname.startsWith(item.href + "/"),
+    )?.id;
+  };
   return (
     <>
       {/* Mobile Menu Button */}
@@ -183,11 +190,10 @@ export default function AdminSidebar() {
                 <Link
                   href={item.href}
                   key={item.id}
-                  onClick={() => handleNavigationClick(item.id)}
-                  className={`flex items-center gap-3 px-3 py-2.5 self-stretch w-full rounded-lg relative flex-[0_0_auto] ${
-                    activeItem === item.id ? "bg-[#233648]" : ""
+                  className={`flex w-full items-center gap-3 px-3 py-2.5 rounded-lg ${
+                    activeId === item.id ? "bg-[#233648]" : ""
                   }`}
-                  aria-current={activeItem === item.id ? "page" : undefined}
+                  aria-current={activeId === item.id ? "page" : undefined}
                 >
                   <div className="inline-flex flex-col items-start relative flex-[0_0_auto]">
                     <item.icon size={20} color="white" />
@@ -196,7 +202,7 @@ export default function AdminSidebar() {
                   <div className="inline-flex flex-col items-start relative flex-[0_0_auto]">
                     <span
                       className={`relative flex items-center justify-center h-5 mt-[-1.00px] tracking-[0] leading-5 whitespace-nowrap ${
-                        activeItem === item.id
+                        activeId === item.id
                           ? "[font-family:'Manrope-Bold',Helvetica] font-bold text-white text-sm"
                           : "[font-family:'Manrope-Medium',Helvetica] font-medium text-[#92adc9] text-sm"
                       }`}
@@ -219,10 +225,10 @@ export default function AdminSidebar() {
                 <Link
                   href={item.href}
                   key={item.id}
-                  className={`flex items-center gap-3 px-3 py-2.5 relative self-stretch w-full flex-[0_0_auto] rounded-lg ${
-                    activeItem === item.id ? "bg-[#233648]" : ""
+                  className={`flex w-full items-center gap-3 px-3 py-2.5 rounded-lg ${
+                    activeId === item.id ? "bg-[#233648]" : ""
                   }`}
-                  aria-current={activeItem === item.id ? "page" : undefined}
+                  aria-current={activeId === item.id ? "page" : undefined}
                 >
                   <div className="inline-flex flex-col items-start relative flex-[0_0_auto]">
                     <item.icon size={20} color="white" />
@@ -231,7 +237,7 @@ export default function AdminSidebar() {
                   <div className="inline-flex flex-col items-start relative flex-[0_0_auto]">
                     <span
                       className={`relative flex items-center justify-center h-5 mt-[-1.00px] tracking-[0] leading-5 whitespace-nowrap ${
-                        activeItem === item.id
+                        activeId === item.id
                           ? "[font-family:'Manrope-Bold',Helvetica] font-bold text-white text-sm"
                           : "[font-family:'Manrope-Medium',Helvetica] font-medium text-[#92adc9] text-sm"
                       }`}

@@ -16,10 +16,17 @@ import {
   CheckCircle2,
   Copy,
   ZoomIn,
-  ChevronRight,
 } from "lucide-react";
+import Breadcrumb from "@/components/ui/Breadcrumb";
+import { confirmDelete } from "@/stores/modal/ConfirmDelete.store";
+import { showToast } from "nextjs-toast-notify";
+// import { Metadata } from "next";
 
-const ResumeManagement: React.FC = () => {
+// export const metadata: Metadata = {
+//   title: "CoderToData | Resume Management",
+//   description: "Manage your resume",
+// };
+const ResumeManagement = () => {
   const [isPublic, setIsPublic] = useState(true);
   const [requireEmail, setRequireEmail] = useState(false);
   const [atsOptimized, setAtsOptimized] = useState(true);
@@ -32,11 +39,7 @@ const ResumeManagement: React.FC = () => {
           {/* Header */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
             <div className="space-y-2">
-              <div className="flex items-center gap-2 text-xs font-bold text-blue-500 uppercase tracking-widest">
-                <span>System</span>
-                <ChevronRight size={14} />
-                <span className="text-slate-500 tracking-tighter">Resume</span>
-              </div>
+              <Breadcrumb />
 
               <h1 className="text-4xl font-black text-white tracking-tight">
                 Resume Management
@@ -119,7 +122,20 @@ const ResumeManagement: React.FC = () => {
                         <button className="flex items-center justify-center gap-2 px-6 py-3 bg-slate-800 text-slate-300 rounded-xl text-sm font-bold hover:bg-slate-700 transition-all">
                           <Copy size={18} /> Link
                         </button>
-                        <button className="p-3 bg-slate-800 text-slate-500 hover:text-red-400 hover:bg-red-400/10 rounded-xl transition-all">
+                        <button
+                          className="p-3 bg-slate-800 text-slate-500 hover:text-red-400 hover:bg-red-400/10 rounded-xl transition-all"
+                          onClick={() =>
+                            confirmDelete({
+                              entityName: "resume",
+                              itemName: "resume_alex_morgan_v4.pdf",
+                              onConfirm: async () => {
+                                showToast.info(
+                                  "delete resume_alex_morgan_v4.pdf",
+                                );
+                              },
+                            })
+                          }
+                        >
                           <Trash2 size={18} />
                         </button>
                       </div>

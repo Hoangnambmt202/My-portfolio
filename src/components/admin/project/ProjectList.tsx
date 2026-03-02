@@ -1,8 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // components/projects/ProjectList.tsx
-import { useProjects } from "@/lib/hooks/useProjects";
+
+import { projectsApi } from "@/lib/api/project";
+import { formatDate } from "@/lib/utils/format";
+import { confirmDelete } from "@/stores/modal/ConfirmDelete.store";
+
 import { ExternalLink, Pencil, Trash2 } from "lucide-react";
 import Image from "next/image";
+import { showToast } from "nextjs-toast-notify";
 
 type ProjectStatus = "DRAFT" | "PUBLISHED" | "ARCHIVED";
 
@@ -67,7 +72,7 @@ function ProjectRow({ project, isLast }: { project: any; isLast: boolean }) {
 
       {/* Last updated */}
       <time className="w-32 shrink-0 text-sm text-slate-400">
-        {project.updatedAt}
+        {formatDate(project.updatedAt)}
       </time>
 
       {/* Actions */}
@@ -87,6 +92,16 @@ function ProjectRow({ project, isLast }: { project: any; isLast: boolean }) {
         <button
           aria-label={`Delete ${project.title}`}
           className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+          onClick={() =>
+            confirmDelete({
+              entityName: "project",
+              itemName: project.title,
+              onConfirm: async () => {
+                // await projectsApi.delete(project.id);
+                showToast.success("Project deleted successfully");
+              },
+            })
+          }
         >
           <Trash2 size={14} />
         </button>
@@ -95,34 +110,21 @@ function ProjectRow({ project, isLast }: { project: any; isLast: boolean }) {
   );
 }
 
-export default function ProjectList({
-  search,
+export default async function ProjectList({
   status,
   page,
 }: {
-  search: string;
   status: string;
   page: number;
 }) {
-  const { projects } = useProjects();
-
-  console.log(search);
-  console.log(status);
-  console.log(page);
-
-  if (projects.length === 0) {
-    return (
-      <div className="p-10 text-center text-slate-500">No projects found.</div>
-    );
-  }
-
+  const data = await projectsApi.getAll({ status, page });
   return (
     <div>
-      {projects.map((project: any, i: number) => (
+      {data.data.projects.map((project: any, i: number) => (
         <ProjectRow
           key={project.id}
           project={project}
-          isLast={i === projects.length - 1}
+          isLast={i === data.data.projects.length - 1}
         />
       ))}
     </div>
