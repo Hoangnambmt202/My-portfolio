@@ -1,15 +1,8 @@
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
+import { useAdminSessionStore } from "@/stores/admin/AdminSession.store";
 import { Bell, Search } from "lucide-react";
 
-export default async function AdminHeader() {
-  const session = await getServerSession(authOptions);
-
-  if (!session) {
-    redirect("/admin/auth/login");
-  }
-
+export default function AdminHeader() {
+  const user = useAdminSessionStore((s) => s.user);
   return (
     <header className="bg-white/80 backdrop-blur-md border-b border-gray-200/50 px-4 lg:px-8 py-4 ml-0 lg:ml-0">
       <div className="flex items-center justify-between">
@@ -40,7 +33,7 @@ export default async function AdminHeader() {
 
           <div className="w-9 h-9 bg-gradient-to-tr from-purple-500 to-pink-500 rounded-full flex items-center justify-center hover:scale-105 transition-transform cursor-pointer">
             <span className="text-white font-medium text-sm">
-              {session?.user?.name?.charAt(0) || "A"}
+              {user?.name?.charAt(0) || "A"}
             </span>
           </div>
         </div>
