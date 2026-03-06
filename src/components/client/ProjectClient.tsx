@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { GithubRepo } from "@/types/portfolio";
 
-export default function PortfolioSection({
+export default function ProjectClient({
   projects,
 }: {
   projects: GithubRepo[];

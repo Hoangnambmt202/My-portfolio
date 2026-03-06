@@ -6,7 +6,7 @@ import { routing } from "@/i18n/routing";
 import { getMessages } from "next-intl/server";
 
 export const metadata: Metadata = {
-  title: "Coder To Data",
+  title: "Coder To Data | Web Developer | Next.js | WordPress",
   description: "Personal portfolio website showcasing my projects and skills",
 };
 

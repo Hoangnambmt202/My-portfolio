@@ -10,7 +10,7 @@ import {
   BadgeCheck,
 } from "lucide-react";
 import { IconInputGroup } from "@/components/ui/InputGroup";
-import type { ProfileData } from "@/types/setting";
+import type { ProfileData } from "@/types/features/setting";
 import { SocialProfilesCard } from "@/components/admin/setting/SocialProfileCard";
 import { useAdminSessionStore } from "@/stores/admin-session.store";
 

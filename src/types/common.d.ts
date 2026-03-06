@@ -35,7 +35,7 @@ export interface ContactInfo {
 }
 
 export interface Theme {
-  mode: 'light' | 'dark';
+  mode: "light" | "dark";
   system?: boolean;
 }
 
@@ -43,4 +43,9 @@ export interface AnimationProps {
   duration?: number;
   delay?: number;
   easing?: string;
-} 
+}
+
+export interface Input {
+  className?: string;
+  props: React.InputHTMLAttributes<HTMLInputElement>;
+}

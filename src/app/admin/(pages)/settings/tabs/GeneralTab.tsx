@@ -13,7 +13,11 @@ import {
   Hash,
   Palette as PaletteIcon,
 } from "lucide-react";
-import type { ThemeMode, FontStyle, AccentColor } from "@/types/setting";
+import type {
+  ThemeMode,
+  FontStyle,
+  AccentColor,
+} from "@/types/features/setting";
 
 const ACCENT_COLORS: AccentColor[] = [
   { hex: "#137fec", label: "Blue" },
@@ -24,13 +28,15 @@ const ACCENT_COLORS: AccentColor[] = [
 ];
 
 export const GeneralTab = () => {
-  const [siteTitle, setSiteTitle] = useState("Alex Dev | Senior Full Stack Engineer");
+  const [siteTitle, setSiteTitle] = useState(
+    "Alex Dev | Senior Full Stack Engineer",
+  );
   const [authorName, setAuthorName] = useState("Alex Dev");
   const [metaDesc, setMetaDesc] = useState(
-    "Passionate Full Stack Developer specializing in React, Node.js, and modern web architectures. Transforming ideas into high-performance digital experiences."
+    "Passionate Full Stack Developer specializing in React, Node.js, and modern web architectures. Transforming ideas into high-performance digital experiences.",
   );
   const [keywords, setKeywords] = useState(
-    "Web Development, React, UI/UX, Portfolio, JavaScript"
+    "Web Development, React, UI/UX, Portfolio, JavaScript",
   );
   const [themeMode, setThemeMode] = useState<ThemeMode>("dark");
   const [accentHex, setAccentHex] = useState("#137fec");
@@ -40,14 +46,25 @@ export const GeneralTab = () => {
   const descLen = metaDesc.length;
   const descOk = descLen >= 150 && descLen <= 160;
 
-  const themeModes: { id: ThemeMode; icon: React.ReactNode; label: string }[] = [
-    { id: "light", icon: <Sun size={14} />, label: "Light" },
-    { id: "dark", icon: <Moon size={14} />, label: "Dark" },
-    { id: "system", icon: <Monitor size={14} />, label: "System" },
-  ];
+  const themeModes: { id: ThemeMode; icon: React.ReactNode; label: string }[] =
+    [
+      { id: "light", icon: <Sun size={14} />, label: "Light" },
+      { id: "dark", icon: <Moon size={14} />, label: "Dark" },
+      { id: "system", icon: <Monitor size={14} />, label: "System" },
+    ];
 
-  const fonts: { id: FontStyle; preview: string; label: string; cls: string }[] = [
-    { id: "sans", preview: "Aa", label: "Sans Serif (Modern)", cls: "font-sans" },
+  const fonts: {
+    id: FontStyle;
+    preview: string;
+    label: string;
+    cls: string;
+  }[] = [
+    {
+      id: "sans",
+      preview: "Aa",
+      label: "Sans Serif (Modern)",
+      cls: "font-sans",
+    },
     { id: "serif", preview: "Aa", label: "Serif (Classic)", cls: "font-serif" },
     { id: "mono", preview: "Aa", label: "Monospace (Code)", cls: "font-mono" },
   ];
@@ -65,7 +82,9 @@ export const GeneralTab = () => {
               <h3 className="text-xs font-black text-white uppercase tracking-widest">
                 SEO &amp; Metadata
               </h3>
-              <p className="text-[10px] text-slate-500">Core identity &amp; search engine signals.</p>
+              <p className="text-[10px] text-slate-500">
+                Core identity &amp; search engine signals.
+              </p>
             </div>
           </div>
           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
@@ -85,7 +104,9 @@ export const GeneralTab = () => {
                 onChange={(e) => setSiteTitle(e.target.value)}
                 className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500/20 transition-all"
               />
-              <p className="text-[10px] text-slate-600">Appears in browser tab and search results.</p>
+              <p className="text-[10px] text-slate-600">
+                Appears in browser tab and search results.
+              </p>
             </div>
             <div className="space-y-1.5 group">
               <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.15em] group-focus-within:text-blue-400 transition-colors">
@@ -117,9 +138,13 @@ export const GeneralTab = () => {
                   style={{ width: `${Math.min((descLen / 160) * 100, 100)}%` }}
                 />
               </div>
-              <span className="text-[10px] text-slate-500 shrink-0">{descLen}/160</span>
+              <span className="text-[10px] text-slate-500 shrink-0">
+                {descLen}/160
+              </span>
             </div>
-            <p className="text-[10px] text-slate-600">Recommended: 150–160 characters.</p>
+            <p className="text-[10px] text-slate-600">
+              Recommended: 150–160 characters.
+            </p>
           </div>
 
           <div className="space-y-1.5 group">
@@ -127,7 +152,10 @@ export const GeneralTab = () => {
               Keywords
             </label>
             <div className="relative">
-              <Hash size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-600 pointer-events-none" />
+              <Hash
+                size={14}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-600 pointer-events-none"
+              />
               <input
                 type="text"
                 value={keywords}
@@ -135,7 +163,9 @@ export const GeneralTab = () => {
                 className="w-full bg-slate-900 border border-slate-800 rounded-xl pl-9 pr-4 py-2.5 text-sm text-white focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500/20 transition-all"
               />
             </div>
-            <p className="text-[10px] text-slate-600">Separate keywords with commas.</p>
+            <p className="text-[10px] text-slate-600">
+              Separate keywords with commas.
+            </p>
           </div>
         </div>
       </div>
@@ -150,7 +180,9 @@ export const GeneralTab = () => {
             <h3 className="text-xs font-black text-white uppercase tracking-widest">
               Branding &amp; Assets
             </h3>
-            <p className="text-[10px] text-slate-500">Favicon and social share image.</p>
+            <p className="text-[10px] text-slate-500">
+              Favicon and social share image.
+            </p>
           </div>
         </div>
 
@@ -163,7 +195,9 @@ export const GeneralTab = () => {
               <div className="size-14 bg-slate-800 rounded-xl flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
                 <Globe size={24} className="text-slate-500" />
               </div>
-              <span className="text-xs font-bold text-blue-400 mb-1">Upload New</span>
+              <span className="text-xs font-bold text-blue-400 mb-1">
+                Upload New
+              </span>
               <span className="text-[10px] text-slate-600 text-center leading-relaxed">
                 ICO, PNG or SVG
                 <br />
@@ -201,8 +235,12 @@ export const GeneralTab = () => {
             <PaletteIcon size={15} />
           </span>
           <div>
-            <h3 className="text-xs font-black text-white uppercase tracking-widest">Visual Theme</h3>
-            <p className="text-[10px] text-slate-500">Mode, accent color, and typography.</p>
+            <h3 className="text-xs font-black text-white uppercase tracking-widest">
+              Visual Theme
+            </h3>
+            <p className="text-[10px] text-slate-500">
+              Mode, accent color, and typography.
+            </p>
           </div>
         </div>
 
@@ -210,8 +248,12 @@ export const GeneralTab = () => {
           {/* Theme Mode */}
           <div className="flex items-center justify-between gap-4 flex-wrap">
             <div>
-              <p className="text-xs font-black text-white">Default Theme Mode</p>
-              <p className="text-[10px] text-slate-500 mt-0.5">Set initial appearance for new visitors.</p>
+              <p className="text-xs font-black text-white">
+                Default Theme Mode
+              </p>
+              <p className="text-[10px] text-slate-500 mt-0.5">
+                Set initial appearance for new visitors.
+              </p>
             </div>
             <div className="flex bg-slate-900 border border-slate-800 rounded-xl p-1 gap-0.5">
               {themeModes.map((m) => (
@@ -236,19 +278,27 @@ export const GeneralTab = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-3">
               <div>
-                <p className="text-xs font-black text-white">Main Accent Color</p>
-                <p className="text-[10px] text-slate-500 mt-0.5">Used for buttons, links, and highlights.</p>
+                <p className="text-xs font-black text-white">
+                  Main Accent Color
+                </p>
+                <p className="text-[10px] text-slate-500 mt-0.5">
+                  Used for buttons, links, and highlights.
+                </p>
               </div>
               <div className="flex items-center gap-2.5 flex-wrap">
                 {ACCENT_COLORS.map((c) => (
                   <button
                     key={c.hex}
-                    onClick={() => { setAccentHex(c.hex); setCustomHex(c.hex); }}
+                    onClick={() => {
+                      setAccentHex(c.hex);
+                      setCustomHex(c.hex);
+                    }}
                     title={c.label}
                     className="size-9 rounded-full transition-all hover:scale-110 shrink-0"
                     style={{
                       background: c.hex,
-                      outline: accentHex === c.hex ? `3px solid ${c.hex}` : "none",
+                      outline:
+                        accentHex === c.hex ? `3px solid ${c.hex}` : "none",
                       outlineOffset: "2px",
                     }}
                   />
@@ -262,7 +312,9 @@ export const GeneralTab = () => {
             <div className="space-y-3">
               <div>
                 <p className="text-xs font-black text-white">Custom Hex Code</p>
-                <p className="text-[10px] text-slate-500 mt-0.5">Enter a specific color value.</p>
+                <p className="text-[10px] text-slate-500 mt-0.5">
+                  Enter a specific color value.
+                </p>
               </div>
               <div className="flex items-center gap-2">
                 <div
@@ -272,7 +324,10 @@ export const GeneralTab = () => {
                 <input
                   type="text"
                   value={customHex}
-                  onChange={(e) => { setCustomHex(e.target.value); setAccentHex(e.target.value); }}
+                  onChange={(e) => {
+                    setCustomHex(e.target.value);
+                    setAccentHex(e.target.value);
+                  }}
                   className="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white font-mono uppercase focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500/20 transition-all"
                   maxLength={7}
                 />
@@ -299,7 +354,9 @@ export const GeneralTab = () => {
                       : "border-slate-800 bg-slate-900/40 hover:bg-slate-800/50"
                   }`}
                 >
-                  <p className={`text-2xl font-bold mb-1 text-white ${f.cls}`}>{f.preview}</p>
+                  <p className={`text-2xl font-bold mb-1 text-white ${f.cls}`}>
+                    {f.preview}
+                  </p>
                   <p className="text-[10px] text-slate-500">{f.label}</p>
                 </button>
               ))}

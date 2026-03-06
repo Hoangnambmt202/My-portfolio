@@ -9,6 +9,9 @@ module.exports = {
     extend: {
       fontFamily: {
         poppins: ['Poppins', 'sans-serif'],
+        playfair_display: ['Playfair Display', 'serif'],
+        jetbrains_mono: ['JetBrains Mono', 'monospace'],
+        pacifico: ['Pacifico', 'cursive'],
         roboto: ['Roboto', 'sans-serif'],
       },
     },

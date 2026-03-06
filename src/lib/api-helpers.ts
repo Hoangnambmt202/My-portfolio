@@ -1,5 +1,5 @@
 // src/lib/api-helpers.ts
-import { auth } from "@/lib/auth";
+import { auth } from "@/lib/api/auth";
 import { NextResponse } from "next/server";
 
 export function successResponse(data: unknown, status = 200) {

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   X,
   UploadCloud,
@@ -10,7 +10,7 @@ import {
   ChevronDown,
   CheckCircle2,
 } from "lucide-react";
-import Modal from "@/components/elements/Modal";
+import Modal from "@/components/ui/Modal";
 
 const NewSkillModal = ({
   isOpen,

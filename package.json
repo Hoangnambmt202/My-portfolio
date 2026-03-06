@@ -1,12 +1,15 @@
 {
-  "name": "my-portfolio",
+  "name": "codertodata",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prisma:generate": "prisma generate",
+    "db:migrate:prod": "prisma migrate deploy",
+    "db:seed:prod": "prisma db seed"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -14,6 +17,7 @@
   "dependencies": {
     "@cloudinary/url-gen": "^1.22.0",
     "@floating-ui/react": "^0.27.16",
+    "@neondatabase/serverless": "^1.0.2",
     "@portabletext/react": "^3.2.1",
     "@prisma/adapter-pg": "^7.4.1",
     "@prisma/client": "^6.19.2",

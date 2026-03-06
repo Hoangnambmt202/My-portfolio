@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
@@ -10,7 +10,7 @@ const loginSchema = z.object({
   password: z.string().min(6),
 });
 
-export const authConfig = {
+export const authConfig: NextAuthConfig = {
   providers: [
     Credentials({
       name: "credentials",

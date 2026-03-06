@@ -46,40 +46,40 @@
 
 body {
   background: rgb(var(--background-rgb));
-
+  font-family: var(--roboto-font);
+  overflow-x: hidden;
 }
 
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 5px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
-} 
 @layer base {
-  button,
-  input,
-  select,
-  textarea {
-    @apply appearance-none bg-transparent border-0 outline-none;
+  * {
+    /* Sử dụng các class của plugin để làm mặc định cho toàn trang nếu muốn */
+    @apply scrollbar-thin scrollbar-track-secondary scrollbar-thumb-muted-foreground/20;
+  }
+
+  /* Nếu bạn vẫn muốn dùng CSS thuần làm mặc định, hãy đặt ở đây nhưng 
+     phải chấp nhận nó có thể khó ghi đè hơn một chút */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/30 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/50;
   }
 }
-
 @layer components {
   .all-\[unset\] {
     all: unset;

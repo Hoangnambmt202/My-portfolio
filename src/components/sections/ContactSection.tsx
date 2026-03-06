@@ -14,7 +14,7 @@ const fadeInUp = {
   },
 };
 const fadeInLeft = {
-  hidden: { opacity: 0, x: -80 },
+  hidden: { opacity: 0, x: -40 },
   visible: {
     opacity: 1,
     x: 0,
@@ -25,7 +25,7 @@ const fadeInLeft = {
   },
 };
 const fadeInRight = {
-  hidden: { opacity: 0, x: 80 },
+  hidden: { opacity: 0, x: 40 },
   visible: {
     opacity: 1,
     x: 0,
@@ -66,7 +66,7 @@ export default function ContactSection() {
   return (
     <section
       id="contact"
-      className="py-14 lg:py-24 px-4 sm:px-6 lg:px-8 bg-slate-900"
+      className="py-14 lg:py-24 px-4 sm:px-6 lg:px-8 bg-slate-950 overflow-hidden"
     >
       <div className="max-w-4xl mx-auto">
         <motion.div
@@ -197,7 +197,15 @@ export default function ContactSection() {
           whileInView="visible"
           viewport={{ once: true, margin: "-80px" }}
           variants={staggerContainer}
-          className="mt-16  flex-col md:flex justify-center gap-8 "
+          className="
+    mt-16
+    flex flex-col
+    sm:flex-row
+    sm:flex-wrap
+    justify-center
+    items-center
+    gap-10
+  "
         >
           {[
             { Icon: Mail, label: "Email", value: "nam23062002@gmail.com" },
@@ -205,7 +213,7 @@ export default function ContactSection() {
               Icon: Github,
               label: "GitHub",
               value: "@Hoangnambmt202",
-              href: "http://github.com/Hoangnambmt202",
+              href: "https://github.com/Hoangnambmt202",
             },
             {
               Icon: Linkedin,
@@ -219,17 +227,34 @@ export default function ContactSection() {
               variants={scaleIn}
               whileHover={{ y: -8, scale: 1.05 }}
               transition={{ duration: 0.3 }}
-              className="text-center group cursor-pointer"
+              className="
+        text-center
+        group
+        cursor-pointer
+        w-full
+        sm:w-[220px]
+      "
             >
               <a
                 href={item.href}
                 target="_blank"
-                className="w-12 h-12 mx-auto bg-slate-800 rounded-full flex items-center justify-center mb-3 group-hover:bg-cyan-500/20 transition-colors"
+                rel="noopener noreferrer"
+                className="
+          w-12 h-12 mx-auto
+          bg-slate-800
+          rounded-full
+          flex items-center justify-center
+          mb-3
+          group-hover:bg-cyan-500/20
+          transition-colors
+        "
               >
                 <item.Icon className="w-6 h-6 text-slate-400 group-hover:text-cyan-400 transition-colors" />
               </a>
+
               <p className="text-slate-400 text-sm">{item.label}</p>
-              <span className="text-white font-medium underline ">
+
+              <span className="text-white font-medium underline break-all">
                 {item.value}
               </span>
             </motion.div>

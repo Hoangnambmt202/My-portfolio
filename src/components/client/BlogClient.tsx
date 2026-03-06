@@ -5,7 +5,7 @@ import { cubicBezier } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import Image from "next/image";
-import { Category, Post } from "@/types/post";
+import { Category, Post } from "@/types/features/post";
 import { urlFor } from "@/sanity/lib/sanityImageUrl";
 import { formatDate } from "@/lib/utils/format";
 const fadeInUp = {

@@ -1,5 +1,4 @@
 import {
-  Plus,
   Calendar,
   GraduationCap,
   Terminal,
@@ -8,7 +7,6 @@ import {
   CheckCircle2,
   Edit3,
   Trash2,
-  ChevronRight,
 } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
@@ -94,30 +92,12 @@ const ExperienceManagement = () => {
 
         <div className="max-w-5xl mx-auto px-6 py-12 relative z-10">
           {/* Header Section */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
-            <div>
-              <div className="flex items-center gap-2 text-xs font-bold text-blue-500 uppercase tracking-widest mb-2">
-                <span>Management</span>
-                <ChevronRight size={14} />
-                <span className="text-slate-500">Career Timeline</span>
-              </div>
-              <h1 className="text-4xl font-black text-white tracking-tight">
-                Experience History
-              </h1>
-              <p className="text-slate-500 mt-2 font-medium">
-                Curate your professional journey and educational milestones.
-              </p>
-            </div>
-            <Link
-              href={"/admin/experiences/new"}
-              className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold transition-all shadow-lg shadow-blue-900/20 active:scale-95 group"
-            >
-              <Plus
-                size={20}
-                className="group-hover:rotate-90 transition-transform"
-              />
-              <span>Add Experience</span>
-            </Link>
+          <div className="mb-24">
+            <h1 className="mb-8 text-6xl font-black leading-[0.9] tracking-tighter text-white md:text-8xl">
+              My
+              <br />
+              <span className="text-[#137fec]">Journey</span>
+            </h1>
           </div>
 
           {/* Timeline Wrapper */}

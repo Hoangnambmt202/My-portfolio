@@ -37,7 +37,7 @@ ChartJS.register(
   Filler,
 );
 import { Line } from "react-chartjs-2";
-import { Post } from "@/types/post";
+import { Post } from "@/types/features/post";
 import Breadcrumb from "@/components/ui/Breadcrumb";
 import PostTableSkeleton from "@/app/admin/(pages)/blog/skeletons/PostTableSkeleton";
 

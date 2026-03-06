@@ -1,12 +1,23 @@
+import { Metadata } from "next";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 import BlogSection from "@/components/sections/BlogSection";
 import ContactSection from "@/components/sections/ContactSection";
 import HeroSection from "@/components/sections/HeroSection";
-import PortfolioSection from "@/components/sections/PortfolioSection";
 import ServicesSection from "@/components/sections/ServicesSection";
+import MindsetSection from "@/components/sections/MindsetSection";
+import ToolboxSection from "@/components/sections/ToolBoxSection";
+import ExperiencesSection from "@/components/sections/ExperiencesSection";
+import CaseStudySection from "@/components/sections/CaseStudySection";
 
-export default function HomePage() {
+export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Coder To Data | Web Developer | Next.js | WordPress",
+  description: "Personal portfolio website showcasing my projects and skills",
+};
+
+export default async function HomePage() {
   return (
     <>
       <Header />
@@ -15,11 +26,17 @@ export default function HomePage() {
         {/* Hero Section */}
         <HeroSection />
 
+        <MindsetSection />
+
+        <ToolboxSection />
+
         {/* Portfolio Section */}
-        <PortfolioSection />
+        <CaseStudySection />
 
         {/* Services Section */}
         <ServicesSection />
+        {/* Experiences Section */}
+        <ExperiencesSection />
 
         {/* Blog Section */}
         <BlogSection />

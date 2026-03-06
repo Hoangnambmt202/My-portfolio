@@ -94,18 +94,35 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
         ref={refs.setReference}
         onClick={() => setIsOpen(!isOpen)}
         disabled={isPending}
-        className={`${sizeClasses[size]} bg-white border border-gray-300 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 flex items-center space-x-2 disabled:opacity-50`}
+        className={`
+    ${sizeClasses[size]}
+    flex items-center gap-2
+    rounded-xl
+    border border-slate-300
+    bg-white
+    shadow-sm
+    hover:bg-slate-50
+    hover:shadow-md
+    focus:outline-none
+    focus:ring-2 focus:ring-cyan-500/40
+    transition-all
+    disabled:opacity-50
+  `}
       >
-        <span>{languageInfo[locale as "en" | "vi"].flag}</span>
+        <span className="font-semibold text-sm">
+          {languageInfo[locale as "en" | "vi"].flag}
+        </span>
+
         {showLabel && (
-          <span className="hidden sm:inline font-medium text-gray-700">
+          <span className="hidden md:inline text-slate-700 font-medium">
             {languageInfo[locale as "en" | "vi"].nativeName}
           </span>
         )}
+
         <motion.svg
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.2 }}
-          className="w-4 h-4 text-gray-500"
+          className="w-4 h-4 text-slate-500"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -126,42 +143,60 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
             {/* Overlay */}
             <div
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 z-[998]"
+              className="fixed inset-0 z-[998] bg-black/5 backdrop-blur-[1px]"
             />
 
             {/* Menu */}
             <motion.div
               ref={refs.setFloating}
               style={floatingStyles}
-              initial={{ opacity: 0, y: -8, scale: 0.95 }}
+              initial={{ opacity: 0, y: -6, scale: 0.96 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -8, scale: 0.95 }}
+              exit={{ opacity: 0, y: -6, scale: 0.96 }}
               transition={{ duration: 0.18 }}
-              className="z-[999] w-[160px] bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden"
+              className="
+    z-[999]
+    w-44 sm:w-52
+    rounded-xl
+    border border-slate-200
+    bg-white
+    shadow-xl
+    overflow-hidden
+  "
             >
               {availableLocales.map((lang) => (
                 <button
                   key={lang}
                   onClick={() => handleLanguageChange(lang)}
-                  className={`w-full px-4 py-3 flex items-center text-left transition-colors ${
-                    locale === lang
-                      ? "bg-blue-50 text-blue-600"
-                      : "text-gray-700 hover:bg-gray-50"
-                  }`}
+                  className={`
+    w-full
+    px-4 py-3
+    flex items-center gap-3
+    text-left
+    transition
+    ${
+      locale === lang
+        ? "bg-cyan-50 text-cyan-600"
+        : "hover:bg-slate-50 text-slate-700"
+    }
+  `}
                 >
-                  <span className="text-lg">{languageInfo[lang].flag}</span>
-                  <div className="ml-3">
-                    <div className="font-medium">
+                  <span className="text-base font-semibold">
+                    {languageInfo[lang].flag}
+                  </span>
+
+                  <div className="flex-1">
+                    <div className="font-medium leading-tight">
                       {languageInfo[lang].nativeName}
                     </div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-slate-500">
                       {languageInfo[lang].name}
                     </div>
                   </div>
 
                   {locale === lang && (
                     <svg
-                      className="w-4 h-4 ml-auto text-blue-600"
+                      className="w-4 h-4 text-cyan-600"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
