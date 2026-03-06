@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useState } from "react";
 import {
   User,
@@ -13,7 +13,7 @@ import {
 import { IconInputGroup } from "@/components/ui/InputGroup";
 import type { ProfileData } from "@/types/features/setting";
 import { SocialProfilesCard } from "@/components/admin/setting/SocialProfileCard";
-import { useAdminSessionStore } from "@/stores/admin-session.store";
+import { useAdminSessionStore } from "@/stores/admin/AdminSession.store";
 
 const BIO_MAX = 280;
 

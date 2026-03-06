@@ -14,8 +14,8 @@ import {
   FileText,
 } from "lucide-react";
 import Link from "next/link";
-import { useProjectStore } from "@/stores/project.store";
-import { ProjectStatus } from "@/lib/types";
+import { useProjectStore } from "@/stores/feature/project.store";
+import { ProjectStatus } from "@/types/features/project";
 import { projectsApi } from "@/lib/api/project";
 import { showToast } from "nextjs-toast-notify";
 

@@ -18,8 +18,8 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
-import { useAdminSessionStore } from "@/stores/admin-session.store";
-import { useAdminNavigationStore } from "@/stores/AdminNavigation.store";
+import { useAdminSessionStore } from "@/stores/admin/AdminSession.store";
+import { useAdminNavigationStore } from "@/stores/admin/AdminNavigation.store";
 interface NavigationItem {
   id: string;
   href: string;

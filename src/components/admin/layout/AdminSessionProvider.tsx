@@ -1,7 +1,10 @@
 "use client";
 
 import { useEffect } from "react";
-import { useAdminSessionStore, AdminUser } from "@/stores/admin-session.store";
+import {
+  useAdminSessionStore,
+  AdminUser,
+} from "@/stores/admin/AdminSession.store";
 
 export default function AdminSessionProvider({ user }: { user: AdminUser }) {
   const setUser = useAdminSessionStore((s) => s.setUser);
