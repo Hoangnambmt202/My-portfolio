@@ -4,7 +4,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://codertodata.dev";
   const locales = ["en", "vi"] as const;
 
-  const pages = ["", "/about", "/blog", "/contact", "/projects"];
+  const pages = [
+    "",
+    ,
+    "/blog",
+    "/contact",
+    "/projects",
+    "/services",
+    "/skills",
+  ];
 
   const now = new Date();
 

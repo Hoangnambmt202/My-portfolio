@@ -10,6 +10,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: "/private/",
       },
     ],
-    sitemap: "https://your-domain.com/sitemap.xml",
+    sitemap: "https://codertodata.dev/sitemap.xml",
   };
 }
