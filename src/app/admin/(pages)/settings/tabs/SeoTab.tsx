@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, KeyboardEvent } from "react";
 import {
   Search,
