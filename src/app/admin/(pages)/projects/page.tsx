@@ -19,21 +19,7 @@ export const metadata: Metadata = {
   title: "CoderToData | Projects",
   description: "Manage your projects",
 };
-// ─── Config ───────────────────────────────────────────────────────────────────
-export const STATUS_CONFIG = {
-  DRAFT: {
-    label: "Draft",
-    color: "text-gray-500",
-  },
-  PUBLISHED: {
-    label: "Published",
-    color: "text-green-500",
-  },
-  ARCHIVED: {
-    label: "Archived",
-    color: "text-red-500",
-  },
-};
+// ─── Config ──────────────────────────────────────────────────────────
 const STATS = [
   {
     label: "Total Projects",

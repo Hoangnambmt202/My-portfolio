@@ -1,13 +1,14 @@
 "use client";
 
 import { create } from "zustand";
+import { Role } from "@/generated/prisma/enums";
 
 export interface AdminUser {
   id: string;
   name?: string | null;
   email?: string | null;
   image?: string | null;
-  role?: "ADMIN" | "USER";
+  role?: Role;
 }
 
 interface AdminSessionState {
