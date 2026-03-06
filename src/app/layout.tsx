@@ -10,6 +10,7 @@ import {
 import BackToTopButton from "@/components/common/BackToTopButton";
 import { SanityLive } from "@/sanity/lib/live";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
 import "@/styles/globals.css";
 import Providers from "./providers";
 import { auth } from "@/lib/api/auth";
@@ -77,6 +78,7 @@ export default async function RootLayout({
         <BackToTopButton />
         <SanityLive />
         <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );
