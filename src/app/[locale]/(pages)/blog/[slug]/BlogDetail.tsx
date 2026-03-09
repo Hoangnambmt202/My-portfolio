@@ -53,12 +53,7 @@ export default function BlogDetail({ post }: BlogDetailProps) {
           <div className="relative h-64 w-full overflow-hidden bg-slate-800 md:h-96">
             {post.image ? (
               <Image
-                src={urlFor(
-                  post.image.asset?._ref || post.image.asset?._id || post.image,
-                )
-                  .width(1200)
-                  .height(800)
-                  .url()}
+                src={urlFor(post.image).width(1200).height(800).url()}
                 alt={post.title}
                 fill
                 className="object-cover transition-transform duration-700 hover:scale-105"
@@ -83,13 +78,7 @@ export default function BlogDetail({ post }: BlogDetailProps) {
                   {post.author.avatar ? (
                     <Image
                       className="h-7 w-7 rounded-full object-cover ring-2 ring-[#137fec]/20"
-                      src={urlFor(
-                        (post.author.avatar as typeof post.image)?.asset
-                          ?._ref ||
-                          (post.author.avatar as typeof post.image)?.asset
-                            ?._id ||
-                          post.author.avatar,
-                      )
+                      src={urlFor(post.author.avatar)
                         .width(100)
                         .height(100)
                         .url()}

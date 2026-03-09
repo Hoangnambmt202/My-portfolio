@@ -11,14 +11,7 @@ export const portableTextComponents: PortableTextComponents = {
       return (
         <figure className="my-8">
           <Image
-            src={urlFor(
-              (value as SanityImageBlock)?.asset?._ref ||
-                (value as SanityImageBlock)?.asset?._id ||
-                value,
-            )
-              .width(1200)
-              .auto("format")
-              .url()}
+            src={urlFor(value).width(1200).auto("format").url()}
             alt={value.alt || "Blog image"}
             width={1200}
             height={700}

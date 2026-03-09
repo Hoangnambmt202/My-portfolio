@@ -3,7 +3,6 @@
 export interface SanityImageBlock {
   _type: "image";
   asset: {
-    _id: string;
     _ref: string;
     _type: "reference";
   };
@@ -34,15 +33,9 @@ export interface Category {
 export interface Image {
   _type: "image";
   asset: {
-    _ref?: string;
-    _id?: string;
-    url?: string;
-    _type?: "reference" | "sanity.imageAsset";
-    metadata?: any;
+    _ref: string;
+    _type: "reference";
   };
-  alt?: string;
-  crop?: any;
-  hotspot?: any;
 }
 export interface Post {
   _id: string;
@@ -60,10 +53,8 @@ export interface Post {
     current: string;
   };
   image?: Image;
-  slug:
-    | {
-        current: string;
-      }
-    | string;
+  slug: {
+    current: string;
+  };
   publishedAt: string;
 }
