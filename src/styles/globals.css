@@ -43,18 +43,18 @@
   --sidebar-border: oklch(0.928 0.006 264.531);
   --sidebar-ring: oklch(0.707 0.022 261.325);
 }
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
 
+}
 body {
   background: rgb(var(--background-rgb));
   font-family: var(--roboto-font);
   overflow-x: hidden;
 }
 
-/* Smooth scrolling */
-html {
-  scroll-behavior: smooth;
-  overflow-x: hidden;
-}
+
 @layer base {
   * {
     /* Sử dụng các class của plugin để làm mặc định cho toàn trang nếu muốn */

@@ -54,8 +54,57 @@ const pacifico = Pacifico({
   display: "swap",
 });
 export const metadata: Metadata = {
-  title: "Coder To Data | Web Developer | Next.js | WordPress",
-  description: "Personal portfolio website showcasing my projects and skills",
+  metadataBase: new URL("https://codertodata.dev"),
+  title: {
+    default: "Coder To Data | Web Developer | Next.js | WordPress",
+    template: "%s | Coder To Data",
+  },
+  description:
+    "CoderToData is a portfolio website show my skills, projects and experiences. I am a web developer with experience in Next.js, WordPress, DevOps, backend, frontend and software engineering.",
+  keywords: [
+    "Coder To Data",
+    "Web Developer",
+    "Next.js",
+    "WordPress",
+    "DevOps",
+    "Backend",
+    "Frontend",
+    "Software Engineering",
+  ],
+  authors: [{ name: "Coder To Data" }],
+  creator: "Coder To Data",
+  publisher: "Coder To Data",
+  openGraph: {
+    title: "Coder To Data | Web Developer | Next.js | WordPress",
+    description:
+      "CoderToData is a portfolio website show my skills, projects and experiences. I am a web developer with experience in Next.js, WordPress, DevOps, backend, frontend and software engineering.",
+    url: "https://codertodata.dev",
+    siteName: "Coder To Data",
+    images: [
+      {
+        url: "https://codertodata.dev/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Coder To Data",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Coder To Data | Web Developer | Next.js | WordPress",
+    description:
+      "CoderToData is a portfolio website show my skills, projects and experiences. I am a web developer with experience in Next.js, WordPress, DevOps, backend, frontend and software engineering.",
+    images: ["https://codertodata.dev/og-image.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  alternates: {
+    canonical: "/",
+  },
 };
 
 export default async function RootLayout({
@@ -67,6 +116,7 @@ export default async function RootLayout({
   return (
     <html
       className={`${inter.variable} ${poppins.variable} ${roboto.variable} ${playfair_display.variable} ${jetbrains_mono.variable} ${pacifico.variable}`}
+      lang="en"
     >
       <body
         className="bg-[#202020] min-h-screen scrollbar-thin

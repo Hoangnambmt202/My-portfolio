@@ -251,7 +251,7 @@ export default function ExperienceSection() {
                 </div>
 
                 {/* connector dot on the line */}
-                <div className="absolute left-[27px] top-6 size-2 rounded-full bg-blue-500 ring-4 ring-slate-950 z-10" />
+                {/* <div className="absolute left-[27px] top-6 size-2 rounded-full bg-blue-500 ring-4 ring-slate-950 z-10" /> */}
 
                 <ExpCard exp={exp} />
               </div>

@@ -108,7 +108,11 @@ export default function BlogClient({ posts }: { posts: Post[] }) {
               <div className="overflow-hidden rounded-lg mb-4">
                 {post.image && (
                   <Image
-                    src={urlFor(post.image.asset._ref)
+                    src={urlFor(
+                      post.image.asset?._ref ||
+                        post.image.asset?._id ||
+                        post.image,
+                    )
                       .width(400)
                       .height(300)
                       .url()}
@@ -138,7 +142,7 @@ export default function BlogClient({ posts }: { posts: Post[] }) {
                   transition={{ duration: 0.2 }}
                 >
                   <Link
-                    href={`/blog/${post?.slug?.current}`}
+                    href={`/blog/${typeof post?.slug === "string" ? post.slug : post?.slug?.current}`}
                     className="flex gap-2 items-center"
                   >
                     {t("readMore")} <ArrowRight className="w-3 h-3" />
