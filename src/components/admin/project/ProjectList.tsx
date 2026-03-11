@@ -1,132 +1,82 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// components/projects/ProjectList.tsx
+"use client";
+import { Project } from "@/types/features/project";
+import ProjectRow from "./ProjectsRow";
+import { useAdminProjectStore } from "@/stores/admin/project/ProjectAdmin.store";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-import { projectsApi } from "@/lib/api/project";
-import { formatDate } from "@/lib/utils/format";
-import { confirmDelete } from "@/stores/modal/ConfirmDelete.store";
+export default function ProjectList({ data }: { data: any }) {
+  const { projects: apiProjects, total, page, limit } = data;
+  const { projects, setProjects, setPagination } = useAdminProjectStore();
+  const router = useRouter();
 
-import { ExternalLink, Pencil, Trash2 } from "lucide-react";
-import Image from "next/image";
-import { showToast } from "nextjs-toast-notify";
+  useEffect(() => {
+    setProjects(apiProjects);
+    setPagination(page, total, limit);
+  }, [apiProjects, page, total, limit, setProjects, setPagination]);
 
-type ProjectStatus = "DRAFT" | "PUBLISHED" | "ARCHIVED";
-
-export const STATUS_CONFIG = {
-  DRAFT: {
-    label: "Draft",
-    color: "text-gray-500",
-  },
-  PUBLISHED: {
-    label: "Published",
-    color: "text-green-500",
-  },
-  ARCHIVED: {
-    label: "Archived",
-    color: "text-red-500",
-  },
-};
-function StatusBadge({ status }: { status: ProjectStatus }) {
-  const config = STATUS_CONFIG[status];
-
-  if (!config) {
-    return <span className="text-xs text-red-400 font-bold">Unknown</span>;
-  }
-
-  const { label, color } = config;
-
-  return (
-    <span className={`px-2 py-1 text-xs font-bold rounded-full ${color}`}>
-      {label}
-    </span>
-  );
-}
-// Import ProjectRow từ file cũ của bạn
-function ProjectRow({ project, isLast }: { project: any; isLast: boolean }) {
-  return (
-    <article
-      className={`group flex items-center gap-4 px-5 py-4 transition-colors duration-150 hover:bg-white/[0.03] ${
-        !isLast ? "border-b border-slate-700/30" : ""
-      }`}
-    >
-      {/* Thumbnail */}
-      <div className="shrink-0 w-10 h-10 rounded-lg overflow-hidden border border-white/[0.06]">
-        <Image
-          width={40}
-          height={40}
-          className="w-full h-full object-cover"
-          alt={`${project.title} thumbnail`}
-          src={project.thumbnail}
-        />
-      </div>
-
-      {/* Name / Category */}
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-bold text-white truncate">{project.title}</p>
-        <p className="text-xs text-slate-500 truncate">{project.category}</p>
-      </div>
-
-      {/* Status */}
-      <div className="w-28 shrink-0">
-        <StatusBadge status={project.status} />
-      </div>
-
-      {/* Last updated */}
-      <time className="w-32 shrink-0 text-sm text-slate-400">
-        {formatDate(project.updatedAt)}
-      </time>
-
-      {/* Actions */}
-      <div className="shrink-0 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
-        <button
-          aria-label={`View ${project.title}`}
-          className="p-1.5 rounded-lg text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors"
-        >
-          <ExternalLink size={14} />
-        </button>
-        <button
-          aria-label={`Edit ${project.title}`}
-          className="p-1.5 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors"
-        >
-          <Pencil size={14} />
-        </button>
-        <button
-          aria-label={`Delete ${project.title}`}
-          className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
-          onClick={() =>
-            confirmDelete({
-              entityName: "project",
-              itemName: project.title,
-              onConfirm: async () => {
-                // await projectsApi.delete(project.id);
-                showToast.success("Project deleted successfully");
-              },
-            })
-          }
-        >
-          <Trash2 size={14} />
-        </button>
-      </div>
-    </article>
-  );
-}
-
-export default async function ProjectList({
-  status,
-  page,
-}: {
-  status: string;
-  page: number;
-}) {
-  const data = await projectsApi.getAll({ status, page });
+  const totalPages = Math.ceil(total / limit);
+  const setPage = (p: number) => {
+    router.push(`/admin/projects?page=${p}`);
+  };
   return (
     <div>
-      {data.data.projects.map((project: any, i: number) => (
+      {projects.map((project: Project, i: number) => (
         <ProjectRow
           key={project.id}
           project={project}
-          isLast={i === data.data.projects.length - 1}
+          isLast={i === projects.length - 1}
         />
       ))}
+      {/* Pagination */}
+      <nav
+        className="flex items-center justify-between px-5 py-3 bg-slate-800/60 border-t border-slate-700/50"
+        aria-label="Pagination"
+      >
+        <p className="text-sm text-slate-400">
+          Showing{" "}
+          <span className="font-semibold text-white">
+            {total === 0
+              ? 0
+              : `${(page - 1) * limit + 1}–${Math.min(page * limit, total)}`}
+          </span>{" "}
+          of <span className="font-semibold text-white">{total}</span> projects
+        </p>
+
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => setPage(page - 1)}
+            disabled={page === 1}
+            className="px-3 py-1 text-sm text-slate-400 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          >
+            Previous
+          </button>
+
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <button
+              key={page}
+              onClick={() => setPage(page)}
+              aria-current={page === page ? "page" : undefined}
+              className={`w-8 h-8 rounded-lg text-sm font-bold transition-all duration-150 ${
+                page === page
+                  ? "bg-blue-600 text-white shadow-[0_2px_8px_rgba(19,127,236,0.4)]"
+                  : "text-slate-300 hover:bg-slate-700"
+              }`}
+            >
+              {page}
+            </button>
+          ))}
+
+          <button
+            onClick={() => setPage(page + 1)}
+            disabled={page === totalPages}
+            className="px-3 py-1 text-sm text-slate-400 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          >
+            Next
+          </button>
+        </div>
+      </nav>
     </div>
   );
 }

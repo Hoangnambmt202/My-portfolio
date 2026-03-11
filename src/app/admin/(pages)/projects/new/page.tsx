@@ -1,7 +1,7 @@
 import CreateProjectClient from "./CreateProjectClient";
 
-const CreateProject = () => {
+const CreateProjectPage = () => {
   return <CreateProjectClient />;
 };
 
-export default CreateProject;
+export default CreateProjectPage;

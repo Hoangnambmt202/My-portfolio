@@ -3,15 +3,6 @@ import { useState, useTransition } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocale } from "next-intl";
 import { usePathname, useRouter } from "@/i18n/routing";
-
-import {
-  useFloating,
-  offset,
-  flip,
-  shift,
-  autoUpdate,
-} from "@floating-ui/react";
-
 interface LanguageSwitcherProps {
   variant?: "dropdown" | "toggle";
   size?: "sm" | "md" | "lg";
@@ -43,13 +34,6 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
     md: "text-base px-3 py-2",
     lg: "text-lg px-4 py-3",
   };
-
-  // Floating UI — xử lý dropdown theo đúng vị trí nút
-  const { refs, floatingStyles } = useFloating({
-    placement: "left-start",
-    middleware: [offset(8), flip(), shift()],
-    whileElementsMounted: autoUpdate,
-  });
 
   const handleLanguageChange = (newLocale: string) => {
     if (newLocale !== locale) {
@@ -91,7 +75,6 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
     <div className={`relative ${className}`}>
       {/* Button */}
       <button
-        ref={refs.setReference}
         onClick={() => setIsOpen(!isOpen)}
         disabled={isPending}
         className={`
@@ -148,21 +131,11 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
 
             {/* Menu */}
             <motion.div
-              ref={refs.setFloating}
-              style={floatingStyles}
-              initial={{ opacity: 0, y: -6, scale: 0.96 }}
+              initial={{ opacity: 0, y: -4, scale: 0.96 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -6, scale: 0.96 }}
+              exit={{ opacity: 0, y: -4, scale: 0.96 }}
               transition={{ duration: 0.18 }}
-              className="
-    z-[999]
-    w-44 sm:w-52
-    rounded-xl
-    border border-slate-200
-    bg-white
-    shadow-xl
-    overflow-hidden
-  "
+              className="absolute right-0 top-full mt-2 z-[999] w-44 rounded-xl border border-slate-200 bg-white shadow-xl overflow-hidden"
             >
               {availableLocales.map((lang) => (
                 <button

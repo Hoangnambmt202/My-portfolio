@@ -1,0 +1,125 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
+import { formatDate } from "@/lib/utils/format";
+import { confirmDelete } from "@/stores/modal/ConfirmDelete.store";
+import { useViewProjectModalStore } from "@/stores/modal/ViewProjectModal.store";
+import { ExternalLink, Eye, Pencil, Trash2 } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { showToast } from "nextjs-toast-notify";
+
+type ProjectStatus = "DRAFT" | "PUBLISHED" | "ARCHIVED";
+
+export const STATUS_CONFIG = {
+  DRAFT: {
+    label: "Draft",
+    color: "text-gray-500",
+  },
+  PUBLISHED: {
+    label: "Published",
+    color: "text-green-500",
+  },
+  ARCHIVED: {
+    label: "Archived",
+    color: "text-red-500",
+  },
+};
+function StatusBadge({ status }: { status: ProjectStatus }) {
+  const config = STATUS_CONFIG[status];
+  if (!config) {
+    return <span className="text-xs text-red-400 font-bold">Unknown</span>;
+  }
+
+  const { label, color } = config;
+
+  return (
+    <span className={`px-2 py-1 text-xs font-bold rounded-full ${color}`}>
+      {label}
+    </span>
+  );
+}
+// Import ProjectRow từ file cũ của bạn
+export default function ProjectRow({
+  project,
+  isLast,
+}: {
+  project: any;
+  isLast: boolean;
+}) {
+  const openViewModal = useViewProjectModalStore((s) => s.openModal);
+  return (
+    <article
+      className={`group flex items-center gap-4 px-4 py-3 transition-colors duration-150 hover:bg-white/[0.03] ${
+        !isLast ? "border-b border-slate-700/30" : ""
+      }`}
+    >
+      {/* Thumbnail */}
+      <div className="shrink-0 w-10 h-10 rounded-lg overflow-hidden border border-white/[0.06]">
+        <Image
+          width={40}
+          height={40}
+          className="w-full h-full object-cover"
+          alt={`${project.title} thumbnail`}
+          src={project.thumbnail || "/assets/imgs/placeholder.png"}
+        />
+      </div>
+
+      {/* Name / Category */}
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-bold text-white truncate">{project.title}</p>
+        <p className="text-xs text-slate-500 truncate">{project.category}</p>
+      </div>
+
+      {/* Status */}
+      <div className="w-28 shrink-0">
+        <StatusBadge status={project.status} />
+      </div>
+
+      {/* Last updated */}
+      <time className="w-32 shrink-0 text-sm text-slate-400">
+        {formatDate(project.updatedAt)}
+      </time>
+
+      {/* Actions */}
+      <div className="shrink-0 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+        <button
+          className="p-1.5 rounded-lg text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors"
+          aria-label={`View ${project.title}`}
+          onClick={() => openViewModal(project)}
+        >
+          <Eye size={14} />
+        </button>
+        <Link
+          href={""}
+          aria-label={`External link ${project.title}`}
+          className="p-1.5 rounded-lg text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors"
+        >
+          <ExternalLink size={14} />
+        </Link>
+        <Link
+          href={`/admin/projects/${project.id}`}
+          aria-label={`Edit ${project.title}`}
+          className="p-1.5 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors"
+        >
+          <Pencil size={14} />
+        </Link>
+        <button
+          aria-label={`Delete ${project.title}`}
+          className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+          onClick={() =>
+            confirmDelete({
+              entityName: "project",
+              itemName: project.title,
+              onConfirm: async () => {
+                // await projectsApi.delete(project.id);
+                showToast.success("Project deleted successfully");
+              },
+            })
+          }
+        >
+          <Trash2 size={14} />
+        </button>
+      </div>
+    </article>
+  );
+}

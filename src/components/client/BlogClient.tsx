@@ -106,12 +106,9 @@ export default function BlogClient({ posts }: { posts: Post[] }) {
               </div>
 
               <div className="overflow-hidden rounded-lg mb-4">
-                {post.image && (
+                {post.image?.asset && (
                   <Image
-                    src={urlFor(post.image.asset._ref)
-                      .width(400)
-                      .height(300)
-                      .url()}
+                    src={urlFor(post.image).width(400).height(300).url()}
                     alt={post.title}
                     width={400}
                     height={300}

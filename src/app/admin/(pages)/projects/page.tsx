@@ -1,92 +1,56 @@
 import ProjectList from "@/components/admin/project/ProjectList";
-import {
-  ChevronDown,
-  FilterIcon,
-  FolderOpen,
-  Globe,
-  Pencil,
-  Plus,
-  Search,
-} from "lucide-react";
+import { FolderOpen, Globe, Pencil, Plus } from "lucide-react";
 
 import Link from "next/link";
 import { Suspense } from "react";
 import ProjectTableSkeleton from "./skeletons/ProjectTableSkeleton";
 import Breadcrumb from "@/components/ui/Breadcrumb";
 import { Metadata } from "next";
+import { projectsApi } from "@/lib/api/project";
+import StatCard from "@/components/admin/project/StatCard";
 
 export const metadata: Metadata = {
   title: "CoderToData | Projects",
   description: "Manage your projects",
 };
-// ─── Config ──────────────────────────────────────────────────────────
-const STATS = [
-  {
-    label: "Total Projects",
-    value: 12,
-    Icon: FolderOpen,
-    color: "text-blue-400",
-    glow: "bg-blue-500/10",
-    iconBg: "bg-blue-500/20",
-  },
-  {
-    label: "Live Published",
-    value: 8,
-    Icon: Globe,
-    color: "text-green-400",
-    glow: "bg-green-500/10",
-    iconBg: "bg-green-500/20",
-  },
-  {
-    label: "Drafts",
-    value: 4,
-    Icon: Pencil,
-    color: "text-amber-400",
-    glow: "bg-amber-500/10",
-    iconBg: "bg-amber-500/20",
-  },
-];
 
-// ─── Sub-components ───────────────────────────────────────────────────────────
+export default async function ProjectDashboardSection() {
+  const data = await projectsApi.getAll({ status: "", page: 1 });
 
-function StatCard({
-  label,
-  value,
-  Icon,
-  color,
-  glow,
-  iconBg,
-}: (typeof STATS)[0]) {
-  return (
-    <div className="relative flex-1 flex items-center justify-between p-6 bg-slate-800/40 rounded-xl border border-white/[0.06] backdrop-blur-sm overflow-hidden transition-transform duration-200 hover:-translate-y-0.5">
-      <div className="flex flex-col gap-0.5">
-        <span className={`text-sm font-medium ${color} opacity-80`}>
-          {label}
-        </span>
-        <span className={`text-3xl font-extrabold ${color}`}>{value}</span>
-      </div>
-      <div className={`p-3 rounded-lg ${iconBg}`}>
-        <Icon className={`w-5 h-5 ${color}`} />
-      </div>
-      {/* ambient glow */}
-      <div
-        className={`absolute -right-6 -bottom-6 w-24 h-24 rounded-full blur-2xl ${glow}`}
-      />
-    </div>
-  );
-}
+  const { total } = data.data;
 
-// ─── Main Component ───────────────────────────────────────────────────────────
+  const STATS = [
+    {
+      label: "Total project",
+      value: total,
+      Icon: FolderOpen,
+      color: "text-blue-400",
+      glow: "bg-blue-500/10",
+      iconBg: "bg-blue-500/20",
+    },
+    {
+      label: "Live Published",
+      value: 8,
+      Icon: Globe,
+      color: "text-green-400",
+      glow: "bg-green-500/10",
+      iconBg: "bg-green-500/20",
+    },
+    {
+      label: "Drafts",
+      value: 4,
+      Icon: Pencil,
+      color: "text-amber-400",
+      glow: "bg-amber-500/10",
+      iconBg: "bg-amber-500/20",
+    },
+  ];
 
-export default function ProjectDashboardSection() {
   return (
     <div className="relative flex flex-col flex-1 min-h-screen bg-slate-900 overflow-y-auto">
-      {/* Top gradient */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-96 bg-gradient-to-b from-blue-500/10 to-transparent" />
 
-      {/* ── Main content ── */}
       <div className="relative flex flex-col gap-4 max-w-screen-xl w-full mx-auto px-6 py-4">
-        {/* Header */}
         <Breadcrumb />
 
         <header className="flex items-center justify-between">
@@ -100,8 +64,8 @@ export default function ProjectDashboardSection() {
           </div>
 
           <Link
-            href={"/admin/projects/new"}
-            className="relative inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white text-sm font-bold rounded-lg shadow-[0_4px_14px_rgba(19,127,236,0.35)] transition-all duration-150"
+            href="/admin/projects/new"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold rounded-lg"
           >
             <Plus size={14} />
             Add New Project
@@ -109,139 +73,35 @@ export default function ProjectDashboardSection() {
         </header>
 
         {/* Stats */}
-        <section className="flex gap-4" aria-label="Project statistics">
+        <section className="flex gap-4">
           {STATS.map((stat) => (
             <StatCard key={stat.label} {...stat} />
           ))}
         </section>
 
-        {/* Toolbar */}
-        <div className="flex gap-3">
-          {/* Search */}
-          <div className="relative flex-1">
-            <Search
-              size={16}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
-            />
-            <input
-              id="search-projects"
-              type="search"
-              placeholder="Search projects..."
-              // value={searchQuery}
-              className="w-full pl-9 pr-4 py-2.5 bg-slate-800/50 border border-slate-700 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition"
-            />
-          </div>
-
-          {/* Status filter */}
-          <div className="relative w-44">
-            <FilterIcon
-              size={14}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
-            />
-            <select
-              id="status-filter"
-              className="w-full appearance-none pl-9 pr-8 py-2.5 bg-slate-800/50 border border-slate-700 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition cursor-pointer"
-            >
-              <option value="all">All Statuses</option>
-              <option value="DRAFT">Draft</option>
-              <option value="PUBLISHED">Published</option>
-              <option value="ARCHIVED">Archived</option>
-            </select>
-            <ChevronDown
-              size={14}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
-            />
-          </div>
-        </div>
         {/* Table */}
-        <section
-          className="flex flex-col bg-slate-800/40 rounded-xl border border-white/[0.06] backdrop-blur-sm overflow-hidden"
-          aria-label="Projects table"
-        >
-          {/* Table header */}
+        <section className="flex flex-col bg-slate-800/40 rounded-xl border border-white/[0.06] overflow-hidden">
           <div className="flex items-center gap-4 px-5 py-3 bg-slate-800/60 border-b border-slate-700/50">
-            <div className="flex-1 min-w-0 text-[11px] font-bold text-slate-400 tracking-widest uppercase">
+            <div className="flex-1 text-[11px] font-bold text-slate-400 uppercase">
               Project Name
             </div>
-            <div className="w-28 shrink-0 text-[11px] font-bold text-slate-400 tracking-widest uppercase">
+            <div className="w-28 text-[11px] font-bold text-slate-400 uppercase">
               Status
             </div>
-            <div className="w-32 shrink-0 text-[11px] font-bold text-slate-400 tracking-widest uppercase">
+            <div className="w-32 text-[11px] font-bold text-slate-400 uppercase">
               Last Updated
             </div>
-            <div className="w-20 shrink-0 text-[11px] font-bold text-slate-400 tracking-widest uppercase text-right">
+            <div className="w-20 text-[11px] font-bold text-slate-400 uppercase text-right">
               Actions
             </div>
           </div>
 
-          {/* Rows */}
           <div>
             <Suspense fallback={<ProjectTableSkeleton />}>
-              <ProjectList page={1} status={""} />
+              <ProjectList data={data.data} />
             </Suspense>
           </div>
-
-          {/* Pagination */}
-          {/* <nav
-            className="flex items-center justify-between px-5 py-3 bg-slate-800/60 border-t border-slate-700/50"
-            aria-label="Pagination"
-          >
-            <p className="text-sm text-slate-400">
-              Showing{" "}
-              <span className="font-semibold text-white">
-                {totalPages === 0
-                  ? 0
-                  : `${(safePage - 1) * ITEMS_PER_PAGE + 1}–${Math.min(safePage * ITEMS_PER_PAGE, total)}`}
-              </span>{" "}
-              of <span className="font-semibold text-white">{total}</span>{" "}
-              projects
-            </p>
-
-            <div className="flex items-center gap-1">
-              <button
-                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                disabled={safePage === 1}
-                className="px-3 py-1 text-sm text-slate-400 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-              >
-                Previous
-              </button>
-
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                (page) => (
-                  <button
-                    key={page}
-                    onClick={() => setCurrentPage(page)}
-                    aria-current={safePage === page ? "page" : undefined}
-                    className={`w-8 h-8 rounded-lg text-sm font-bold transition-all duration-150 ${
-                      safePage === page
-                        ? "bg-blue-600 text-white shadow-[0_2px_8px_rgba(19,127,236,0.4)]"
-                        : "text-slate-300 hover:bg-slate-700"
-                    }`}
-                  >
-                    {page}
-                  </button>
-                ),
-              )}
-
-              <button
-                onClick={() =>
-                  setCurrentPage((p) => Math.min(totalPages, p + 1))
-                }
-                disabled={safePage === totalPages}
-                className="px-3 py-1 text-sm text-slate-400 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-              >
-                Next
-              </button>
-            </div>
-          </nav> */}
         </section>
-
-        {/* Footer */}
-        <footer className="text-center">
-          <p className="text-xs text-slate-600">
-            © 2024 Dev Portfolio Admin. All rights reserved.
-          </p>
-        </footer>
       </div>
     </div>
   );

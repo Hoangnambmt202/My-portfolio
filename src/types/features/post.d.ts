@@ -1,14 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
-export interface SanityImageBlock {
-  _type: "image";
-  asset: {
-    _ref: string;
-    _type: "reference";
-  };
-  alt?: string;
-}
-
 export interface SanityCodeBlock {
   _type: "code";
   language?: string;
@@ -36,6 +26,7 @@ export interface Image {
     _ref: string;
     _type: "reference";
   };
+  alt?: string;
 }
 export interface Post {
   _id: string;
@@ -52,7 +43,7 @@ export interface Post {
     _type: string;
     current: string;
   };
-  image?: Image;
+  image?: Image | null;
   slug: {
     current: string;
   };

@@ -1,6 +1,7 @@
 import AdminSessionProvider from "@/components/admin/layout/AdminSessionProvider";
 import AdminSidebar from "@/components/admin/layout/AdminSidebar";
-import ConfirmModal from "@/components/ui/ConfirmModal";
+import ConfirmModal from "@/components/common/modals/ConfirmModal";
+import ViewProjectModal from "@/components/common/modals/ViewProjectModal";
 import { auth } from "@/lib/api/auth";
 import { redirect } from "next/navigation";
 
@@ -33,6 +34,7 @@ export default async function AdminLayout({
         {/* Page Content */}
         {children}
         <ConfirmModal />
+        <ViewProjectModal />
       </main>
     </div>
   );

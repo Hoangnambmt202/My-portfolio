@@ -11,11 +11,11 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const page = Number(searchParams.get("page") ?? 1);
     const limit = Number(searchParams.get("limit") ?? 10);
-    const featured = searchParams.get("featured") === "true";
+    const isFeatured = searchParams.get("isFeatured") === "true";
     const status = searchParams.get("status");
 
     const where = {
-      ...(featured && { featured: true }),
+      ...(isFeatured && { isFeatured: true }),
       ...(status && { status: status as any }),
     };
 
@@ -28,7 +28,6 @@ export async function GET(req: Request) {
       }),
       prisma.project.count({ where }),
     ]);
-
     return NextResponse.json({
       success: true,
       data: { projects, total, page, limit },

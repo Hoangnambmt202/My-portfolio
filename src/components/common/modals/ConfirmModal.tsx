@@ -1,7 +1,9 @@
 "use client";
+
 import { Trash2, AlertTriangle, Info, X } from "lucide-react";
 import { useConfirmModalStore } from "@/stores/modal/ConfirmModal.store";
 import { useState } from "react";
+import Modal from "@/components/ui/Modal";
 
 const variantConfig = {
   danger: {
@@ -24,7 +26,7 @@ export default function ConfirmModal() {
 
   const [input, setInput] = useState("");
 
-  if (!open || !payload) return null;
+  if (!payload) return null;
 
   const {
     title = "Xác nhận hành động",
@@ -39,21 +41,15 @@ export default function ConfirmModal() {
   const canConfirm = !requireTyping || input.trim() === requireTyping;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* Overlay */}
-      <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-        onClick={closeModal}
-      />
-
-      {/* Modal */}
-      <div className="relative w-full max-w-md rounded-xl bg-[#0f172a] border border-slate-800 shadow-xl">
+    <Modal isOpen={open} onClose={closeModal}>
+      <div className="rounded-xl bg-[#0f172a] border border-slate-800 shadow-xl">
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-800">
           <div className="flex items-center gap-2">
             <Icon className="text-red-500" size={18} />
             <h3 className="text-xl font-bold text-white">{title}</h3>
           </div>
+
           <button
             onClick={closeModal}
             className="text-slate-400 hover:text-white"
@@ -71,6 +67,7 @@ export default function ConfirmModal() {
               <p className="text-xs text-slate-400 mb-1">
                 Gõ <b>{requireTyping}</b> để xác nhận
               </p>
+
               <input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
@@ -101,6 +98,6 @@ export default function ConfirmModal() {
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 }

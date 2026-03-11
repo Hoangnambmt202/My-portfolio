@@ -117,6 +117,7 @@ export default async function RootLayout({
     <html
       className={`${inter.variable} ${poppins.variable} ${roboto.variable} ${playfair_display.variable} ${jetbrains_mono.variable} ${pacifico.variable}`}
       lang="en"
+      suppressHydrationWarning
     >
       <body
         className="bg-[#202020] min-h-screen scrollbar-thin
