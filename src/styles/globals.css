@@ -1,11 +1,11 @@
 @import "tailwindcss";
 
 @plugin "tailwindcss-animate";
-@plugin 'tailwind-scrollbar' {
-  nocompatible: true;
-};
-@custom-variant dark (&:is(.dark *));
 
+@custom-variant dark (&:is(.dark *));
+* {
+  scrollbar-width: thin;
+}
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-rgb: 255, 255, 255;
@@ -54,32 +54,23 @@ body {
   overflow-x: hidden;
 }
 
-
-@layer base {
-  * {
-    /* Sử dụng các class của plugin để làm mặc định cho toàn trang nếu muốn */
-    @apply scrollbar-thin scrollbar-track-secondary scrollbar-thumb-muted-foreground/20;
-  }
-
-  /* Nếu bạn vẫn muốn dùng CSS thuần làm mặc định, hãy đặt ở đây nhưng 
-     phải chấp nhận nó có thể khó ghi đè hơn một chút */
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    @apply bg-muted-foreground/30 rounded-full;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    @apply bg-muted-foreground/50;
-  }
+::-webkit-scrollbar {
+  width: 4px;
 }
+
+::-webkit-scrollbar-thumb {
+  background: #6366f1;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4f46e5;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 @layer components {
   .all-\[unset\] {
     all: unset;

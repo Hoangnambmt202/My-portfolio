@@ -119,12 +119,7 @@ export default async function RootLayout({
       lang="en"
       suppressHydrationWarning
     >
-      <body
-        className="bg-[#202020] min-h-screen scrollbar-thin
-          scrollbar-thumb-gray-400
-          scrollbar-track-transparent
-          scrollbar-thumb-rounded-full"
-      >
+      <body className="bg-[#202020] min-h-screen ">
         <Providers session={session}>{children}</Providers>
         <BackToTopButton />
         <SanityLive />
