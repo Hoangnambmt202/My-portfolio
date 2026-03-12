@@ -1,7 +1,7 @@
 "use client";
 
 import { create } from "zustand";
-import { Role } from "@/generated/prisma/enums";
+import { Role } from "@prisma/client";
 
 export interface AdminUser {
   id: string;
