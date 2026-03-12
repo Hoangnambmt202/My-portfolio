@@ -21,6 +21,20 @@ async function main() {
   }
 
   const hashedPassword = await bcrypt.hash(env.ADMIN_PASSWORD, 12);
+  const existing = await prisma.user.findFirst({
+    where: { role: "ADMIN" },
+  });
+
+  if (!existing) {
+    await prisma.user.create({
+      data: {
+        email: env.ADMIN_MAIL,
+        password: hashedPassword,
+        name: env.ADMIN_NAME,
+        role: "ADMIN",
+      },
+    });
+  }
 
   await prisma.user.upsert({
     where: { email: env.ADMIN_MAIL },
