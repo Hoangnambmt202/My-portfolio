@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+import { useEffect } from "react"; // 1. Import useEffect
 import {
   Save,
   X,
-  ChevronRight,
   Image as ImageIcon,
   CloudUpload,
   Link as LinkIcon,
@@ -13,39 +13,76 @@ import {
   Trash2,
   FileText,
 } from "lucide-react";
-import Link from "next/link";
 
 import { ProjectStatus } from "@/types/features/project";
 import { useAdminProjectFormStore } from "@/stores/admin/project/ProjectFormAdmin.store";
-// import { projectsApi } from "@/lib/api/project";
-// import { showToast } from "nextjs-toast-notify";
+import { projectsApi } from "@/lib/api/project";
+import { showToast } from "nextjs-toast-notify";
+import Breadcrumb from "@/components/ui/Breadcrumb";
+import { useRouter } from "next/navigation"; // 2. Thêm router để redirect sau khi save
+import { revalidateProjectsData } from "@/actions/project.actions";
 
 const EditProjectClient = ({ project }: { project: any }) => {
-  const { loading, setField, removeTech, addTech, error } =
-    useAdminProjectFormStore();
+  const router = useRouter();
+
+  // 3. Lấy TẤT CẢ các state và action cần thiết từ store
+  const {
+    title,
+    description,
+    content,
+    liveUrl,
+    githubUrl,
+    techStack,
+    status,
+    loading,
+    setField,
+    removeTech,
+    addTech,
+    setLoading,
+  } = useAdminProjectFormStore();
+
+  // 4. Đồng bộ data từ server vào store khi component mount
+  useEffect(() => {
+    if (project) {
+      setField("title", project.title || "");
+      setField("description", project.description || "");
+      setField("content", project.content || "");
+      setField("liveUrl", project.liveUrl || "");
+      setField("githubUrl", project.githubUrl || "");
+      setField("techStack", project.techStack || []);
+      setField("status", project.status || "DRAFT");
+    }
+  }, [project, setField]);
+
   const handleSubmit = async () => {
     try {
-      // const res = await projectsApi.update(id, {
-      //   title,
-      //   description,
-      //   content,
-      //   techStack,
-      //   status,
-      //   images: [],
-      //   order: 0,
-      //   slug: title.toLowerCase().replace(/\s+/g, "-"),
-      // });
+      setLoading(true); // Bật trạng thái loading
 
-      // if (!res.success) {
-      //   throw new Error(res.error ?? "Create project failed");
-      // }
-      // if (res.success) {
-      //   showToast.success("Tạo project thành công", { duration: 1500 });
-      // }
-      console.log("sumbit edit");
+      // 5. Lấy dữ liệu TỪ STORE (dữ liệu mới nhất user đã sửa), thay vì từ `project` (dữ liệu cũ)
+      const res = await projectsApi.update(project.id, {
+        title: title,
+        description: description,
+        content: content,
+        liveUrl: liveUrl,
+        githubUrl: githubUrl,
+        techStack: techStack,
+        status: status,
+        images: [],
+        order: 0,
+      });
+      await revalidateProjectsData();
+
+      if (!res.success) {
+        throw new Error(res.error ?? "Update project failed");
+      }
+
+      showToast.success("Cập nhật project thành công", { duration: 1500 });
+      router.push("/admin/projects"); // Redirect về danh sách
     } catch (err: any) {
-      console.log(err);
-      return false;
+      console.error(err);
+      showToast.error("Có lỗi xảy ra khi cập nhật");
+    } finally {
+      setLoading(false); // Tắt loading
     }
   };
   return (
@@ -55,19 +92,7 @@ const EditProjectClient = ({ project }: { project: any }) => {
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-center justify-between py-4 gap-4">
             <div>
-              <nav className="flex items-center gap-2 text-xs font-medium text-slate-500 mb-1 tracking-wider">
-                <Link
-                  href="/admin/projects"
-                  className="hover:text-blue-400 transition-colors"
-                >
-                  Projects
-                </Link>
-                <ChevronRight size={14} />
-                <span className="text-slate-300">Edit Project</span>
-              </nav>
-              <h1 className="text-2xl font-bold text-white tracking-tight">
-                Edit Project
-              </h1>
+              <Breadcrumb />
             </div>
 
             <div className="flex items-center gap-3">
@@ -110,7 +135,7 @@ const EditProjectClient = ({ project }: { project: any }) => {
                   <input
                     type="text"
                     name="title"
-                    value={project.title}
+                    value={title}
                     placeholder="e.g. AI-Powered Analytics Dashboard"
                     onChange={(e) => setField("title", e.target.value)}
                     className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
@@ -123,7 +148,7 @@ const EditProjectClient = ({ project }: { project: any }) => {
                   </label>
                   <textarea
                     rows={3}
-                    value={project.description || ""}
+                    value={description || ""}
                     onChange={(e) => setField("description", e.target.value)}
                     placeholder="Briefly describe the core value of this project..."
                     className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none"
@@ -209,7 +234,7 @@ const EditProjectClient = ({ project }: { project: any }) => {
               <div className="grid grid-cols-1">
                 <textarea
                   rows={5}
-                  value={project.content || ""}
+                  value={content || ""}
                   onChange={(e) => setField("content", e.target.value)}
                   placeholder="Briefly describe the core value of this project..."
                   className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none"
@@ -233,8 +258,10 @@ const EditProjectClient = ({ project }: { project: any }) => {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-slate-300">Current Status</span>
-                  <span className="px-2.5 py-1 text-[10px] font-bold bg-amber-500/10 text-amber-500 border border-amber-500/20 rounded-full uppercase tracking-tight">
-                    Draft
+                  <span
+                    className={`px-2.5 py-1 text-[10px] font-bol border rounded-full uppercase tracking-tight ${status === "PUBLISHED" ? "text-green-500 border-green-500/20 bg-green-500/10" : "text-amber-500 border-amber-500/20 bg-amber-500/10"}`}
+                  >
+                    {status}
                   </span>
                 </div>
                 <div>
@@ -262,7 +289,7 @@ const EditProjectClient = ({ project }: { project: any }) => {
                 Technologies
               </h3>
               <div className="flex flex-wrap gap-2 mb-4">
-                {project.techStack.map((tag: string) => (
+                {techStack.map((tag: string) => (
                   <div
                     key={tag}
                     className="flex items-center gap-1 bg-green-500/10 border border-green-500/20 rounded-xl px-2 py-1 text-green-400 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none"
@@ -311,6 +338,8 @@ const EditProjectClient = ({ project }: { project: any }) => {
                   />
                   <input
                     type="url"
+                    value={liveUrl}
+                    onChange={(e) => setField("liveUrl", e.target.value)}
                     placeholder="Live Demo URL"
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg pl-10 pr-4 py-2.5 text-sm text-white focus:border-blue-500 outline-none transition-all"
                   />
@@ -322,6 +351,8 @@ const EditProjectClient = ({ project }: { project: any }) => {
                   />
                   <input
                     type="url"
+                    value={githubUrl}
+                    onChange={(e) => setField("githubUrl", e.target.value)}
                     placeholder="Source Code URL"
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg pl-10 pr-4 py-2.5 text-sm text-white focus:border-blue-500 outline-none transition-all"
                   />
@@ -343,11 +374,7 @@ const EditProjectClient = ({ project }: { project: any }) => {
           </aside>
         </div>
       </main>
-      {error && (
-        <div className="bg-red-500/10 border border-red-500/30 text-red-400 text-sm p-3 rounded-lg">
-          {error}
-        </div>
-      )}
+
       <footer className="max-w-[1400px] mx-auto px-8 py-10 border-t border-slate-900 mt-12 text-center">
         <p className="text-xs font-medium text-slate-600 uppercase tracking-[0.2em]">
           © 2026 DevPortfolio • Crafting Digital Experiences

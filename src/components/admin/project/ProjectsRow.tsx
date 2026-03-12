@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+import { projectsApi } from "@/lib/api/project";
 import { formatDate } from "@/lib/utils/format";
 import { confirmDelete } from "@/stores/modal/ConfirmDelete.store";
 import { useViewProjectModalStore } from "@/stores/modal/ViewProjectModal.store";
@@ -7,7 +8,7 @@ import { ExternalLink, Eye, Pencil, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { showToast } from "nextjs-toast-notify";
-
+import { revalidateProjectsData } from "@/actions/project.actions";
 type ProjectStatus = "DRAFT" | "PUBLISHED" | "ARCHIVED";
 
 export const STATUS_CONFIG = {
@@ -111,8 +112,41 @@ export default function ProjectRow({
               entityName: "project",
               itemName: project.title,
               onConfirm: async () => {
-                // await projectsApi.delete(project.id);
-                showToast.success("Project deleted successfully");
+                try {
+                  const res = await projectsApi.delete(project.id);
+                  if (!res.success) {
+                    const fieldErrors = res?.error?.fieldErrors;
+
+                    if (fieldErrors) {
+                      Object.entries(fieldErrors).forEach(
+                        ([field, messages]) => {
+                          (messages as string[]).forEach((msg) => {
+                            showToast.error(`${field}: ${msg}`);
+                          });
+                        },
+                      );
+                    }
+
+                    return;
+                  }
+                  await revalidateProjectsData();
+
+                  showToast.success("Project deleted successfully", {
+                    duration: 1500,
+                  });
+                } catch (error: any) {
+                  const fieldErrors = error?.error?.fieldErrors;
+
+                  if (fieldErrors) {
+                    Object.entries(fieldErrors).forEach(([field, messages]) => {
+                      (messages as string[]).forEach((msg) => {
+                        showToast.error(`${field}: ${msg}`);
+                      });
+                    });
+                  } else {
+                    showToast.error("Delete failed");
+                  }
+                }
               },
             })
           }

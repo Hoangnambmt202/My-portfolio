@@ -5,6 +5,7 @@ import ProjectRow from "./ProjectsRow";
 import { useAdminProjectStore } from "@/stores/admin/project/ProjectAdmin.store";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function ProjectList({ data }: { data: any }) {
   const { projects: apiProjects, total, page, limit } = data;
@@ -44,13 +45,13 @@ export default function ProjectList({ data }: { data: any }) {
           of <span className="font-semibold text-white">{total}</span> projects
         </p>
 
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
           <button
             onClick={() => setPage(page - 1)}
             disabled={page === 1}
-            className="px-3 py-1 text-sm text-slate-400 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            className="p-1.5 rounded-md border border-slate-400 text-slate-300 hover:text-white hover:border-slate-600 transition-all disabled:opacity-30"
           >
-            Previous
+            <ChevronLeft size={14} />
           </button>
 
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
@@ -71,9 +72,9 @@ export default function ProjectList({ data }: { data: any }) {
           <button
             onClick={() => setPage(page + 1)}
             disabled={page === totalPages}
-            className="px-3 py-1 text-sm text-slate-400 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            className="p-1.5 rounded-md border border-slate-400 text-slate-300 hover:text-white hover:border-slate-600 transition-all disabled:opacity-30"
           >
-            Next
+            <ChevronRight size={14} />
           </button>
         </div>
       </nav>

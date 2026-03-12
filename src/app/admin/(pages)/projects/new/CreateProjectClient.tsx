@@ -14,7 +14,7 @@ import {
   FileText,
 } from "lucide-react";
 import Link from "next/link";
-import { useProjectStore } from "@/stores/feature/project.store";
+import { useAdminProjectFormStore } from "@/stores/admin/project/ProjectFormAdmin.store";
 import { ProjectStatus } from "@/types/features/project";
 import { projectsApi } from "@/lib/api/project";
 import { showToast } from "nextjs-toast-notify";
@@ -25,35 +25,60 @@ const CreateProjectClient = () => {
     description,
     content,
     techStack,
+    liveUrl,
+    githubUrl,
     loading,
-    error,
     status,
     setField,
+    setLoading,
     addTech,
     removeTech,
-  } = useProjectStore();
+    errors,
+    setErrors,
+    reset,
+  } = useAdminProjectFormStore();
   const handleSubmit = async () => {
     try {
-      const res = await projectsApi.create({
-        title,
-        description,
-        content,
-        techStack,
-        status,
+      setLoading(true);
+      await projectsApi.create({
+        title: title.trim(),
+        description: description.trim(),
+        content: content.trim(),
+        techStack: techStack.map((tech) => tech.trim()),
+        status: status,
+        liveUrl: liveUrl.trim() || "",
+        githubUrl: githubUrl.trim() || "",
         images: [],
         order: 0,
-        slug: title.toLowerCase().replace(/\s+/g, "-"),
       });
 
-      if (!res.success) {
-        throw new Error(res.error ?? "Create project failed");
-      }
-      if (res.success) {
-        showToast.success("Tạo project thành công", { duration: 1500 });
-      }
+      showToast.success("Tạo project thành công", { duration: 1500 });
+      reset();
     } catch (err: any) {
-      console.log(err);
-      return false;
+      const fieldErrors = err?.error?.fieldErrors;
+      const formErrors = err?.error?.formErrors;
+
+      if (fieldErrors) {
+        setErrors(fieldErrors);
+
+        Object.entries(fieldErrors).forEach(([field, messages]) => {
+          (messages as string[]).forEach((msg) => {
+            showToast.error(`${field}: ${msg}`);
+          });
+        });
+      }
+
+      if (formErrors?.length) {
+        formErrors.forEach((msg: string) => {
+          showToast.error(msg);
+        });
+      }
+
+      if (!fieldErrors && !formErrors) {
+        showToast.error(err?.message || "Something went wrong");
+      }
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -123,6 +148,11 @@ const CreateProjectClient = () => {
                     onChange={(e) => setField("title", e.target.value)}
                     className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                   />
+                  {errors?.title && (
+                    <p className="text-red-400 text-xs mt-1">
+                      {errors.title[0]}
+                    </p>
+                  )}
                 </div>
 
                 <div className="group">
@@ -136,6 +166,11 @@ const CreateProjectClient = () => {
                     placeholder="Briefly describe the core value of this project..."
                     className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none"
                   ></textarea>
+                  {errors?.description && (
+                    <p className="text-red-400 text-xs mt-1">
+                      {errors.description[0]}
+                    </p>
+                  )}
                   <div className="flex justify-end mt-1">
                     <span className="text-[10px] text-slate-600 uppercase font-bold tracking-widest">
                       0 / 1000 Characters
@@ -222,6 +257,11 @@ const CreateProjectClient = () => {
                   placeholder="Briefly describe the core value of this project..."
                   className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none"
                 ></textarea>
+                {errors?.content && (
+                  <p className="text-red-400 text-xs mt-1">
+                    {errors.content[0]}
+                  </p>
+                )}
               </div>
               <div className="flex justify-end mt-2">
                 <span className="text-[10px] text-slate-600 uppercase font-bold tracking-widest">
@@ -270,15 +310,18 @@ const CreateProjectClient = () => {
                 Technologies
               </h3>
               <div className="flex flex-wrap gap-2 mb-4">
-                {techStack.map((tag) => (
-                  <span key={tag} className="...">
-                    {tag}
+                {techStack.map((tag: string) => (
+                  <div
+                    key={tag}
+                    className="flex items-center gap-1 bg-green-500/10 border border-green-500/20 rounded-xl px-2 py-1 text-green-400 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none"
+                  >
+                    <span className="">{tag}</span>
                     <X
                       size={12}
                       onClick={() => removeTech(tag)}
                       className="cursor-pointer hover:text-red-400"
                     />
-                  </span>
+                  </div>
                 ))}
               </div>
               <div className="relative">
@@ -297,6 +340,11 @@ const CreateProjectClient = () => {
                   }}
                   className="..."
                 />
+                {errors?.techStack && (
+                  <p className="text-red-400 text-xs mt-1">
+                    {errors.techStack[0]}
+                  </p>
+                )}
                 <button className="absolute right-2 top-1.5 p-1 text-slate-500 hover:text-blue-400">
                   <Plus size={18} />
                 </button>
@@ -316,9 +364,16 @@ const CreateProjectClient = () => {
                   />
                   <input
                     type="url"
+                    value={liveUrl}
+                    onChange={(e) => setField("liveUrl", e.target.value)}
                     placeholder="Live Demo URL"
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg pl-10 pr-4 py-2.5 text-sm text-white focus:border-blue-500 outline-none transition-all"
                   />
+                  {errors?.liveUrl && (
+                    <p className="text-red-400 text-xs mt-1">
+                      {errors.liveUrl[0]}
+                    </p>
+                  )}
                 </div>
                 <div className="relative group">
                   <Code
@@ -327,6 +382,8 @@ const CreateProjectClient = () => {
                   />
                   <input
                     type="url"
+                    value={githubUrl}
+                    onChange={(e) => setField("githubUrl", e.target.value)}
                     placeholder="Source Code URL"
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg pl-10 pr-4 py-2.5 text-sm text-white focus:border-blue-500 outline-none transition-all"
                   />
@@ -348,11 +405,7 @@ const CreateProjectClient = () => {
           </aside>
         </div>
       </main>
-      {error && (
-        <div className="bg-red-500/10 border border-red-500/30 text-red-400 text-sm p-3 rounded-lg">
-          {error}
-        </div>
-      )}
+
       <footer className="max-w-[1400px] mx-auto px-8 py-10 border-t border-slate-900 mt-12 text-center">
         <p className="text-xs font-medium text-slate-600 uppercase tracking-[0.2em]">
           © 2026 DevPortfolio • Crafting Digital Experiences

@@ -1,8 +1,13 @@
 import { projectsApi } from "@/lib/api/project";
 import EditProjectClient from "./EditProjectClient";
 
-const EditProjectPage = async ({ params }: { params: { id: string } }) => {
-  const res = await projectsApi.getById(params.id);
+const EditProjectPage = async ({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) => {
+  const { id } = await params;
+  const res = await projectsApi.getById(id);
   return <EditProjectClient project={res.data} />;
 };
 

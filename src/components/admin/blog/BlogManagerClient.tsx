@@ -40,6 +40,8 @@ import { Line } from "react-chartjs-2";
 import { Post } from "@/types/features/post";
 import Breadcrumb from "@/components/ui/Breadcrumb";
 import PostTableSkeleton from "@/app/admin/(pages)/blog/skeletons/PostTableSkeleton";
+import Image from "next/image";
+import { urlFor } from "@/sanity/lib/sanityImageUrl";
 
 const BlogManagement = ({ posts }: { posts: Post[] }) => {
   const [activeTab, setActiveTab] = useState("All Posts");
@@ -202,14 +204,29 @@ const BlogManagement = ({ posts }: { posts: Post[] }) => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/50">
-                {posts.map((post) => (
+                {posts.map((post: Post) => (
                   <tr
                     key={post._id}
                     className="group hover:bg-slate-800/30 transition-colors"
                   >
                     <td className="px-4 xl:px-6 py-3">
                       <div className="flex items-center gap-3">
-                        <div className="size-8 rounded-lg bg-gradient-to-br from-slate-700 to-slate-800 shrink-0 shadow" />
+                        <div>
+                          {post.image ? (
+                            <Image
+                              src={urlFor(post.image)
+                                .width(1200)
+                                .height(800)
+                                .url()}
+                              alt={post.title}
+                              width={50}
+                              height={50}
+                              className="rounded-lg"
+                            />
+                          ) : (
+                            <div className="size-8 rounded-lg bg-gradient-to-br from-slate-700 to-slate-800 shrink-0 shadow" />
+                          )}
+                        </div>
                         <div className="min-w-0">
                           <h4 className="font-bold text-white text-xs truncate max-w-[160px] xl:max-w-xs group-hover:text-blue-400 transition-colors">
                             {post.title}
@@ -220,7 +237,7 @@ const BlogManagement = ({ posts }: { posts: Post[] }) => {
                         </div>
                       </div>
                     </td>
-                    <td className="px-3 xl:px-4 py-3">
+                    <td className="px-3 xl:px-4 py-3 flex justify-center ">
                       <StatusBadge status={post.status} />
                     </td>
                     <td className="px-3 xl:px-4 py-3">
@@ -391,9 +408,9 @@ const StatCard = ({
 
 const StatusBadge = ({ status }: { status: string }) => {
   const styles: any = {
-    Published: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-    Scheduled: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-    Draft: "bg-slate-500/10 text-slate-500 border-slate-500/20",
+    published: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+    scheduled: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+    draft: "bg-slate-500/10 text-slate-500 border-slate-500/20",
   };
   return (
     <span

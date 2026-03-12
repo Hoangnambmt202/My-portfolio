@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { create } from "zustand";
@@ -9,19 +8,28 @@ interface ProjectFormState {
   description: string;
   content: string;
   techStack: string[];
+  liveUrl: string;
+  githubUrl: string;
   status: ProjectStatus;
 
   loading: boolean;
-  error?: string;
+  errors: Record<string, string[]>;
 
-  setField: (field: string, value: any) => void;
-  setProject: (project: any) => void;
+  setField: <K extends keyof ProjectFormState>(
+    field: K,
+    value: ProjectFormState[K],
+  ) => void;
+
+  setProject: (project: Partial<ProjectFormState>) => void;
 
   addTech: (tech: string) => void;
   removeTech: (tech: string) => void;
 
   setLoading: (v: boolean) => void;
-  setError: (v?: string) => void;
+  setErrors: (errors: Record<string, string[]>) => void;
+  clearErrors: () => void;
+
+  reset: () => void;
 }
 
 export const useAdminProjectFormStore = create<ProjectFormState>((set) => ({
@@ -30,9 +38,11 @@ export const useAdminProjectFormStore = create<ProjectFormState>((set) => ({
   content: "",
   techStack: [],
   status: "DRAFT",
+  liveUrl: "",
+  githubUrl: "",
 
   loading: false,
-  error: undefined,
+  errors: {},
 
   setField: (field, value) =>
     set((state) => ({
@@ -41,18 +51,19 @@ export const useAdminProjectFormStore = create<ProjectFormState>((set) => ({
     })),
 
   setProject: (project) =>
-    set({
-      title: project.title ?? "",
-      description: project.description ?? "",
-      content: project.content ?? "",
-      techStack: project.techStack ?? [],
-      status: project.status ?? "DRAFT",
-    }),
+    set((state) => ({
+      ...state,
+      ...project,
+    })),
 
   addTech: (tech) =>
-    set((state) => ({
-      techStack: [...state.techStack, tech],
-    })),
+    set((state) => {
+      if (state.techStack.includes(tech)) return state;
+
+      return {
+        techStack: [...state.techStack, tech],
+      };
+    }),
 
   removeTech: (tech) =>
     set((state) => ({
@@ -60,5 +71,17 @@ export const useAdminProjectFormStore = create<ProjectFormState>((set) => ({
     })),
 
   setLoading: (loading) => set({ loading }),
-  setError: (error) => set({ error }),
+  setErrors: (errors) => set({ errors }),
+
+  clearErrors: () => set({ errors: {} }),
+  reset: () =>
+    set({
+      title: "",
+      description: "",
+      content: "",
+      liveUrl: "",
+      githubUrl: "",
+      techStack: [],
+      status: "DRAFT",
+    }),
 }));

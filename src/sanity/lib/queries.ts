@@ -4,6 +4,10 @@ export const POSTS_QUERY = `
   title,
   "slug": slug.current,
   excerpt,
+   "status": select(
+    _id in path("drafts.**") => "draft",
+    "published"
+  ),
   tags,
   category[]->{
     title,
@@ -37,6 +41,10 @@ export const POST_DETAIL_QUERY = `
   _id,
   title,
   "slug": slug.current,
+  "status": select(
+    _id in path("drafts.**") => "draft",
+    "published"
+  ),
   category[]->{
     title,
     "slug": slug.current

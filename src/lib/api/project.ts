@@ -1,4 +1,5 @@
 // src/lib/api/projects.ts
+
 const BASE = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 const BASE_URL = `${BASE}/api/projects`;
 
@@ -38,12 +39,17 @@ export const projectsApi = {
       body: JSON.stringify(data),
       credentials: "include",
     });
-    if (!res.ok) throw new Error("Failed to create project");
-    return res.json();
+    const json = await res.json();
+
+    if (!res.ok) {
+      throw json;
+    }
+
+    return json;
   },
 
   update: async (id: string, data: unknown) => {
-    const res = await fetch(`${BASE}/${id}`, {
+    const res = await fetch(`${BASE_URL}/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -54,11 +60,16 @@ export const projectsApi = {
   },
 
   delete: async (id: string) => {
-    const res = await fetch(`${BASE}/${id}`, {
+    const res = await fetch(`${BASE_URL}/${id}`, {
       method: "DELETE",
       credentials: "include",
     });
-    if (!res.ok) throw new Error("Failed to delete project");
-    return res.json();
+    const json = await res.json();
+
+    if (!res.ok) {
+      throw json; // 🔥 throw luôn response từ API
+    }
+
+    return json;
   },
 };

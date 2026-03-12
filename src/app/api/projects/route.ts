@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { projectSchema } from "@/lib/validations/project";
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/api/auth";
+import { generateSlug } from "@/lib/utils/slug";
 
 export async function GET(req: Request) {
   try {
@@ -43,12 +44,14 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const session = await auth();
+
     if (!session?.user?.id) {
       return NextResponse.json(
         { success: false, error: "Unauthorized" },
         { status: 401 },
       );
     }
+
     const body = await req.json();
     const parsed = projectSchema.safeParse(body);
 
@@ -59,9 +62,20 @@ export async function POST(req: Request) {
       );
     }
 
+    const slugBase = generateSlug(parsed.data.title);
+
+    let slug = slugBase;
+    let counter = 1;
+
+    // đảm bảo slug unique
+    while (await prisma.project.findUnique({ where: { slug } })) {
+      slug = `${slugBase}-${counter++}`;
+    }
+
     const project = await prisma.project.create({
       data: {
         ...parsed.data,
+        slug,
         user: {
           connect: { id: session.user.id },
         },

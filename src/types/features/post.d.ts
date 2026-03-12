@@ -1,4 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
+export interface SanityImageBlock {
+  _type: "image";
+  asset: {
+    _ref: string;
+    _type: "reference";
+  };
+  alt?: string;
+}
 export interface SanityCodeBlock {
   _type: "code";
   language?: string;

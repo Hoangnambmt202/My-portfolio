@@ -2,9 +2,9 @@
 "use client";
 
 import TrafficChart from "@/components/admin/dashboard/TrafficChart";
+import Breadcrumb from "@/components/ui/Breadcrumb";
 import {
   Check,
-  ChevronRight,
   Eye,
   Mail,
   PackagePlus,
@@ -12,7 +12,7 @@ import {
   Users,
   Wrench,
 } from "lucide-react";
-import Link from "next/link";
+
 import { useState } from "react";
 
 interface StatCard {
@@ -132,37 +132,7 @@ export default function AdminDashboard() {
     <div className="relative flex-1 self-stretch grow bg-[#111a22] overflow-y-auto">
       <div className="flex flex-col max-w-[1200px] w-full items-start gap-8 p-8 relative h-full ">
         <header className="flex flex-col items-start gap-1 relative self-stretch w-full flex-[0_0_auto]">
-          <nav
-            className="flex pt-0 pb-2 px-0 self-stretch w-full flex-[0_0_auto] flex-col items-start relative"
-            aria-label="Breadcrumb"
-          >
-            <ol className="flex items-center gap-2 relative self-stretch w-full flex-[0_0_auto]">
-              <li className="inline-flex flex-col items-start relative flex-[0_0_auto]">
-                <Link
-                  href="/"
-                  className="relative flex items-center justify-center w-[37.88px] h-5 mt-[-1.00px] [font-family:'Manrope-Regular',Helvetica] font-normal text-[#92adc9] text-sm tracking-[0] leading-5 whitespace-nowrap"
-                >
-                  Home
-                </Link>
-              </li>
-
-              <li
-                className="inline-flex flex-col items-start relative flex-[0_0_auto]"
-                aria-hidden="true"
-              >
-                <ChevronRight size={20} color="gray" />
-              </li>
-
-              <li className="inline-flex flex-col items-start relative flex-[0_0_auto]">
-                <span
-                  className="relative flex items-center justify-center w-[71.48px] h-5 mt-[-1.00px] [font-family:'Manrope-Medium',Helvetica] font-medium text-white text-sm tracking-[0] leading-5 whitespace-nowrap"
-                  aria-current="page"
-                >
-                  Dashboard
-                </span>
-              </li>
-            </ol>
-          </nav>
+          <Breadcrumb />
 
           <div className="flex items-center justify-between relative self-stretch w-full flex-[0_0_auto]">
             <div className="inline-flex flex-col items-start gap-1 relative flex-[0_0_auto]">

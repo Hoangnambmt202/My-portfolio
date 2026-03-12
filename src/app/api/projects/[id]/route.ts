@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/app/api/projects/[id]/route.ts
 import { prisma } from "@/lib/prisma";
 import { projectSchema } from "@/lib/validations/project";
-import { successResponse, errorResponse, requireAuth } from "@/lib/api-helpers";
+import { successResponse, errorResponse } from "@/lib/api-helpers";
+import { auth } from "@/lib/api/auth";
+import { NextResponse } from "next/server";
 
 export async function GET(
   _: Request,
@@ -17,29 +20,70 @@ export async function PUT(
   req: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const { error } = await requireAuth();
-  if (error) return error;
+  try {
+    const session = await auth();
+    if (!session?.user.id) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Unauthorized",
+        },
+        { status: 401 },
+      );
+    }
+    const { id } = await params;
+    const body = await req.json();
+    const parsed = projectSchema.partial().safeParse(body);
+    if (!parsed.success) return errorResponse(parsed.error.message);
 
-  const { id } = await params;
-  const body = await req.json();
-  const parsed = projectSchema.partial().safeParse(body);
-  if (!parsed.success) return errorResponse(parsed.error.message);
-
-  const project = await prisma.project.update({
-    where: { id },
-    data: parsed.data,
-  });
-  return successResponse(project);
+    const project = await prisma.project.update({
+      where: { id },
+      data: parsed.data,
+    });
+    return successResponse(project);
+  } catch (error: any) {
+    return errorResponse(error.message);
+  }
 }
 
 export async function DELETE(
-  _: Request,
+  req: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const { error } = await requireAuth();
-  if (error) return error;
-
-  const { id } = await params;
-  await prisma.project.delete({ where: { id } });
-  return successResponse({ message: "Deleted successfully" });
+  try {
+    const session = await auth();
+    if (!session?.user.id) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Unauthorized",
+        },
+        { status: 401 },
+      );
+    }
+    const project = await prisma.project.findUnique({
+      where: { id: (await params).id },
+    });
+    if (!project) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Project not found",
+        },
+        { status: 404 },
+      );
+    }
+    await prisma.project.delete({
+      where: { id: (await params).id },
+    });
+    return successResponse({ message: "Project deleted successfully" });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: `Failed to delete project: ${error}`,
+      },
+      { status: 500 },
+    );
+  }
 }

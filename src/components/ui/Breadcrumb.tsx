@@ -17,6 +17,7 @@ export default function Breadcrumb({
 }: Props) {
   const pathname = usePathname();
   const HIDDEN_SEGMENTS = ["admin"];
+  const BASE_PATH = "/admin";
 
   const segments = pathname
     .split("/")
@@ -24,8 +25,7 @@ export default function Breadcrumb({
     .filter((segment) => !HIDDEN_SEGMENTS.includes(segment));
 
   const buildHref = (index: number) =>
-    "/" + segments.slice(0, index + 1).join("/");
-
+    BASE_PATH + "/" + segments.slice(0, index + 1).join("/");
   return (
     <nav aria-label="Breadcrumb" className={`text-sm ${className}`}>
       <ol className="flex items-center flex-wrap gap-1 text-gray-500">
@@ -70,7 +70,7 @@ export default function Breadcrumb({
 }
 //
 // Cách sử dụng, Auto path route
-// VD: /projects/12/edit
+// VD: /projects/12
 //
-// Home > projects > 12 > edit
+// Home > projects > 12
 //

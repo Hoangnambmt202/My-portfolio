@@ -13,6 +13,5 @@ export default async function BlogManager() {
     query: POSTS_QUERY,
     params: {},
   });
-
   return <BlogManagerClient posts={posts} />;
 }

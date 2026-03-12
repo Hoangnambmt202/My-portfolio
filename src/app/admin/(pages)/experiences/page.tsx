@@ -1,3 +1,4 @@
+import Breadcrumb from "@/components/ui/Breadcrumb";
 import {
   Calendar,
   GraduationCap,
@@ -93,9 +94,9 @@ const ExperienceManagement = () => {
         <div className="max-w-5xl mx-auto px-6 py-12 relative z-10">
           {/* Header Section */}
           <div className="mb-24">
+            <Breadcrumb />
             <h1 className="mb-8 text-6xl font-black leading-[0.9] tracking-tighter text-white md:text-8xl">
-              My
-              <br />
+              My{""}
               <span className="text-[#137fec]">Journey</span>
             </h1>
           </div>

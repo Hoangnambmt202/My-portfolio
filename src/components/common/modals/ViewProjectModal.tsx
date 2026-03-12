@@ -6,6 +6,7 @@ import Image from "next/image";
 import { X, Code2, ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { formatDate } from "@/lib/utils/format";
+import Link from "next/link";
 
 /* ── Dot accent colors cycling through tech stack ── */
 const DOT_COLORS = [
@@ -314,7 +315,8 @@ export default function ViewProjectModal() {
           >
             Back to List
           </button>
-          <button
+          <Link
+            href={`/admin/projects/${project.id}`}
             className="w-full sm:w-auto px-5 py-2 rounded-lg bg-[#137fec] hover:bg-[#1a8fff] text-white text-[13px] font-semibold flex items-center justify-center gap-2 transition-all duration-150"
             style={{ boxShadow: "0 4px 16px rgba(19,127,236,0.25)" }}
           >
@@ -332,7 +334,7 @@ export default function ViewProjectModal() {
               />
             </svg>
             Edit Project
-          </button>
+          </Link>
         </footer>
       </motion.div>
     </Modal>

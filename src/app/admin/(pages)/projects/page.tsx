@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import ProjectList from "@/components/admin/project/ProjectList";
 import { FolderOpen, Globe, Pencil, Plus } from "lucide-react";
 
@@ -10,15 +11,20 @@ import { projectsApi } from "@/lib/api/project";
 import StatCard from "@/components/admin/project/StatCard";
 
 export const metadata: Metadata = {
-  title: "CoderToData | Projects",
+  title: "Projects",
   description: "Manage your projects",
 };
 
 export default async function ProjectDashboardSection() {
-  const data = await projectsApi.getAll({ status: "", page: 1 });
+  const res = await projectsApi.getAll({ status: "", page: 1 });
 
-  const { total } = data.data;
-
+  const { total } = res.data;
+  const publishedCount = res.data.projects.filter(
+    (project: any) => project.status === "PUBLISHED",
+  ).length;
+  const draftCount = res.data.projects.filter(
+    (project: any) => project.status === "DRAFT",
+  ).length;
   const STATS = [
     {
       label: "Total project",
@@ -30,7 +36,7 @@ export default async function ProjectDashboardSection() {
     },
     {
       label: "Live Published",
-      value: 8,
+      value: publishedCount,
       Icon: Globe,
       color: "text-green-400",
       glow: "bg-green-500/10",
@@ -38,7 +44,7 @@ export default async function ProjectDashboardSection() {
     },
     {
       label: "Drafts",
-      value: 4,
+      value: draftCount,
       Icon: Pencil,
       color: "text-amber-400",
       glow: "bg-amber-500/10",
@@ -98,7 +104,7 @@ export default async function ProjectDashboardSection() {
 
           <div>
             <Suspense fallback={<ProjectTableSkeleton />}>
-              <ProjectList data={data.data} />
+              <ProjectList data={res.data} />
             </Suspense>
           </div>
         </section>
