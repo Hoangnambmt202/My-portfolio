@@ -2,6 +2,7 @@ import Image from "next/image";
 import { urlFor } from "@/sanity/lib/sanityImageUrl";
 import type { PortableTextComponents } from "@portabletext/react";
 import type { SanityImageBlock, SanityCodeBlock } from "@/types/features/post";
+import { Quote } from "lucide-react";
 
 export const portableTextComponents: PortableTextComponents = {
   types: {
@@ -32,6 +33,7 @@ export const portableTextComponents: PortableTextComponents = {
         <code className="font-mono text-[#137fec]">{value.code}</code>
       </pre>
     ),
+    
   },
 
   block: {
@@ -55,6 +57,14 @@ export const portableTextComponents: PortableTextComponents = {
     normal: ({ children }) => (
       <p className="mb-6 leading-relaxed text-white">{children}</p>
     ),
+    blockquote: ({ children }) => (
+  <blockquote className="my-6 flex gap-4 rounded-xl border-l-4 border-[#137fec] bg-slate-800 p-4 text-white/90">
+    <Quote className="mt-1 h-5 w-5 shrink-0 text-[#137fec]" />
+    <div className="italic leading-relaxed">{children}</div>
+  </blockquote>
+),
+    
+
   },
 
   list: {

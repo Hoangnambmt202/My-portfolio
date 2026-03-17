@@ -31,6 +31,7 @@ const staggerFastContainer = {
   },
 };
 export default function BlogClient({ posts }: { posts: Post[] }) {
+
   const t = useTranslations("blog");
   const blogCard = {
     hidden: { opacity: 0, x: -60, scale: 0.9 },
@@ -135,7 +136,7 @@ export default function BlogClient({ posts }: { posts: Post[] }) {
                   transition={{ duration: 0.2 }}
                 >
                   <Link
-                    href={`/blog/${post?.slug?.current}`}
+                    href={`/blog/${post?.slug}`}
                     className="flex gap-2 items-center"
                   >
                     {t("readMore")} <ArrowRight className="w-3 h-3" />
