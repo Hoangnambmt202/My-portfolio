@@ -53,9 +53,9 @@ export default function BlogClient({ posts }: { posts: Post[] }) {
     >
       <div className="max-w-4xl md:max-w-7xl lg:max-w-7xl mx-auto">
         <motion.div
-          initial="hidden"
+          initial="visible"
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px", amount: 0.3 }}
+          viewport={{ once: true, amount: 0.1 }}
           variants={fadeInUp}
           className="text-center mb-10 lg:mb-16"
         >
@@ -80,11 +80,11 @@ export default function BlogClient({ posts }: { posts: Post[] }) {
         </motion.div>
 
         <motion.div
-          className="grid md:grid-cols-3 gap-8"
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
           variants={staggerFastContainer}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-80px", amount: 0.2 }}
+          viewport={{ once: true, amount: 0.2 }}
         >
           {posts.map((post: Post) => (
             <motion.div
