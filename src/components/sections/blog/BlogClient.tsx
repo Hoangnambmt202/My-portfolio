@@ -31,7 +31,6 @@ const staggerFastContainer = {
   },
 };
 export default function BlogClient({ posts }: { posts: Post[] }) {
-
   const t = useTranslations("blog");
   const blogCard = {
     hidden: { opacity: 0, x: -60, scale: 0.9 },
@@ -59,15 +58,15 @@ export default function BlogClient({ posts }: { posts: Post[] }) {
           variants={fadeInUp}
           className="text-center mb-10 lg:mb-16"
         >
-          <motion.h2
+          <motion.h1
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.6 }}
-            className="text-3xl lg:text-4xl font-bold text-white mb-4"
+            className="text-3xl lg:text-8xl font-bold text-white mb-4"
           >
             {t("title")}
-          </motion.h2>
+          </motion.h1>
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}

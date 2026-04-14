@@ -55,8 +55,13 @@ export const projectsApi = {
       body: JSON.stringify(data),
       credentials: "include",
     });
-    if (!res.ok) throw new Error("Failed to update project");
-    return res.json();
+    const json = await res.json();
+
+    if (!res.ok) {
+      throw json;
+    }
+
+    return json;
   },
 
   delete: async (id: string) => {

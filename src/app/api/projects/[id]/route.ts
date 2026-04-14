@@ -36,9 +36,25 @@ export async function PUT(
     const parsed = projectSchema.partial().safeParse(body);
     if (!parsed.success) return errorResponse(parsed.error.message);
 
+    const updateData: any = { ...parsed.data };
+    
+    // Auto-generate new slug if title is updated
+    if (parsed.data.title) {
+      const { generateSlug } = await import("@/lib/utils/slug");
+      const slugBase = generateSlug(parsed.data.title);
+      let slug = slugBase;
+      let counter = 1;
+      
+      // Ensure slug is unique, excluding the current project
+      while (await prisma.project.findFirst({ where: { slug, id: { not: id } } })) {
+        slug = `${slugBase}-${counter++}`;
+      }
+      updateData.slug = slug;
+    }
+
     const project = await prisma.project.update({
       where: { id },
-      data: parsed.data,
+      data: updateData,
     });
     return successResponse(project);
   } catch (error: any) {

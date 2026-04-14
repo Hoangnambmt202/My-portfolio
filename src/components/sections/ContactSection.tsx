@@ -76,15 +76,15 @@ export default function ContactSection() {
           variants={fadeInUp}
           className="text-center mb-10 lg:mb-16"
         >
-          <motion.h2
+          <motion.h1
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.7 }}
-            className="text-3xl lg:text-4xl font-bold text-white mb-4"
+            className="text-3xl lg:text-8xl font-bold text-white mb-4"
           >
             {t("title")}
-          </motion.h2>
+          </motion.h1>
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}

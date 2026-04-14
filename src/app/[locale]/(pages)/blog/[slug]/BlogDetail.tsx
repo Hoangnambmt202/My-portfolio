@@ -10,6 +10,7 @@ import { urlFor } from "@/sanity/lib/sanityImageUrl";
 import { portableTextComponents } from "@/components/ui/portableTextComponents";
 import { formatDate } from "@/lib/utils/format";
 import { Calendar, User, Tag, ArrowLeft } from "lucide-react";
+import CommentSection from "@/components/sections/blog/CommentSection";
 
 interface BlogDetailProps {
   post: Post;
@@ -150,6 +151,9 @@ export default function BlogDetail({ post }: BlogDetailProps) {
 
         {/* related posts slot */}
         <AnimatePresence />
+
+        {/* Comments Section */}
+        <CommentSection postId={post.slug.current} />
       </div>
     </div>
   );

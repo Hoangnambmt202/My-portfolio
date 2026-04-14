@@ -1,7 +1,7 @@
 import AdminSessionProvider from "@/components/admin/layout/AdminSessionProvider";
 import AdminSidebar from "@/components/admin/layout/AdminSidebar";
 import ConfirmModal from "@/components/common/modals/ConfirmModal";
-import ViewProjectModal from "@/components/common/modals/ViewProjectModal";
+import ViewProjectModal from "@/components/admin/project/ViewProjectModal";
 import { auth } from "@/lib/api/auth";
 import { redirect } from "next/navigation";
 

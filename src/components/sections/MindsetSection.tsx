@@ -172,11 +172,11 @@ export default function MindsetSection() {
         {/* ── Editorial grid ── */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-0">
           <div
-            className="grid gap-px bg-slate-800 border border-slate-800"
-            style={{
-              gridTemplateColumns:
-                "repeat(auto-fill, minmax(min(100%, 250px), 1fr))",
-            }}
+            className="grid gap-px grid-cols-1 md:grid-cols-2 lg:grid-cols-3 bg-slate-800 border border-slate-800"
+            // style={{
+            //   gridTemplateColumns:
+            //     "repeat(auto-fill, minmax(min(100%, 250px), 1fr))",
+            // }}
           >
             {PRINCIPLES.map((p) => (
               <PrincipleCard key={p.index} principle={p} />

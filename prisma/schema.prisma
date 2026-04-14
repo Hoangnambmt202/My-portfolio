@@ -1,12 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider = "prisma-client-js"
-   binaryTargets = ["native", "rhel-openssl-3.0.x"]
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
@@ -15,136 +9,170 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-// prisma/schema.prisma
-
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
-  name      String?
-  role      Role     @default(USER)
-  avatar    String?
-  bio       String?   @db.Text
-  location      String?
-  socialLinks   Json?
-  createdAt DateTime @default(now())
-  updatedAt     DateTime  @updatedAt
-
-  // Quan hệ
-  projects      Project[]
-  experiences   Experience[]
-  skills        Skill[]
-  resumes       Resume[]
+  id          String       @id @default(cuid())
+  email       String       @unique
+  password    String
+  name        String?
+  role        Role         @default(USER)
+  avatar      String?
+  bio         String?
+  location    String?
+  socialLinks Json?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  comments    Comment[]
+  experiences Experience[]
+  projects    Project[]
+  resumes     Resume[]
+  skills      Skill[]
 }
-// Settings: Cấu hình chung cho toàn bộ website (SEO, trạng thái site)
+
 model Settings {
-  id              Int      @id @default(1) // Chỉ có 1 record duy nhất
-  siteName        String   @default("My Portfolio")
-  siteDescription String?  @db.Text
+  id              Int     @id @default(1)
+  siteName        String  @default("My Portfolio")
+  siteDescription String?
   seoKeywords     String?
   contactEmail    String?
-  isOpenToWork    Boolean  @default(true)
+  isOpenToWork    Boolean @default(true)
   footerText      String?
-  themeConfig     Json?    // Lưu config về màu sắc, font chữ
+  themeConfig     Json?
 }
+
 model Project {
-  id          String   @id @default(cuid())
+  id          String        @id @default(cuid())
   title       String
-  slug        String   @unique
+  slug        String        @unique
   description String
   content     String?
   thumbnail   String?
-  images      String[] // array url cloudinary
+  images      String[]
   techStack   String[]
   demoUrl     String?
   liveUrl     String?
   githubUrl   String?
-  isFeatured    Boolean   @default(false)
-  tags          String[]
-  userId        String
-  user          User      @relation(fields: [userId], references: [id])
+  problem     String?
+  decision    String?
+  result      String?
+  metrics     Json?
+  isFeatured  Boolean       @default(false)
+  tags        String[]
+  userId      String
   status      ProjectStatus @default(DRAFT)
-  order       Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  order       Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  user        User          @relation(fields: [userId], references: [id])
 }
 
 model Post {
-  id          String     @id @default(cuid())
-  title       String
-  slug        String     @unique
-  excerpt     String?
-  content     String     // MDX or HTML
-  thumbnail   String?
-  tags        String[]
-  published   Boolean    @default(false)
-  views       Int        @default(0)
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id        String   @id @default(cuid())
+  title     String
+  slug      String   @unique
+  excerpt   String?
+  content   String
+  thumbnail String?
+  tags      String[]
+  published Boolean  @default(false)
+  views     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
-
 
 model Experience {
+  id           String    @id @default(cuid())
+  company      String
+  position     String
+  location     String?
+  description  String?
+  startDate    DateTime
+  endDate      DateTime?
+  isCurrent    Boolean   @default(false)
+  type         ExpType   @default(WORK)
+  userId       String
+  order        Int       @default(0)
+  achievements String[]
+  coursework   String[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  user         User      @relation(fields: [userId], references: [id])
+}
+
+model SkillGroup {
   id          String   @id @default(cuid())
-  company     String
-  position    String
-  location    String?
+  name        String
+  slug        String   @unique
   description String?
-  startDate   DateTime
-  endDate     DateTime?
-  isCurrent     Boolean  @default(false)
-  type        ExpType  @default(WORK)
-  userId        String
-  user          User      @relation(fields: [userId], references: [id])
+  color       String   @default("#3b82f6")
+  icon        String?
   order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  skills      Skill[]
 }
 
-// Skill: Kỹ năng chuyên môn
 model Skill {
-  id            String    @id @default(cuid())
+  id            String      @id @default(cuid())
   name          String
-  icon          String?   // Tên icon (Lucide, FontAwesome) hoặc URL ảnh
-  category      String    // "Frontend", "Backend", "Database", "Tools"
-  level         Int       @default(1) // 1-5 hoặc 1-100
-  order    Int        @default(0)
-  
+  iconUrl       String?
+  iconPublicId  String?
+  proficiency   Int         @default(75)
+  level         String      @default("Intermediate")
+  whenToUse     String?
+  whyItMatters  String?
+  isHighlighted Boolean     @default(false)
+  order         Int         @default(0)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  groupId       String?
   userId        String
-  user          User      @relation(fields: [userId], references: [id])
+  group         SkillGroup? @relation(fields: [groupId], references: [id])
+  user          User        @relation(fields: [userId], references: [id])
 }
 
-// Resume: Quản lý các bản Resume (PDF hoặc các phiên bản khác nhau)
 model Resume {
-  id            String    @id @default(cuid())
-  title         String    // Ví dụ: "Web Developer Resume - English"
-  fileUrl       String
-  version       String?
-  isPrimary     Boolean   @default(false)
-  
-  userId        String
-  user          User      @relation(fields: [userId], references: [id])
-  
-  createdAt     DateTime  @default(now())
+  id        String   @id @default(cuid())
+  title     String
+  fileUrl   String
+  version   String?
+  isPrimary Boolean  @default(false)
+  userId    String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Message {
-  id        String        @id @default(cuid())
+  id        String   @id @default(cuid())
   name      String
   email     String
   subject   String?
   content   String
-  read      Boolean       @default(false)
-  replied   Boolean       @default(false)
-  createdAt DateTime      @default(now())
+  read      Boolean  @default(false)
+  replied   Boolean  @default(false)
+  createdAt DateTime @default(now())
 }
 
 model Media {
   id        String   @id @default(cuid())
   url       String
-  publicId  String   // cloudinary public_id
+  publicId  String
   name      String
   size      Int
-  type      String   // image/video
+  type      String
   createdAt DateTime @default(now())
+}
+
+model Comment {
+  id        String    @id @default(cuid())
+  content   String
+  userId    String
+  postId    String?
+  parentId  String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  parent    Comment?  @relation("CommentToComment", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   Comment[] @relation("CommentToComment")
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum ProjectStatus {
@@ -173,4 +201,6 @@ enum ExpType {
   WORK
   EDUCATION
   FREELANCE
+  INTERNSHIP
+  CONTRACT
 }

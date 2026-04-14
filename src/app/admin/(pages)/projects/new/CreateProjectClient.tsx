@@ -29,10 +29,17 @@ const CreateProjectClient = () => {
     githubUrl,
     loading,
     status,
+    problem,
+    decision,
+    result,
+    metrics,
     setField,
     setLoading,
     addTech,
     removeTech,
+    addMetric,
+    updateMetric,
+    removeMetric,
     errors,
     setErrors,
     reset,
@@ -44,6 +51,10 @@ const CreateProjectClient = () => {
         title: title.trim(),
         description: description.trim(),
         content: content.trim(),
+        problem: problem.trim(),
+        decision: decision.trim(),
+        result: result.trim(),
+        metrics: metrics,
         techStack: techStack.map((tech) => tech.trim()),
         status: status,
         liveUrl: liveUrl.trim() || "",
@@ -262,6 +273,111 @@ const CreateProjectClient = () => {
                     {errors.content[0]}
                   </p>
                 )}
+              </div>
+              
+              <div className="space-y-5 mt-6">
+                <div className="group">
+                  <label className="block text-sm font-semibold text-slate-400 mb-2 group-focus-within:text-blue-400 transition-colors">
+                    Problem Statement
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={problem}
+                    onChange={(e) => setField("problem", e.target.value)}
+                    placeholder="E.g. Internal processes were suffering from 4-6s cold starts..."
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none"
+                  ></textarea>
+                  {errors?.problem && (
+                    <p className="text-red-400 text-xs mt-1">
+                      {errors.problem[0]}
+                    </p>
+                  )}
+                </div>
+
+                <div className="group">
+                  <label className="block text-sm font-semibold text-slate-400 mb-2 group-focus-within:text-blue-400 transition-colors">
+                    Decision / Solution
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={decision}
+                    onChange={(e) => setField("decision", e.target.value)}
+                    placeholder="E.g. Refactored the runtime from Python to Rust..."
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none"
+                  ></textarea>
+                  {errors?.decision && (
+                    <p className="text-red-400 text-xs mt-1">
+                      {errors.decision[0]}
+                    </p>
+                  )}
+                </div>
+
+                <div className="group">
+                  <label className="block text-sm font-semibold text-slate-400 mb-2 group-focus-within:text-blue-400 transition-colors">
+                    Result
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={result}
+                    onChange={(e) => setField("result", e.target.value)}
+                    placeholder="E.g. Cold start latency reduced by 85%..."
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none"
+                  ></textarea>
+                  {errors?.result && (
+                    <p className="text-red-400 text-xs mt-1">
+                      {errors.result[0]}
+                    </p>
+                  )}
+                </div>
+                
+                <div className="group">
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="block text-sm font-semibold text-slate-400 group-focus-within:text-blue-400 transition-colors">
+                      Metrics
+                    </label>
+                    <button
+                      type="button"
+                      onClick={addMetric}
+                      className="text-xs flex items-center gap-1 text-blue-400 hover:text-blue-300 transition-colors"
+                    >
+                      <Plus size={14} /> Add Metric
+                    </button>
+                  </div>
+                  
+                  {metrics.length > 0 ? (
+                    <div className="space-y-3">
+                      {metrics.map((metric, index) => (
+                        <div key={index} className="flex items-center gap-3">
+                          <input
+                            type="text"
+                            placeholder="Value (e.g. 85%)"
+                            value={metric.value}
+                            onChange={(e) => updateMetric(index, "value", e.target.value)}
+                            className="w-1/3 bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                          />
+                          <input
+                            type="text"
+                            placeholder="Label (e.g. Latency Reduction)"
+                            value={metric.label}
+                            onChange={(e) => updateMetric(index, "label", e.target.value)}
+                            className="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => removeMetric(index)}
+                            className="p-2 text-slate-500 hover:text-red-400 transition-colors bg-slate-950 border border-slate-800 rounded-lg"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="full bg-slate-950/50 border border-dashed border-slate-800 rounded-xl p-4 text-center">
+                       <p className="text-sm text-slate-500">No metrics added yet.</p>
+                    </div>
+                  )}
+                </div>
               </div>
               <div className="flex justify-end mt-2">
                 <span className="text-[10px] text-slate-600 uppercase font-bold tracking-widest">

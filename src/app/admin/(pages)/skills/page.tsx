@@ -1,288 +1,602 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
-  Search,
-  Plus,
-  GripVertical,
-  Edit3,
-  Trash2,
-  Upload,
-  Code2,
-  Database,
-  Palette,
-  Terminal,
+  Search, Plus, GripVertical, Edit3, Trash2,
+  LayoutGrid, List, FolderOpen, Layers,
+  ChevronRight, RefreshCw, Star, X,
 } from "lucide-react";
-import Image from "next/image";
-import NewSkillModal from "@/components/admin/skill/NewSkillModal";
 import Breadcrumb from "@/components/ui/Breadcrumb";
+import SkillModal from "@/components/admin/skill/SkillModal";
+import GroupModal from "@/components/admin/skill/GroupModal";
+import SkillCard from "@/components/admin/skill/SkillCard";
+import SkillRow from "@/components/admin/skill/SkillRow";
+import DeleteConfirmModal from "@/components/admin/skill/DeleteConfirmModal";
+import { skillsApi } from "@/lib/api/skills";
+import { Skill, SkillGroup } from "@/types/features/skill";
 
-// --- Types ---
-// interface Skill {
-//   id: string;
-//   name: string;
-//   category: string;
-//   proficiency: number;
-//   level: string;
-//   icon: string;
-// }
+type ViewMode = "grid" | "list";
+type ModalType =
+  | "createSkill"
+  | "editSkill"
+  | "createGroup"
+  | "editGroup"
+  | "deleteSkill"
+  | "deleteGroup"
+  | null;
 
-interface SkillGroup {
-  id: string;
-  name: string;
-  count: number;
-  icon: React.ReactNode;
-  color: string;
+// ─── Drag-and-Drop hook (no external lib) ────────────────────────────────────
+function useDragSort<T extends { id: string; order: number }>(
+  items: T[],
+  onReorder: (items: T[]) => Promise<void>
+) {
+  const [list, setList] = useState<T[]>(items);
+  const draggingId = useRef<string | null>(null);
+
+  useEffect(() => {
+    setList(items);
+  }, [items]);
+
+  const onDragStart = (id: string) => {
+    draggingId.current = id;
+  };
+
+  const onDragOver = (e: React.DragEvent, overId: string) => {
+    e.preventDefault();
+    if (!draggingId.current || draggingId.current === overId) return;
+    setList((prev) => {
+      const from = prev.findIndex((i) => i.id === draggingId.current);
+      const to = prev.findIndex((i) => i.id === overId);
+      if (from === -1 || to === -1) return prev;
+      const next = [...prev];
+      const [moved] = next.splice(from, 1);
+      next.splice(to, 0, moved);
+      return next;
+    });
+  };
+
+  const onDrop = async () => {
+    draggingId.current = null;
+    const reordered = list.map((item, idx) => ({ ...item, order: idx }));
+    setList(reordered);
+    await onReorder(reordered);
+  };
+
+  return { list, onDragStart, onDragOver, onDrop };
 }
 
-const SkillsManagement = () => {
-  const [activeGroup, setActiveGroup] = useState("frontend");
-  const [isOpenModal, setIsOpenModal] = useState(false);
+// ─── Group Sidebar ────────────────────────────────────────────────────────────
+function GroupSidebar({
+  groups,
+  activeGroupId,
+  onSelectGroup,
+  onEditGroup,
+  onDeleteGroup,
+  onCreateGroup,
+  onDragStart,
+  onDragOver,
+  onDrop,
+}: {
+  groups: SkillGroup[];
+  activeGroupId: string | null;
+  onSelectGroup: (id: string | null) => void;
+  onEditGroup: (g: SkillGroup) => void;
+  onDeleteGroup: (g: SkillGroup) => void;
+  onCreateGroup: () => void;
+  onDragStart: (id: string) => void;
+  onDragOver: (e: React.DragEvent, id: string) => void;
+  onDrop: () => Promise<void>;
+}) {
+  return (
+    <section className="w-72 border-r border-slate-800/60 flex flex-col bg-slate-950/40">
+      <div className="p-5 border-b border-slate-800/60">
+        <div className="flex items-center justify-between mb-1">
+          <h2 className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">
+            Skill Groups
+          </h2>
+          <button
+            onClick={onCreateGroup}
+            className="flex items-center gap-1 text-[10px] font-bold text-blue-400 hover:text-white transition-colors px-2 py-1 rounded-lg hover:bg-blue-600/10 cursor-pointer"
+          >
+            <Plus size={12} /> New
+          </button>
+        </div>
+      </div>
 
-  const handleAddNewSkill = () => {
-    setIsOpenModal(true);
+      <div className="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-1">
+        {/* All skills */}
+        <button
+          onClick={() => onSelectGroup(null)}
+          className={`w-full flex items-center justify-between p-3 rounded-xl transition-all cursor-pointer ${
+            activeGroupId === null
+              ? "bg-blue-600/10 border border-blue-500/20"
+              : "hover:bg-slate-900 border border-transparent"
+          }`}
+        >
+          <div className="flex items-center gap-3">
+            <div className={`p-2 rounded-lg ${activeGroupId === null ? "bg-blue-600/20 text-blue-400" : "bg-slate-900 text-slate-500"}`}>
+              <Layers size={15} />
+            </div>
+            <div className="text-left">
+              <p className={`text-sm font-bold ${activeGroupId === null ? "text-white" : "text-slate-400"}`}>
+                All Skills
+              </p>
+            </div>
+          </div>
+          {activeGroupId === null && <div className="size-1.5 rounded-full bg-blue-500 animate-pulse" />}
+        </button>
+
+        {/* Ungrouped */}
+        <button
+          onClick={() => onSelectGroup("ungrouped")}
+          className={`w-full flex items-center justify-between p-3 rounded-xl transition-all cursor-pointer ${
+            activeGroupId === "ungrouped"
+              ? "bg-blue-600/10 border border-blue-500/20"
+              : "hover:bg-slate-900 border border-transparent"
+          }`}
+        >
+          <div className="flex items-center gap-3">
+            <div className={`p-2 rounded-lg ${activeGroupId === "ungrouped" ? "bg-blue-600/20 text-blue-400" : "bg-slate-900 text-slate-500"}`}>
+              <FolderOpen size={15} />
+            </div>
+            <div className="text-left">
+              <p className={`text-sm font-bold ${activeGroupId === "ungrouped" ? "text-white" : "text-slate-400"}`}>
+                Ungrouped
+              </p>
+            </div>
+          </div>
+          {activeGroupId === "ungrouped" && <div className="size-1.5 rounded-full bg-blue-500 animate-pulse" />}
+        </button>
+
+        {groups.length > 0 && (
+          <div className="pt-2 pb-1">
+            <p className="text-[9px] font-bold text-slate-700 uppercase tracking-widest px-2 mb-1">Groups</p>
+          </div>
+        )}
+
+        {/* Groups list (draggable) */}
+        {groups.map((group) => {
+          const count = (group._count as { skills: number } | undefined)?.skills ?? 0;
+          return (
+            <div
+              key={group.id}
+              draggable
+              onDragStart={() => onDragStart(group.id)}
+              onDragOver={(e) => onDragOver(e, group.id)}
+              onDrop={onDrop}
+              className="group/item"
+            >
+              <button
+                onClick={() => onSelectGroup(group.id)}
+                className={`w-full flex items-center justify-between p-3 rounded-xl transition-all cursor-pointer ${
+                  activeGroupId === group.id
+                    ? "bg-blue-600/10 border border-blue-500/20"
+                    : "hover:bg-slate-900 border border-transparent"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <GripVertical
+                    size={14}
+                    className="text-slate-700 group-hover/item:text-slate-500 cursor-grab shrink-0"
+                  />
+                  <div
+                    className="size-8 rounded-lg flex items-center justify-center shrink-0"
+                    style={{
+                      backgroundColor: `${group.color}18`,
+                      border: `1px solid ${group.color}30`,
+                    }}
+                  >
+                    <div className="size-2 rounded-full" style={{ backgroundColor: group.color }} />
+                  </div>
+                  <div className="text-left min-w-0">
+                    <p className={`text-sm font-bold truncate ${activeGroupId === group.id ? "text-white" : "text-slate-400"}`}>
+                      {group.name}
+                    </p>
+                    <p className="text-[10px] text-slate-600">{count} skill{count !== 1 ? "s" : ""}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1 opacity-0 group-hover/item:opacity-100 transition-opacity">
+                  <span
+                    onClick={(e) => { e.stopPropagation(); onEditGroup(group); }}
+                    className="p-1 hover:bg-slate-800 rounded-md text-slate-500 hover:text-blue-400 transition-colors cursor-pointer"
+                  >
+                    <Edit3 size={11} />
+                  </span>
+                  <span
+                    onClick={(e) => { e.stopPropagation(); onDeleteGroup(group); }}
+                    className="p-1 hover:bg-slate-800 rounded-md text-slate-500 hover:text-red-400 transition-colors cursor-pointer"
+                  >
+                    <Trash2 size={11} />
+                  </span>
+                </div>
+              </button>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+// ─── Main Page ────────────────────────────────────────────────────────────────
+export default function SkillsManagement() {
+  const [skills, setSkills] = useState<Skill[]>([]);
+  const [groups, setGroups] = useState<SkillGroup[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [deleting, setDeleting] = useState(false);
+  const [search, setSearch] = useState("");
+  const [activeGroupId, setActiveGroupId] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<ViewMode>("grid");
+  const [modal, setModal] = useState<ModalType>(null);
+  const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
+  const [selectedGroup, setSelectedGroup] = useState<SkillGroup | null>(null);
+
+  // ── Data fetching ──
+  const fetchAll = useCallback(async () => {
+    setLoading(true);
+    try {
+      const [skillsRes, groupsRes] = await Promise.all([
+        skillsApi.getAll(),
+        skillsApi.getAllGroups(),
+      ]);
+      if (skillsRes.success) setSkills(skillsRes.data);
+      if (groupsRes.success) setGroups(groupsRes.data);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => { fetchAll(); }, [fetchAll]);
+
+  // ── Filtered skills ──
+  const filteredSkills = skills.filter((s) => {
+    const matchSearch = search
+      ? s.name.toLowerCase().includes(search.toLowerCase()) ||
+        s.whenToUse?.toLowerCase().includes(search.toLowerCase()) ||
+        s.whyItMatters?.toLowerCase().includes(search.toLowerCase())
+      : true;
+    const matchGroup =
+      activeGroupId === null
+        ? true
+        : activeGroupId === "ungrouped"
+        ? !s.groupId
+        : s.groupId === activeGroupId;
+    return matchSearch && matchGroup;
+  });
+
+  // ── Drag & drop for skills ──
+  const {
+    list: sortedSkills,
+    onDragStart: onSkillDragStart,
+    onDragOver: onSkillDragOver,
+    onDrop: onSkillDrop,
+  } = useDragSort(filteredSkills, async (reordered) => {
+    await skillsApi.reorder(reordered.map((s, i) => ({ id: s.id, order: i })));
+  });
+
+  // ── Drag & drop for groups ──
+  const {
+    list: sortedGroups,
+    onDragStart: onGroupDragStart,
+    onDragOver: onGroupDragOver,
+    onDrop: onGroupDrop,
+  } = useDragSort(groups, async (reordered) => {
+    await skillsApi.reorderGroups(reordered.map((g, i) => ({ id: g.id, order: i })));
+  });
+
+  // ── Handlers: Skills ──
+  const handleCreateSkill = async (fd: FormData) => {
+    await skillsApi.create(fd);
+    await fetchAll();
   };
-  const groups: SkillGroup[] = [
-    {
-      id: "frontend",
-      name: "Frontend Dev",
-      count: 12,
-      icon: <Code2 size={18} />,
-      color: "text-blue-400",
-    },
-    {
-      id: "backend",
-      name: "Backend Dev",
-      count: 8,
-      icon: <Database size={18} />,
-      color: "text-green-400",
-    },
-    {
-      id: "design",
-      name: "Design Tools",
-      count: 5,
-      icon: <Palette size={18} />,
-      color: "text-purple-400",
-    },
-    {
-      id: "devops",
-      name: "DevOps",
-      count: 4,
-      icon: <Terminal size={18} />,
-      color: "text-orange-400",
-    },
-  ];
+
+  const handleUpdateSkill = async (fd: FormData) => {
+    if (!selectedSkill) return;
+    await skillsApi.update(selectedSkill.id, fd);
+    await fetchAll();
+  };
+
+  const handleDeleteSkill = async () => {
+    if (!selectedSkill) return;
+    setDeleting(true);
+    try {
+      await skillsApi.delete(selectedSkill.id);
+      await fetchAll();
+      setModal(null);
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  // ── Handlers: Groups ──
+  const handleCreateGroup = async (data: {
+    name: string; description?: string; color?: string; icon?: string;
+  }) => {
+    await skillsApi.createGroup(data);
+    await fetchAll();
+  };
+
+  const handleUpdateGroup = async (data: {
+    name?: string; description?: string; color?: string; icon?: string;
+  }) => {
+    if (!selectedGroup) return;
+    await skillsApi.updateGroup(selectedGroup.id, data);
+    await fetchAll();
+  };
+
+  const handleDeleteGroup = async () => {
+    if (!selectedGroup) return;
+    setDeleting(true);
+    try {
+      await skillsApi.deleteGroup(selectedGroup.id);
+      if (activeGroupId === selectedGroup.id) setActiveGroupId(null);
+      await fetchAll();
+      setModal(null);
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  // ── Active group label ──
+  const activeGroupLabel = (() => {
+    if (activeGroupId === null) return "All Skills";
+    if (activeGroupId === "ungrouped") return "Ungrouped";
+    return groups.find((g) => g.id === activeGroupId)?.name ?? "Skills";
+  })();
+
+  const activeGroupColor = (() => {
+    if (!activeGroupId || activeGroupId === "ungrouped") return "#3b82f6";
+    return groups.find((g) => g.id === activeGroupId)?.color ?? "#3b82f6";
+  })();
 
   return (
     <div className="flex h-screen bg-slate-950 text-slate-200 font-sans selection:bg-blue-500/30 overflow-hidden">
-      {/* 2. Main Content Area */}
-      <main className="flex-1 flex flex-col overflow-hidden bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-blue-900/10 via-slate-950 to-slate-950">
-        {/* Top Header */}
-        <header className="h-20 border-b border-slate-800/50 flex items-center justify-between px-8 bg-slate-950/50 backdrop-blur-xl z-20">
+      <main className="flex-1 flex flex-col overflow-hidden bg-[radial-gradient(ellipse_at_top_right,rgba(59,130,246,0.05),transparent_60%)]">
+
+        {/* ── Header ── */}
+        <header className="h-16 border-b border-slate-800/60 flex items-center justify-between px-6 bg-slate-950/70 backdrop-blur-xl z-20 shrink-0 gap-4">
           <Breadcrumb />
-          <div className="relative w-96 group">
+
+          {/* Search */}
+          <div className="relative flex-1 max-w-sm group">
             <Search
               className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-blue-400 transition-colors"
-              size={18}
+              size={15}
             />
             <input
               type="text"
-              placeholder="Search skills, categories..."
-              className="w-full bg-slate-900/50 border border-slate-800 rounded-full py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search skills, contexts..."
+              className="w-full bg-slate-900/60 border border-slate-800 rounded-full py-2 pl-9 pr-9 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500/30 focus:border-blue-500 transition-all placeholder:text-slate-600"
             />
+            {search && (
+              <button
+                onClick={() => setSearch("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors"
+              >
+                <X size={13} />
+              </button>
+            )}
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-sm font-bold transition-all active:scale-95 shadow-lg shadow-blue-900/20">
-            <Plus size={18} />
-            <span>New Group Skill</span>
-          </button>
+
+          {/* Actions */}
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={fetchAll}
+              className="p-2 text-slate-500 hover:text-white hover:bg-slate-800 rounded-lg transition-all"
+              title="Refresh"
+            >
+              <RefreshCw size={16} className={loading ? "animate-spin" : ""} />
+            </button>
+            <button
+              onClick={() => { setSelectedGroup(null); setModal("createGroup"); }}
+              className="flex items-center gap-1.5 px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xl text-xs font-bold transition-all border border-slate-700"
+            >
+              <Layers size={14} /> New Group
+            </button>
+            <button
+              onClick={() => { setSelectedSkill(null); setModal("createSkill"); }}
+              className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold transition-all active:scale-95 shadow-lg shadow-blue-900/20"
+            >
+              <Plus size={15} /> Add Skill
+            </button>
+          </div>
         </header>
 
         <div className="flex-1 flex overflow-hidden">
-          {/* 3. Skill Groups List (Draggable Context) */}
-          <section className="w-80 border-r border-slate-800/50 flex flex-col bg-slate-950/30">
-            <div className="p-6">
-              <h2 className="text-xs font-bold text-slate-500 uppercase tracking-[0.2em] mb-4">
-                Group by
-              </h2>
-              <div className="space-y-1">
-                {groups.map((group) => (
-                  <button
-                    key={group.id}
-                    onClick={() => setActiveGroup(group.id)}
-                    className={`w-full group flex items-center justify-between p-3 rounded-xl transition-all ${
-                      activeGroup === group.id
-                        ? "bg-blue-600/10 border border-blue-500/20 shadow-lg"
-                        : "hover:bg-slate-900 border border-transparent"
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <GripVertical
-                        size={16}
-                        className={`text-slate-700 group-hover:text-slate-500 transition-colors cursor-grab`}
-                      />
-                      <div
-                        className={`p-2 rounded-lg bg-slate-900 ${activeGroup === group.id ? "text-blue-400" : "text-slate-400 group-hover:text-slate-200"}`}
-                      >
-                        {group.icon}
-                      </div>
-                      <div className="text-left">
-                        <p
-                          className={`text-sm font-bold ${activeGroup === group.id ? "text-white" : "text-slate-400"}`}
-                        >
-                          {group.name}
-                        </p>
-                        <p className="text-[10px] text-slate-500 font-medium">
-                          {group.count} Skills
-                        </p>
-                      </div>
-                    </div>
-                    {activeGroup === group.id && (
-                      <div className="size-1.5 rounded-full bg-blue-500 animate-pulse" />
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </section>
+          {/* ── Group Sidebar ── */}
+          <GroupSidebar
+            groups={sortedGroups}
+            activeGroupId={activeGroupId}
+            onSelectGroup={setActiveGroupId}
+            onEditGroup={(g) => { setSelectedGroup(g); setModal("editGroup"); }}
+            onDeleteGroup={(g) => { setSelectedGroup(g); setModal("deleteGroup"); }}
+            onCreateGroup={() => { setSelectedGroup(null); setModal("createGroup"); }}
+            onDragStart={onGroupDragStart}
+            onDragOver={onGroupDragOver}
+            onDrop={onGroupDrop}
+          />
 
-          {/* 4. Skills Detail Grid */}
-          <section className="flex-1 overflow-y-auto custom-scrollbar">
-            <div className="p-8">
-              <div className="flex items-end justify-between mb-8">
+          {/* ── Skills Panel ── */}
+          <section className="flex-1 flex flex-col overflow-hidden">
+            {/* Panel header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800/60 shrink-0">
+              <div className="flex items-center gap-3">
+                <div
+                  className="size-2 rounded-full shrink-0"
+                  style={{ backgroundColor: activeGroupColor }}
+                />
                 <div>
-                  <h1 className="text-3xl font-black text-white tracking-tight capitalize">
-                    {activeGroup} Development
+                  <h1 className="text-lg font-black text-white tracking-tight">
+                    {activeGroupLabel}
                   </h1>
-                  <p className="text-slate-500 text-sm mt-1 font-medium">
-                    Manage individual skill proficiency and visual assets.
+                  <p className="text-xs text-slate-500">
+                    {filteredSkills.length} skill{filteredSkills.length !== 1 ? "s" : ""}
+                    {search && ` matching "${search}"`}
                   </p>
                 </div>
-                <div className="flex bg-slate-900 p-1 rounded-lg border border-slate-800">
-                  <button className="px-4 py-1.5 text-xs font-bold bg-slate-800 text-white rounded shadow-sm">
-                    Grid
-                  </button>
-                  <button className="px-4 py-1.5 text-xs font-bold text-slate-500 hover:text-slate-300">
-                    List
-                  </button>
-                </div>
               </div>
 
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-                <SkillCard
-                  name="React.js"
-                  level="Expert"
-                  percent={92}
-                  icon="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg"
-                  color="from-cyan-500 to-blue-600"
-                />
-                <SkillCard
-                  name="TypeScript"
-                  level="Advanced"
-                  percent={85}
-                  icon="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg"
-                  color="from-blue-500 to-indigo-600"
-                />
-                <SkillCard
-                  name="Tailwind CSS"
-                  level="Master"
-                  percent={98}
-                  icon="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg"
-                  color="from-teal-400 to-cyan-500"
-                />
-
-                {/* Add New Placeholder */}
+              {/* View mode toggle */}
+              <div className="flex bg-slate-900 p-1 rounded-xl border border-slate-800">
                 <button
-                  className="group border-2 border-dashed border-slate-800 rounded-2xl p-6 flex flex-col items-center justify-center gap-3 hover:border-blue-500/50 hover:bg-blue-500/5 transition-all"
-                  onClick={handleAddNewSkill}
+                  onClick={() => setViewMode("grid")}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg transition-all ${
+                    viewMode === "grid" ? "bg-slate-700 text-white shadow-sm" : "text-slate-500 hover:text-slate-300"
+                  }`}
                 >
-                  <div className="size-12 rounded-full bg-slate-900 flex items-center justify-center text-slate-600 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-xl">
-                    <Plus size={24} />
-                  </div>
-                  <div className="text-center">
-                    <p className="text-sm font-bold text-slate-400 group-hover:text-white transition-colors">
-                      Add New Skill
-                    </p>
-                    <p className="text-xs text-slate-600">
-                      to {activeGroup} group
-                    </p>
-                  </div>
+                  <LayoutGrid size={13} /> Grid
+                </button>
+                <button
+                  onClick={() => setViewMode("list")}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg transition-all ${
+                    viewMode === "list" ? "bg-slate-700 text-white shadow-sm" : "text-slate-500 hover:text-slate-300"
+                  }`}
+                >
+                  <List size={13} /> List
                 </button>
               </div>
             </div>
+
+            {/* Skills content */}
+            <div className="flex-1 overflow-y-auto custom-scrollbar p-6">
+              {loading ? (
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <div key={i} className="h-36 bg-slate-800/40 rounded-2xl animate-pulse" />
+                  ))}
+                </div>
+              ) : filteredSkills.length === 0 ? (
+                <div className="flex flex-col items-center justify-center h-64 text-center gap-3">
+                  <div className="size-16 rounded-2xl bg-slate-900 flex items-center justify-center text-slate-700">
+                    <Star size={28} />
+                  </div>
+                  <p className="text-slate-400 font-bold">
+                    {search ? `No skills match "${search}"` : "No skills in this group"}
+                  </p>
+                  <p className="text-sm text-slate-600 max-w-xs">
+                    {search ? "Try a different search term" : "Add your first skill to get started"}
+                  </p>
+                  {!search && (
+                    <button
+                      onClick={() => { setSelectedSkill(null); setModal("createSkill"); }}
+                      className="mt-2 flex items-center gap-2 px-4 py-2 bg-blue-600/10 hover:bg-blue-600 text-blue-400 hover:text-white border border-blue-500/30 hover:border-blue-500 rounded-xl text-sm font-bold transition-all"
+                    >
+                      <Plus size={15} /> Add Skill
+                    </button>
+                  )}
+                </div>
+              ) : viewMode === "grid" ? (
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                  {sortedSkills.map((skill) => (
+                    <div
+                      key={skill.id}
+                      draggable
+                      onDragStart={() => onSkillDragStart(skill.id)}
+                      onDragOver={(e) => onSkillDragOver(e, skill.id)}
+                      onDrop={onSkillDrop}
+                    >
+                      <SkillCard
+                        skill={skill}
+                        onEdit={(s) => { setSelectedSkill(s); setModal("editSkill"); }}
+                        onDelete={(s) => { setSelectedSkill(s); setModal("deleteSkill"); }}
+                        dragHandleProps={{
+                          draggable: true,
+                          onDragStart: () => onSkillDragStart(skill.id),
+                        }}
+                      />
+                    </div>
+                  ))}
+                  {/* Add new placeholder */}
+                  <button
+                    onClick={() => { setSelectedSkill(null); setModal("createSkill"); }}
+                    className="group border-2 border-dashed border-slate-800 rounded-2xl p-6 flex flex-col items-center justify-center gap-3 hover:border-blue-500/50 hover:bg-blue-600/5 transition-all min-h-[120px] cursor-pointer"
+                  >
+                    <div className="size-11 rounded-full bg-slate-900 flex items-center justify-center text-slate-600 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-xl">
+                      <Plus size={22} />
+                    </div>
+                    <p className="text-sm font-bold text-slate-500 group-hover:text-white transition-colors">
+                      Add Skill
+                    </p>
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {sortedSkills.map((skill) => (
+                    <div
+                      key={skill.id}
+                      draggable
+                      onDragStart={() => onSkillDragStart(skill.id)}
+                      onDragOver={(e) => onSkillDragOver(e, skill.id)}
+                      onDrop={onSkillDrop}
+                    >
+                      <SkillRow
+                        skill={skill}
+                        onEdit={(s) => { setSelectedSkill(s); setModal("editSkill"); }}
+                        onDelete={(s) => { setSelectedSkill(s); setModal("deleteSkill"); }}
+                        dragHandleProps={{
+                          draggable: true,
+                          onDragStart: () => onSkillDragStart(skill.id),
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Stats footer */}
+            {!loading && skills.length > 0 && (
+              <div className="border-t border-slate-800/60 px-6 py-3 flex items-center gap-6 text-[11px] text-slate-600 shrink-0">
+                <span>{skills.length} total skills</span>
+                <span className="flex items-center gap-1">
+                  <Star size={10} className="text-amber-400" fill="currentColor" />
+                  {skills.filter((s) => s.isHighlighted).length} highlighted
+                </span>
+                <span>{groups.length} groups</span>
+                <span className="ml-auto flex items-center gap-1 text-slate-700">
+                  <GripVertical size={11} /> Drag to reorder
+                  <ChevronRight size={11} />
+                </span>
+              </div>
+            )}
           </section>
         </div>
       </main>
-      <NewSkillModal
-        isOpen={isOpenModal}
-        onClose={() => setIsOpenModal(false)}
+
+      {/* ── Modals ── */}
+      <SkillModal
+        isOpen={modal === "createSkill" || modal === "editSkill"}
+        onClose={() => setModal(null)}
+        onSave={modal === "editSkill" ? handleUpdateSkill : handleCreateSkill}
+        groups={groups}
+        skill={modal === "editSkill" ? selectedSkill : null}
+      />
+
+      <GroupModal
+        isOpen={modal === "createGroup" || modal === "editGroup"}
+        onClose={() => setModal(null)}
+        onSave={modal === "editGroup" ? handleUpdateGroup : handleCreateGroup}
+        group={modal === "editGroup" ? selectedGroup : null}
+      />
+
+      <DeleteConfirmModal
+        isOpen={modal === "deleteSkill"}
+        onClose={() => setModal(null)}
+        onConfirm={handleDeleteSkill}
+        loading={deleting}
+        title="Delete Skill?"
+        description={`"${selectedSkill?.name}" will be permanently removed. This cannot be undone.`}
+      />
+
+      <DeleteConfirmModal
+        isOpen={modal === "deleteGroup"}
+        onClose={() => setModal(null)}
+        onConfirm={handleDeleteGroup}
+        loading={deleting}
+        title="Delete Group?"
+        description={`"${selectedGroup?.name}" group will be deleted. Skills in this group will become ungrouped.`}
       />
     </div>
   );
-};
-
-const SkillCard = ({
-  name,
-  level,
-  percent,
-  icon,
-  color,
-}: {
-  name: string;
-  level: string;
-  percent: number;
-  icon: string;
-  color: string;
-}) => (
-  <div className="group relative bg-slate-900/50 border border-slate-800 rounded-2xl p-6 hover:bg-slate-900 hover:border-slate-700 transition-all shadow-sm">
-    <div className="absolute top-4 right-4 flex gap-1 opacity-0 group-hover:opacity-100 transition-all transform translate-y-1 group-hover:translate-y-0">
-      <button className="p-2 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-blue-400 transition-colors">
-        <Edit3 size={16} />
-      </button>
-      <button className="p-2 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-red-400 transition-colors">
-        <Trash2 size={16} />
-      </button>
-    </div>
-
-    <div className="flex items-start gap-5">
-      <div className="relative shrink-0">
-        <div className="size-16 rounded-2xl bg-slate-950 p-3 border border-slate-800 group-hover:border-slate-600 transition-colors flex items-center justify-center overflow-hidden">
-          <Image
-            width={100}
-            height={100}
-            src={icon}
-            alt={name}
-            className="size-full object-contain"
-          />
-        </div>
-        <button className="absolute -bottom-2 -right-2 size-7 rounded-full bg-blue-600 text-white flex items-center justify-center border-4 border-slate-900 shadow-xl opacity-0 group-hover:opacity-100 transition-all scale-75 group-hover:scale-100">
-          <Upload size={12} />
-        </button>
-      </div>
-
-      <div className="flex-1 min-w-0">
-        <h3 className="text-lg font-black text-white truncate group-hover:text-blue-400 transition-colors">
-          {name}
-        </h3>
-        <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mt-0.5">
-          {level}
-        </p>
-
-        <div className="mt-6 space-y-2">
-          <div className="flex justify-between items-end">
-            <span className="text-[10px] font-bold text-slate-600 uppercase">
-              Proficiency
-            </span>
-            <span className="text-xs font-black text-white">{percent}%</span>
-          </div>
-          <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
-            <div
-              className={`h-full bg-gradient-to-r ${color} rounded-full transition-all duration-1000 group-hover:shadow-[0_0_12px_rgba(59,130,246,0.5)]`}
-              style={{ width: `${percent}%` }}
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-);
-
-export default SkillsManagement;
+}

@@ -4,7 +4,7 @@ import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { Eye, EyeOff, Lock, User, Shield } from "lucide-react";
 import { showToast } from "nextjs-toast-notify";
-import LoaderInline from "@/components/common/LoaderInline";
+import LoaderInline from "@/components/common/loaders/LoaderInline";
 import { loginSchema } from "@/schemas/auth.schema";
 import { useRouter } from "next/navigation";
 

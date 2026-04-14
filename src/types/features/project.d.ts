@@ -11,7 +11,12 @@ export interface Project {
   images: string[];
   techStack: string[];
   demoUrl?: string;
+  liveUrl?: string;
   githubUrl?: string;
+  problem?: string;
+  decision?: string;
+  result?: string;
+  metrics?: { value: string; label: string }[];
   isFeatured: boolean;
   status: ProjectStatus;
   order: number;

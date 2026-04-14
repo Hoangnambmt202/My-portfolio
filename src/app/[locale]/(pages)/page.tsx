@@ -1,14 +1,15 @@
 import { Metadata } from "next";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
-import BlogSection from "@/components/sections/BlogSection";
+import BlogSection from "@/components/sections/blog/BlogSection";
 import ContactSection from "@/components/sections/ContactSection";
 import HeroSection from "@/components/sections/HeroSection";
 import ServicesSection from "@/components/sections/ServicesSection";
 import MindsetSection from "@/components/sections/MindsetSection";
-import ToolboxSection from "@/components/sections/ToolBoxSection";
+
 import ExperiencesSection from "@/components/sections/ExperiencesSection";
-import CaseStudySection from "@/components/sections/CaseStudySection";
+import CaseStudySection from "@/components/sections/project/CaseStudySection";
+import ToolboxSection from "@/components/sections/toolbox/ToolBoxSection";
 
 export const dynamic = "force-dynamic";
 

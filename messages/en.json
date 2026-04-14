@@ -19,7 +19,7 @@
     "liveDemo": "Visit"
   },
   "services": {
-    "title": "Services",
+    "title": "What can I do for you?",
     "subtitle": "Professional software development services",
     "items": {
       "0": {
@@ -56,7 +56,7 @@
     "back": "Back"
   },
   "blog": {
-    "title": "Blog",
+    "title": "Daily stories",
     "subtitle": "Sharing knowledge and programming experience",
     "searchPlaceholder": "Search posts...",
     "filterByCategory": "Category",
@@ -88,8 +88,8 @@
     }
   },
   "contact": {
-    "title": "Contact",
-    "subtitle": "Have an interesting project? Contact me!",
+    "title": "Get In Touch",
+    "subtitle": "Have an interesting case study or work? Let's connect!",
     "form": {
       "name": "Your Name",
       "namePlaceholder": "John Doe",
@@ -98,7 +98,7 @@
       "subject": "Subject",
       "subjectPlaceholder": "E-commerce Website Project",
       "message": "Message",
-      "messagePlaceholder": "Describe your project in detail...",
+      "messagePlaceholder": "Tell me about your project or something else ...",
       "send": "Send Message"
     },
     "info": {

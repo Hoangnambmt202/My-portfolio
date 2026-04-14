@@ -17,15 +17,20 @@ This portfolio is designed to provide a comprehensive view of my ability and my 
 *** Skills: ** List of programming languages, frameworks, tools and technology that I am proficient.
 *** Experience: ** Summary of my professional work experience and learning experience, focusing on the roles and responsibilities related.
 *** Contact: ** Detailed information on how to contact me for work opportunities, collaboration or questions.
+*** Comment System: ** A lively guestbook/comment section built with Zustand, Next.js API Routes, and PostgreSQL, featuring:
+    * Nested replies
+    * Authentication required via NextAuth
+    * Real-time UI updates (Optimistic UI)
 
 ## Technology
 
 This portfolio is built using the following technologies:
 
-* [List the front technologies, for example: React, Angular, VUE.JS]
-* [List of rear technologies, for example: Node.js, Python, Django, Flask]
-* [List of databases, for example: Postgresql, MySQL, MongoDB]
-* [List the deployment tools, for example: Netlify, Vercel, AWS, Heroku]
+* Next.js 15 (App Router)
+* NextAuth.js (v5 Beta) for Authentication
+* Zustand for State Management
+* Tailwind CSS for styling
+* PostgreSQL with Prisma ORM
 
 ## Contribute
 

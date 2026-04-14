@@ -5,11 +5,11 @@ import { LanguageSwitcher } from "../common/LanguageSwitcher";
 import Link from "next/link";
 
 const navItems = [
-  { label: "Skills", href: "#skills" },
-  { label: "Projects", href: "#projects" },
+  { label: "Tech Stack", href: "#skills" },
+  { label: "Case Studies", href: "#projects" },
   { label: "Services", href: "#services" },
-  { label: "Experience", href: "#experience" },
-  { label: "Blog", href: "#blog" },
+  { label: "Journey", href: "#experience" },
+  { label: "Stories", href: "#blog" },
   { label: "Contact", href: "#contact" },
 ];
 

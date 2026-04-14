@@ -11,6 +11,11 @@ interface ProjectFormState {
   liveUrl: string;
   githubUrl: string;
   status: ProjectStatus;
+  
+  problem: string;
+  decision: string;
+  result: string;
+  metrics: { value: string; label: string }[];
 
   loading: boolean;
   errors: Record<string, string[]>;
@@ -24,6 +29,10 @@ interface ProjectFormState {
 
   addTech: (tech: string) => void;
   removeTech: (tech: string) => void;
+  
+  addMetric: () => void;
+  updateMetric: (index: number, field: "value" | "label", value: string) => void;
+  removeMetric: (index: number) => void;
 
   setLoading: (v: boolean) => void;
   setErrors: (errors: Record<string, string[]>) => void;
@@ -40,6 +49,11 @@ export const useAdminProjectFormStore = create<ProjectFormState>((set) => ({
   status: "DRAFT",
   liveUrl: "",
   githubUrl: "",
+  
+  problem: "",
+  decision: "",
+  result: "",
+  metrics: [],
 
   loading: false,
   errors: {},
@@ -70,6 +84,23 @@ export const useAdminProjectFormStore = create<ProjectFormState>((set) => ({
       techStack: state.techStack.filter((t) => t !== tech),
     })),
 
+  addMetric: () =>
+    set((state) => ({
+      metrics: [...state.metrics, { value: "", label: "" }],
+    })),
+
+  updateMetric: (index, field, value) =>
+    set((state) => {
+      const newMetrics = [...state.metrics];
+      newMetrics[index] = { ...newMetrics[index], [field]: value };
+      return { metrics: newMetrics };
+    }),
+
+  removeMetric: (index) =>
+    set((state) => ({
+      metrics: state.metrics.filter((_, i) => i !== index),
+    })),
+
   setLoading: (loading) => set({ loading }),
   setErrors: (errors) => set({ errors }),
 
@@ -83,5 +114,9 @@ export const useAdminProjectFormStore = create<ProjectFormState>((set) => ({
       githubUrl: "",
       techStack: [],
       status: "DRAFT",
+      problem: "",
+      decision: "",
+      result: "",
+      metrics: [],
     }),
 }));

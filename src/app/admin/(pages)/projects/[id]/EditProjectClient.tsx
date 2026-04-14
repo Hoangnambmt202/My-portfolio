@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { useEffect } from "react"; // 1. Import useEffect
+import { useEffect, useCallback } from "react";
 import {
   Save,
   X,
@@ -12,20 +11,24 @@ import {
   Plus,
   Trash2,
   FileText,
+  Loader2,
 } from "lucide-react";
 
-import { ProjectStatus } from "@/types/features/project";
+import { Project, ProjectStatus } from "@/types/features/project";
 import { useAdminProjectFormStore } from "@/stores/admin/project/ProjectFormAdmin.store";
 import { projectsApi } from "@/lib/api/project";
 import { showToast } from "nextjs-toast-notify";
 import Breadcrumb from "@/components/ui/Breadcrumb";
-import { useRouter } from "next/navigation"; // 2. Thêm router để redirect sau khi save
+import { useRouter } from "next/navigation";
 import { revalidateProjectsData } from "@/actions/project.actions";
 
-const EditProjectClient = ({ project }: { project: any }) => {
+interface EditProjectClientProps {
+  project: Project;
+}
+
+const EditProjectClient = ({ project }: EditProjectClientProps) => {
   const router = useRouter();
 
-  // 3. Lấy TẤT CẢ các state và action cần thiết từ store
   const {
     title,
     description,
@@ -35,56 +38,134 @@ const EditProjectClient = ({ project }: { project: any }) => {
     techStack,
     status,
     loading,
+    problem,
+    decision,
+    result,
+    metrics,
+    errors,
+    setProject,
     setField,
     removeTech,
     addTech,
+    addMetric,
+    updateMetric,
+    removeMetric,
     setLoading,
+    setErrors,
+    clearErrors,
+    reset,
   } = useAdminProjectFormStore();
 
-  // 4. Đồng bộ data từ server vào store khi component mount
+  // Batch-sync server data → store (1 render instead of 7)
+  // Reset store on unmount to prevent state leaking between pages
   useEffect(() => {
     if (project) {
-      setField("title", project.title || "");
-      setField("description", project.description || "");
-      setField("content", project.content || "");
-      setField("liveUrl", project.liveUrl || "");
-      setField("githubUrl", project.githubUrl || "");
-      setField("techStack", project.techStack || []);
-      setField("status", project.status || "DRAFT");
+      setProject({
+        title: project.title || "",
+        description: project.description || "",
+        content: project.content || "",
+        liveUrl: project.liveUrl || project.demoUrl || "",
+        githubUrl: project.githubUrl || "",
+        problem: project.problem || "",
+        decision: project.decision || "",
+        result: project.result || "",
+        metrics: project.metrics && Array.isArray(project.metrics) ? (project.metrics as { value: string, label: string; }[]) : [],
+        techStack: project.techStack || [],
+        status: project.status || "DRAFT",
+      });
+      clearErrors();
     }
-  }, [project, setField]);
+
+    return () => {
+      reset();
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [project.id]);
+
+  const handleDiscard = useCallback(() => {
+    if (project) {
+      setProject({
+        title: project.title || "",
+        description: project.description || "",
+        content: project.content || "",
+        liveUrl: project.liveUrl || project.demoUrl || "",
+        githubUrl: project.githubUrl || "",
+        problem: project.problem || "",
+        decision: project.decision || "",
+        result: project.result || "",
+        metrics: project.metrics && Array.isArray(project.metrics) ? (project.metrics as { value: string, label: string; }[]) : [],
+        techStack: project.techStack || [],
+        status: project.status || "DRAFT",
+      });
+      clearErrors();
+      showToast.info("Changes discarded", { duration: 1500 });
+    }
+  }, [project, setProject, clearErrors]);
 
   const handleSubmit = async () => {
-    try {
-      setLoading(true); // Bật trạng thái loading
+    if (loading) return; // Prevent double-submit
 
-      // 5. Lấy dữ liệu TỪ STORE (dữ liệu mới nhất user đã sửa), thay vì từ `project` (dữ liệu cũ)
+    try {
+      setLoading(true);
+      clearErrors();
+
       const res = await projectsApi.update(project.id, {
-        title: title,
-        description: description,
-        content: content,
-        liveUrl: liveUrl,
-        githubUrl: githubUrl,
-        techStack: techStack,
-        status: status,
+        title: title.trim(),
+        description: description.trim(),
+        content: content.trim(),
+        problem: problem.trim(),
+        decision: decision.trim(),
+        result: result.trim(),
+        metrics: metrics,
+        liveUrl: liveUrl.trim() || undefined,
+        githubUrl: githubUrl.trim() || undefined,
+        techStack: techStack.map((t) => t.trim()),
+        status,
         images: [],
         order: 0,
       });
-      await revalidateProjectsData();
 
       if (!res.success) {
         throw new Error(res.error ?? "Update project failed");
       }
 
+      await revalidateProjectsData();
       showToast.success("Cập nhật project thành công", { duration: 1500 });
-      router.push("/admin/projects"); // Redirect về danh sách
-    } catch (err: any) {
-      console.error(err);
-      showToast.error("Có lỗi xảy ra khi cập nhật");
+      router.push("/admin/projects");
+    } catch (err: unknown) {
+      const error = err as Record<string, unknown>;
+      const fieldErrors = (error?.error as Record<string, unknown>)
+        ?.fieldErrors as Record<string, string[]> | undefined;
+      const formErrors = (error?.error as Record<string, unknown>)
+        ?.formErrors as string[] | undefined;
+
+      if (fieldErrors) {
+        setErrors(fieldErrors);
+        Object.entries(fieldErrors).forEach(([field, messages]) => {
+          (messages as string[]).forEach((msg) => {
+            showToast.error(`${field}: ${msg}`);
+          });
+        });
+      }
+
+      if (formErrors?.length) {
+        formErrors.forEach((msg: string) => {
+          showToast.error(msg);
+        });
+      }
+
+      if (!fieldErrors && !formErrors) {
+        const message =
+          error?.message ||
+          (typeof error?.error === "string" ? error.error : null) ||
+          "Something went wrong";
+        showToast.error(message as string);
+      }
     } finally {
-      setLoading(false); // Tắt loading
+      setLoading(false);
     }
   };
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-200 font-sans selection:bg-blue-500/30 overflow-y-auto">
       {/* Top Header Section */}
@@ -96,15 +177,25 @@ const EditProjectClient = ({ project }: { project: any }) => {
             </div>
 
             <div className="flex items-center gap-3">
-              <button className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-slate-400 hover:text-white border border-slate-800 hover:bg-slate-900 rounded-lg transition-all">
+              <button
+                type="button"
+                onClick={handleDiscard}
+                className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-slate-400 hover:text-white border border-slate-800 hover:bg-slate-900 rounded-lg transition-all"
+              >
                 <Trash2 size={18} />
                 <span>Discard</span>
               </button>
               <button
+                type="button"
                 onClick={handleSubmit}
-                className="flex items-center gap-2 px-5 py-2 text-sm font-bold text-white bg-blue-600 hover:bg-blue-500 rounded-lg shadow-lg shadow-blue-900/20 transition-all active:scale-95"
+                disabled={loading}
+                className="flex items-center gap-2 px-5 py-2 text-sm font-bold text-white bg-blue-600 hover:bg-blue-500 rounded-lg shadow-lg shadow-blue-900/20 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100"
               >
-                <Save size={18} />
+                {loading ? (
+                  <Loader2 size={18} className="animate-spin" />
+                ) : (
+                  <Save size={18} />
+                )}
                 {loading ? "Saving..." : "Save Project"}
               </button>
             </div>
@@ -138,8 +229,13 @@ const EditProjectClient = ({ project }: { project: any }) => {
                     value={title}
                     placeholder="e.g. AI-Powered Analytics Dashboard"
                     onChange={(e) => setField("title", e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                    className={`w-full bg-slate-950 border rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all ${errors?.title ? "border-red-500/50" : "border-slate-800"}`}
                   />
+                  {errors?.title && (
+                    <p className="text-red-400 text-xs mt-1">
+                      {errors.title[0]}
+                    </p>
+                  )}
                 </div>
 
                 <div className="group">
@@ -151,11 +247,16 @@ const EditProjectClient = ({ project }: { project: any }) => {
                     value={description || ""}
                     onChange={(e) => setField("description", e.target.value)}
                     placeholder="Briefly describe the core value of this project..."
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none"
+                    className={`w-full bg-slate-950 border rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none ${errors?.description ? "border-red-500/50" : "border-slate-800"}`}
                   ></textarea>
+                  {errors?.description && (
+                    <p className="text-red-400 text-xs mt-1">
+                      {errors.description[0]}
+                    </p>
+                  )}
                   <div className="flex justify-end mt-1">
                     <span className="text-[10px] text-slate-600 uppercase font-bold tracking-widest">
-                      0 / 1000 Characters
+                      {(description || "").length} / 1000 Characters
                     </span>
                   </div>
                 </div>
@@ -165,8 +266,8 @@ const EditProjectClient = ({ project }: { project: any }) => {
             {/* Media Upload Section */}
             <section className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-sm">
               <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 bg-purple-500/10 rounded-lg">
-                  <ImageIcon className="text-purple-400" size={20} />
+                <div className="p-2 bg-teal-500/10 rounded-lg">
+                  <ImageIcon className="text-teal-400" size={20} />
                 </div>
                 <h2 className="text-lg font-bold text-white">Media Assets</h2>
               </div>
@@ -225,8 +326,8 @@ const EditProjectClient = ({ project }: { project: any }) => {
             </section>
             <section className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-sm">
               <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 bg-purple-500/10 rounded-lg">
-                  <FileText className="text-purple-400" size={20} />
+                <div className="p-2 bg-teal-500/10 rounded-lg">
+                  <FileText className="text-teal-400" size={20} />
                 </div>
                 <h2 className="text-lg font-bold text-white">Case Study</h2>
               </div>
@@ -237,12 +338,123 @@ const EditProjectClient = ({ project }: { project: any }) => {
                   value={content || ""}
                   onChange={(e) => setField("content", e.target.value)}
                   placeholder="Briefly describe the core value of this project..."
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none"
+                  className={`w-full bg-slate-950 border rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none ${errors?.content ? "border-red-500/50" : "border-slate-800"}`}
                 ></textarea>
+                {errors?.content && (
+                  <p className="text-red-400 text-xs mt-1">
+                    {errors.content[0]}
+                  </p>
+                )}
               </div>
+              
+              <div className="space-y-5 mt-6">
+                <div className="group">
+                  <label className="block text-sm font-semibold text-slate-400 mb-2 group-focus-within:text-blue-400 transition-colors">
+                    Problem Statement
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={problem || ""}
+                    onChange={(e) => setField("problem", e.target.value)}
+                    placeholder="E.g. Internal processes were suffering from 4-6s cold starts..."
+                    className={`w-full bg-slate-950 border rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none ${errors?.problem ? "border-red-500/50" : "border-slate-800"}`}
+                  ></textarea>
+                  {errors?.problem && (
+                    <p className="text-red-400 text-xs mt-1">
+                      {errors.problem[0]}
+                    </p>
+                  )}
+                </div>
+
+                <div className="group">
+                  <label className="block text-sm font-semibold text-slate-400 mb-2 group-focus-within:text-blue-400 transition-colors">
+                    Decision / Solution
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={decision || ""}
+                    onChange={(e) => setField("decision", e.target.value)}
+                    placeholder="E.g. Refactored the runtime from Python to Rust..."
+                    className={`w-full bg-slate-950 border rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none ${errors?.decision ? "border-red-500/50" : "border-slate-800"}`}
+                  ></textarea>
+                  {errors?.decision && (
+                    <p className="text-red-400 text-xs mt-1">
+                      {errors.decision[0]}
+                    </p>
+                  )}
+                </div>
+
+                <div className="group">
+                  <label className="block text-sm font-semibold text-slate-400 mb-2 group-focus-within:text-blue-400 transition-colors">
+                    Result
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={result || ""}
+                    onChange={(e) => setField("result", e.target.value)}
+                    placeholder="E.g. Cold start latency reduced by 85%..."
+                    className={`w-full bg-slate-950 border rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none ${errors?.result ? "border-red-500/50" : "border-slate-800"}`}
+                  ></textarea>
+                  {errors?.result && (
+                    <p className="text-red-400 text-xs mt-1">
+                      {errors.result[0]}
+                    </p>
+                  )}
+                </div>
+                
+                <div className="group">
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="block text-sm font-semibold text-slate-400 group-focus-within:text-blue-400 transition-colors">
+                      Metrics
+                    </label>
+                    <button
+                      type="button"
+                      onClick={addMetric}
+                      className="text-xs flex items-center gap-1 text-blue-400 hover:text-blue-300 transition-colors"
+                    >
+                      <Plus size={14} /> Add Metric
+                    </button>
+                  </div>
+                  
+                  {metrics.length > 0 ? (
+                    <div className="space-y-3">
+                      {metrics.map((metric, index) => (
+                        <div key={index} className="flex items-center gap-3">
+                          <input
+                            type="text"
+                            placeholder="Value (e.g. 85%)"
+                            value={metric.value}
+                            onChange={(e) => updateMetric(index, "value", e.target.value)}
+                            className="w-1/3 bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                          />
+                          <input
+                            type="text"
+                            placeholder="Label (e.g. Latency Reduction)"
+                            value={metric.label}
+                            onChange={(e) => updateMetric(index, "label", e.target.value)}
+                            className="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => removeMetric(index)}
+                            className="p-2 text-slate-500 hover:text-red-400 transition-colors bg-slate-950 border border-slate-800 rounded-lg"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="full bg-slate-950/50 border border-dashed border-slate-800 rounded-xl p-4 text-center">
+                       <p className="text-sm text-slate-500">No metrics added yet.</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+              
               <div className="flex justify-end mt-2">
                 <span className="text-[10px] text-slate-600 uppercase font-bold tracking-widest">
-                  Character count: 0 / 1000
+                  Character count: {(content || "").length} / 1000
                 </span>
               </div>
             </section>
@@ -259,7 +471,7 @@ const EditProjectClient = ({ project }: { project: any }) => {
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-slate-300">Current Status</span>
                   <span
-                    className={`px-2.5 py-1 text-[10px] font-bol border rounded-full uppercase tracking-tight ${status === "PUBLISHED" ? "text-green-500 border-green-500/20 bg-green-500/10" : "text-amber-500 border-amber-500/20 bg-amber-500/10"}`}
+                    className={`px-2.5 py-1 text-[10px] font-bold border rounded-full uppercase tracking-tight ${status === "PUBLISHED" ? "text-green-500 border-green-500/20 bg-green-500/10" : status === "ARCHIVED" ? "text-slate-400 border-slate-500/20 bg-slate-500/10" : "text-amber-500 border-amber-500/20 bg-amber-500/10"}`}
                   >
                     {status}
                   </span>
@@ -277,7 +489,7 @@ const EditProjectClient = ({ project }: { project: any }) => {
                   >
                     <option value={"PUBLISHED"}>Published</option>
                     <option value={"ARCHIVED"}>Archived</option>
-                    <option value={"DRAFT"}>DRAFT</option>
+                    <option value={"DRAFT"}>Draft</option>
                   </select>
                 </div>
               </div>
@@ -292,9 +504,9 @@ const EditProjectClient = ({ project }: { project: any }) => {
                 {techStack.map((tag: string) => (
                   <div
                     key={tag}
-                    className="flex items-center gap-1 bg-green-500/10 border border-green-500/20 rounded-xl px-2 py-1 text-green-400 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none"
+                    className="flex items-center gap-1 bg-green-500/10 border border-green-500/20 rounded-xl px-2 py-1 text-green-400 transition-all"
                   >
-                    <span className="">{tag}</span>
+                    <span>{tag}</span>
                     <X
                       size={12}
                       onClick={() => removeTech(tag)}
@@ -317,9 +529,17 @@ const EditProjectClient = ({ project }: { project: any }) => {
                       }
                     }
                   }}
-                  className="..."
+                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
                 />
-                <button className="absolute right-2 top-1.5 p-1 text-slate-500 hover:text-blue-400">
+                {errors?.techStack && (
+                  <p className="text-red-400 text-xs mt-1">
+                    {errors.techStack[0]}
+                  </p>
+                )}
+                <button
+                  type="button"
+                  className="absolute right-2 top-1.5 p-1 text-slate-500 hover:text-blue-400"
+                >
                   <Plus size={18} />
                 </button>
               </div>
@@ -343,6 +563,11 @@ const EditProjectClient = ({ project }: { project: any }) => {
                     placeholder="Live Demo URL"
                     className="w-full bg-slate-950 border border-slate-800 rounded-lg pl-10 pr-4 py-2.5 text-sm text-white focus:border-blue-500 outline-none transition-all"
                   />
+                  {errors?.liveUrl && (
+                    <p className="text-red-400 text-xs mt-1">
+                      {errors.liveUrl[0]}
+                    </p>
+                  )}
                 </div>
                 <div className="relative group">
                   <Code
@@ -367,7 +592,10 @@ const EditProjectClient = ({ project }: { project: any }) => {
               <p className="text-blue-100 text-sm mb-4">
                 Check how your project card looks on the homepage.
               </p>
-              <button className="w-full py-2 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-lg text-sm font-bold transition-all">
+              <button
+                type="button"
+                className="w-full py-2 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-lg text-sm font-bold transition-all"
+              >
                 Preview Now
               </button>
             </div>

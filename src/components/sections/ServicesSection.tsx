@@ -90,15 +90,15 @@ export default function ServicesSection() {
           variants={fadeInUp}
           className="text-center mb-8 lg:mb-16"
         >
-          <motion.h2
+          <motion.h1
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className=" text-3xl lg:text-4xl font-bold text-white mb-2 lg:mb-4"
+            className=" text-3xl lg:text-7xl font-bold text-white mb-2 lg:mb-4"
           >
             {t("title")}
-          </motion.h2>
+          </motion.h1>
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}

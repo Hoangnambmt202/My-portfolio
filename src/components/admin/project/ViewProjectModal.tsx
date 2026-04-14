@@ -6,7 +6,8 @@ import Image from "next/image";
 import { X, Code2, ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { formatDate } from "@/lib/utils/format";
-import Link from "next/link";
+import { Button } from "@/components/ui/Button";
+import { useRouter } from "next/navigation";
 
 /* ── Dot accent colors cycling through tech stack ── */
 const DOT_COLORS = [
@@ -21,9 +22,13 @@ const DOT_COLORS = [
 
 export default function ViewProjectModal() {
   const { open, project, closeModal } = useViewProjectModalStore();
-
+  const router = useRouter();
   if (!project) return null;
 
+  const handleEditProject = () => {
+    router.push(`/admin/projects/${project.id}`);
+    closeModal();
+  };
   return (
     <Modal isOpen={open} onClose={closeModal}>
       <motion.div
@@ -309,16 +314,16 @@ export default function ViewProjectModal() {
 
         {/* ── Footer ── */}
         <footer className="px-6 py-4 border-t border-white/10 bg-white/[0.03] flex flex-col sm:flex-row items-center justify-end gap-3 shrink-0">
-          <button
+          <Button
             onClick={closeModal}
             className="w-full sm:w-auto px-5 py-2 rounded-lg border border-white/10 text-slate-300 text-[13px] font-semibold hover:bg-white/[0.06] transition-colors duration-150"
           >
             Back to List
-          </button>
-          <Link
-            href={`/admin/projects/${project.id}`}
+          </Button>
+          <Button
             className="w-full sm:w-auto px-5 py-2 rounded-lg bg-[#137fec] hover:bg-[#1a8fff] text-white text-[13px] font-semibold flex items-center justify-center gap-2 transition-all duration-150"
             style={{ boxShadow: "0 4px 16px rgba(19,127,236,0.25)" }}
+            onClick={handleEditProject}
           >
             <svg
               className="w-4 h-4"
@@ -334,7 +339,7 @@ export default function ViewProjectModal() {
               />
             </svg>
             Edit Project
-          </Link>
+          </Button>
         </footer>
       </motion.div>
     </Modal>
