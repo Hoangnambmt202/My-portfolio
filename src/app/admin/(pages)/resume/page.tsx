@@ -18,7 +18,7 @@ import {
   ZoomIn,
 } from "lucide-react";
 import Breadcrumb from "@/components/ui/Breadcrumb";
-import { confirmDelete } from "@/stores/modal/ConfirmDelete.store";
+import { confirmDelete } from "@/stores/modal/useConfirmDelete";
 import { showToast } from "nextjs-toast-notify";
 // import { Metadata } from "next";
 

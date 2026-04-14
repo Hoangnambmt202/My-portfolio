@@ -3,7 +3,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { useCommentStore } from "@/stores/feature/comment.store";
+import { useCommentStore } from "@/stores/feature/useCommentStore";
 import { Send, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { Link } from "@/i18n/routing";

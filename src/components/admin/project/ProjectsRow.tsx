@@ -2,7 +2,7 @@
 "use client";
 import { projectsApi } from "@/lib/api/project";
 import { formatDate } from "@/lib/utils/format";
-import { confirmDelete } from "@/stores/modal/ConfirmDelete.store";
+import { confirmDelete } from "@/stores/modal/useConfirmDelete";
 import { useViewProjectModalStore } from "@/stores/modal/ViewProjectModal.store";
 import { ExternalLink, Eye, Pencil, Trash2 } from "lucide-react";
 import Image from "next/image";

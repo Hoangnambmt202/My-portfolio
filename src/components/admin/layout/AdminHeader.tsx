@@ -1,4 +1,4 @@
-import { useAdminSessionStore } from "@/stores/admin/AdminSession.store";
+import { useAdminSessionStore } from "@/stores/admin/useSessionStore";
 import { Bell, Search } from "lucide-react";
 
 export default function AdminHeader() {

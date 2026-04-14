@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { CommentType } from "@/types/features/comment";
-import { useCommentStore } from "@/stores/feature/comment.store";
+import { useCommentStore } from "@/stores/feature/useCommentStore";
 import CommentForm from "./CommentForm";
 import Image from "next/image";
 import { Trash2, MessageSquareReply, Clock } from "lucide-react";

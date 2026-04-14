@@ -18,7 +18,7 @@ import {
   MapPin,
 } from "lucide-react";
 import { Experience } from "@/lib/api/experiences";
-import { useExperienceStore } from "@/stores/admin/experience/AdminExperience.store";
+import { useExperienceStore } from "@/stores/admin/experience/useExperienceStore";
 import { ExpType } from "@prisma/client";
 import { motion, AnimatePresence } from "framer-motion";
 

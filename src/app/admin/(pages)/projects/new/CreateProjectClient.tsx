@@ -14,7 +14,7 @@ import {
   FileText,
 } from "lucide-react";
 import Link from "next/link";
-import { useAdminProjectFormStore } from "@/stores/admin/project/ProjectFormAdmin.store";
+import { useAdminProjectFormStore } from "@/stores/admin/project/useProjectFormStore";
 import { ProjectStatus } from "@/types/features/project";
 import { projectsApi } from "@/lib/api/project";
 import { showToast } from "nextjs-toast-notify";
@@ -274,7 +274,7 @@ const CreateProjectClient = () => {
                   </p>
                 )}
               </div>
-              
+
               <div className="space-y-5 mt-6">
                 <div className="group">
                   <label className="block text-sm font-semibold text-slate-400 mb-2 group-focus-within:text-blue-400 transition-colors">
@@ -329,7 +329,7 @@ const CreateProjectClient = () => {
                     </p>
                   )}
                 </div>
-                
+
                 <div className="group">
                   <div className="flex items-center justify-between mb-2">
                     <label className="block text-sm font-semibold text-slate-400 group-focus-within:text-blue-400 transition-colors">
@@ -343,7 +343,7 @@ const CreateProjectClient = () => {
                       <Plus size={14} /> Add Metric
                     </button>
                   </div>
-                  
+
                   {metrics.length > 0 ? (
                     <div className="space-y-3">
                       {metrics.map((metric, index) => (
@@ -352,14 +352,18 @@ const CreateProjectClient = () => {
                             type="text"
                             placeholder="Value (e.g. 85%)"
                             value={metric.value}
-                            onChange={(e) => updateMetric(index, "value", e.target.value)}
+                            onChange={(e) =>
+                              updateMetric(index, "value", e.target.value)
+                            }
                             className="w-1/3 bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                           />
                           <input
                             type="text"
                             placeholder="Label (e.g. Latency Reduction)"
                             value={metric.label}
-                            onChange={(e) => updateMetric(index, "label", e.target.value)}
+                            onChange={(e) =>
+                              updateMetric(index, "label", e.target.value)
+                            }
                             className="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                           />
                           <button
@@ -374,7 +378,9 @@ const CreateProjectClient = () => {
                     </div>
                   ) : (
                     <div className="full bg-slate-950/50 border border-dashed border-slate-800 rounded-xl p-4 text-center">
-                       <p className="text-sm text-slate-500">No metrics added yet.</p>
+                      <p className="text-sm text-slate-500">
+                        No metrics added yet.
+                      </p>
                     </div>
                   )}
                 </div>

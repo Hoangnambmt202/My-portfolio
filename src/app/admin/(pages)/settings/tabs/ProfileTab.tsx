@@ -13,7 +13,7 @@ import {
 import { IconInputGroup } from "@/components/ui/InputGroup";
 import type { ProfileData } from "@/types/features/setting";
 import { SocialProfilesCard } from "@/components/admin/setting/SocialProfileCard";
-import { useAdminSessionStore } from "@/stores/admin/AdminSession.store";
+import { useAdminSessionStore } from "@/stores/admin/useSessionStore";
 
 const BIO_MAX = 280;
 

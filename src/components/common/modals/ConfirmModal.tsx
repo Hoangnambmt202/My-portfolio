@@ -1,7 +1,7 @@
 "use client";
 
 import { Trash2, AlertTriangle, Info, X } from "lucide-react";
-import { useConfirmModalStore } from "@/stores/modal/ConfirmModal.store";
+import { useConfirmModalStore } from "@/stores/modal/useConfirmModal";
 import { useState } from "react";
 import Modal from "@/components/ui/Modal";
 

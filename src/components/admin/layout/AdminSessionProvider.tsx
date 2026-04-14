@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import {
   useAdminSessionStore,
   AdminUser,
-} from "@/stores/admin/AdminSession.store";
+} from "@/stores/admin/useSessionStore";
 
 export default function AdminSessionProvider({ user }: { user: AdminUser }) {
   const setUser = useAdminSessionStore((s) => s.setUser);

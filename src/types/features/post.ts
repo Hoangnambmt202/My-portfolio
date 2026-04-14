@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { SanityImageSource } from "./sanity-image";
+
 export interface SanityImageBlock {
   _type: "image";
   asset: {

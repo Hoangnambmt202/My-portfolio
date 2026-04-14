@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useCommentStore } from "@/stores/feature/comment.store";
+import { useCommentStore } from "@/stores/feature/useCommentStore";
 import CommentItem from "./CommentItem";
 import { Loader2 } from "lucide-react";
 

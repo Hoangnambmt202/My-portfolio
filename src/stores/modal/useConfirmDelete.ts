@@ -1,4 +1,4 @@
-import { useConfirmModalStore } from "./ConfirmModal.store";
+import { useConfirmModalStore } from "./useConfirmModal";
 
 type ConfirmDeleteOptions = {
   entityName?: string; // VD: "project", "bài viết"

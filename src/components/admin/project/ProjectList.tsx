@@ -2,7 +2,7 @@
 "use client";
 import { Project } from "@/types/features/project";
 import ProjectRow from "./ProjectsRow";
-import { useAdminProjectStore } from "@/stores/admin/project/ProjectAdmin.store";
+import { useAdminProjectStore } from "@/stores/admin/project/useProjectStore";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronLeft, ChevronRight } from "lucide-react";
