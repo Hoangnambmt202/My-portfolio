@@ -1,12 +1,24 @@
 "use client";
 import { useState, useRef } from "react";
 import {
-  X, UploadCloud, BadgeCheck, Type, Layers, Star,
-  CheckCircle2, ChevronDown, Lightbulb, BookOpen,
+  X,
+  UploadCloud,
+  BadgeCheck,
+  Type,
+  Layers,
+  Star,
+  CheckCircle2,
+  ChevronDown,
+  Lightbulb,
+  BookOpen,
 } from "lucide-react";
 import Image from "next/image";
 import Modal from "@/components/ui/Modal";
-import { Skill, SkillGroup, levelFromProficiency } from "@/types/features/skill";
+import {
+  Skill,
+  SkillGroup,
+  levelFromProficiency,
+} from "@/types/features/skill";
 
 interface SkillModalProps {
   isOpen: boolean;
@@ -17,13 +29,21 @@ interface SkillModalProps {
 }
 
 export default function SkillModal({
-  isOpen, onClose, onSave, groups, skill,
+  isOpen,
+  onClose,
+  onSave,
+  groups,
+  skill,
 }: SkillModalProps) {
   const isEdit = !!skill;
   const [loading, setLoading] = useState(false);
   const [proficiency, setProficiency] = useState(skill?.proficiency ?? 75);
-  const [isHighlighted, setIsHighlighted] = useState(skill?.isHighlighted ?? false);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(skill?.iconUrl ?? null);
+  const [isHighlighted, setIsHighlighted] = useState(
+    skill?.isHighlighted ?? false,
+  );
+  const [previewUrl, setPreviewUrl] = useState<string | null>(
+    skill?.iconUrl ?? null,
+  );
   const fileRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -76,7 +96,9 @@ export default function SkillModal({
                 {isEdit ? "Edit Skill" : "New Skill"}
               </h3>
               <p className="text-xs text-slate-500">
-                {isEdit ? "Update skill details" : "Define your technical expertise"}
+                {isEdit
+                  ? "Update skill details"
+                  : "Define your technical expertise"}
               </p>
             </div>
           </div>
@@ -84,12 +106,18 @@ export default function SkillModal({
             onClick={onClose}
             className="p-2 text-slate-500 hover:text-white hover:bg-slate-800 rounded-xl transition-all"
           >
-            <X size={18} className="transition-transform hover:rotate-90 duration-200" />
+            <X
+              size={18}
+              className="transition-transform hover:rotate-90 duration-200"
+            />
           </button>
         </div>
 
         {/* Body */}
-        <form onSubmit={handleSubmit} className="overflow-y-auto custom-scrollbar">
+        <form
+          onSubmit={handleSubmit}
+          className="overflow-y-auto custom-scrollbar"
+        >
           <div className="p-7 space-y-7">
             {/* Icon + Name + Group */}
             <div className="grid grid-cols-12 gap-6">
@@ -117,7 +145,10 @@ export default function SkillModal({
                   ) : (
                     <>
                       <div className="size-12 rounded-xl bg-slate-800 flex items-center justify-center mb-2 group-hover:bg-blue-600/15 transition-all">
-                        <UploadCloud size={22} className="text-slate-500 group-hover:text-blue-400 transition-colors" />
+                        <UploadCloud
+                          size={22}
+                          className="text-slate-500 group-hover:text-blue-400 transition-colors"
+                        />
                       </div>
                       <p className="text-[11px] font-semibold text-slate-500 group-hover:text-slate-300">
                         SVG / PNG / JPG
@@ -142,7 +173,10 @@ export default function SkillModal({
                     Skill Name *
                   </label>
                   <div className="relative">
-                    <Type className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-600" size={16} />
+                    <Type
+                      className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-600"
+                      size={16}
+                    />
                     <input
                       name="name"
                       defaultValue={skill?.name ?? ""}
@@ -157,7 +191,10 @@ export default function SkillModal({
                     Skill Group
                   </label>
                   <div className="relative">
-                    <Layers className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-600" size={16} />
+                    <Layers
+                      className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-600"
+                      size={16}
+                    />
                     <select
                       name="groupId"
                       defaultValue={skill?.groupId ?? ""}
@@ -165,10 +202,15 @@ export default function SkillModal({
                     >
                       <option value="">— No Group —</option>
                       {groups.map((g) => (
-                        <option key={g.id} value={g.id}>{g.name}</option>
+                        <option key={g.id} value={g.id}>
+                          {g.name}
+                        </option>
                       ))}
                     </select>
-                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-600 pointer-events-none" size={16} />
+                    <ChevronDown
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-600 pointer-events-none"
+                      size={16}
+                    />
                   </div>
                 </div>
               </div>
@@ -181,7 +223,9 @@ export default function SkillModal({
                   <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">
                     Proficiency
                   </label>
-                  <p className={`text-sm font-bold mt-1 ${levelColors[getLevelLabel(proficiency)]}`}>
+                  <p
+                    className={`text-sm font-bold mt-1 ${levelColors[getLevelLabel(proficiency)]}`}
+                  >
                     {getLevelLabel(proficiency)}
                   </p>
                 </div>
@@ -199,8 +243,19 @@ export default function SkillModal({
                 className="w-full h-2 bg-slate-800 rounded-full appearance-none cursor-pointer accent-blue-500"
               />
               <div className="flex justify-between mt-3">
-                {["Beginner", "Intermediate", "Advanced", "Expert", "Master"].map((t) => (
-                  <span key={t} className="text-[9px] font-bold text-slate-600 uppercase tracking-tight">{t}</span>
+                {[
+                  "Beginner",
+                  "Intermediate",
+                  "Advanced",
+                  "Expert",
+                  "Master",
+                ].map((t) => (
+                  <span
+                    key={t}
+                    className="text-[9px] font-bold text-slate-600 uppercase tracking-tight"
+                  >
+                    {t}
+                  </span>
                 ))}
               </div>
             </div>
@@ -244,21 +299,38 @@ export default function SkillModal({
                   : "bg-slate-950/50 border-slate-800 hover:border-slate-700"
               }`}
             >
-              <div className={`size-9 rounded-lg flex items-center justify-center transition-all ${
-                isHighlighted ? "bg-amber-500 text-white shadow-lg shadow-amber-900/30" : "bg-slate-800 text-slate-500"
-              }`}>
-                <Star size={18} fill={isHighlighted ? "currentColor" : "none"} />
+              <div
+                className={`size-9 rounded-lg flex items-center justify-center transition-all ${
+                  isHighlighted
+                    ? "bg-amber-500 text-white shadow-lg shadow-amber-900/30"
+                    : "bg-slate-800 text-slate-500"
+                }`}
+              >
+                <Star
+                  size={18}
+                  fill={isHighlighted ? "currentColor" : "none"}
+                />
               </div>
               <div className="flex-1">
-                <p className={`text-sm font-bold ${isHighlighted ? "text-white" : "text-slate-300"}`}>
+                <p
+                  className={`text-sm font-bold ${isHighlighted ? "text-white" : "text-slate-300"}`}
+                >
                   Highlight on Home
                 </p>
-                <p className="text-xs text-slate-500">Feature this skill in the hero skill cloud</p>
+                <p className="text-xs text-slate-500">
+                  Feature this skill in the hero skill cloud
+                </p>
               </div>
-              <div className={`size-5 rounded-full border-2 flex items-center justify-center transition-all ${
-                isHighlighted ? "border-amber-500 bg-amber-500" : "border-slate-700"
-              }`}>
-                {isHighlighted && <CheckCircle2 size={12} className="text-slate-900" />}
+              <div
+                className={`size-5 rounded-full border-2 flex items-center justify-center transition-all ${
+                  isHighlighted
+                    ? "border-amber-500 bg-amber-500"
+                    : "border-slate-700"
+                }`}
+              >
+                {isHighlighted && (
+                  <CheckCircle2 size={12} className="text-slate-900" />
+                )}
               </div>
             </div>
           </div>
