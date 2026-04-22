@@ -27,7 +27,7 @@ export async function GET(req: Request) {
   } catch {
     return NextResponse.json(
       { success: false, error: "Failed to fetch skills" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -38,14 +38,16 @@ export async function POST(req: Request) {
     if (!session?.user?.id) {
       return NextResponse.json(
         { success: false, error: "Unauthorized" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
     const formData = await req.formData();
     const name = formData.get("name") as string;
     const groupId = formData.get("groupId") as string | null;
-    const proficiency = parseInt((formData.get("proficiency") as string) || "75");
+    const proficiency = parseInt(
+      (formData.get("proficiency") as string) || "75",
+    );
     const level = (formData.get("level") as string) || "Intermediate";
     const whenToUse = (formData.get("whenToUse") as string) || null;
     const whyItMatters = (formData.get("whyItMatters") as string) || null;
@@ -55,7 +57,7 @@ export async function POST(req: Request) {
     if (!name) {
       return NextResponse.json(
         { success: false, error: "Name is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -91,7 +93,7 @@ export async function POST(req: Request) {
     console.error("[POST /api/skills]", error);
     return NextResponse.json(
       { success: false, error: "Failed to create skill" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

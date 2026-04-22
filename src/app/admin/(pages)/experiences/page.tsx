@@ -129,6 +129,7 @@ export default function ExperienceManagement() {
   const formatDate = (dateStr?: string | null) => {
     if (!dateStr) return "Present";
     return new Date(dateStr).toLocaleDateString("en-US", {
+      day: "2-digit",
       month: "short",
       year: "numeric",
     });

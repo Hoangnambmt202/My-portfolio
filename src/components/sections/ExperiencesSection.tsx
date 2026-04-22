@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import {
   Calendar,
   GraduationCap,
@@ -7,7 +8,11 @@ import {
   Code2,
   Building2,
   CheckCircle2,
+  Briefcase,
 } from "lucide-react";
+import { useExperienceStore } from "@/stores/feature/useExperienceStore";
+import { experiencesApi, Experience } from "@/lib/api/experiences";
+import { ExpType as PrismaExpType } from "@prisma/client";
 
 /* ─────────────────────────────────────────────────────
    Experience Section — Next.js / TypeScript / Tailwind
@@ -16,84 +21,60 @@ import {
    Mobile  : horizontal scroll cards (snap), swipe hint
 ───────────────────────────────────────────────────── */
 
-type ExpType = "Full-time" | "Contract" | "Education" | "Internship";
+type DisplayExpType = "Full-time" | "Contract" | "Education" | "Internship" | "Freelance";
 
-interface ExperienceItem {
-  id: string;
-  role: string;
-  company: string;
-  period: string;
-  type: ExpType;
-  description: string;
-  achievements?: string[];
-  coursework?: string[];
-  icon: React.ReactNode;
-}
-
-const BADGE: Record<ExpType, string> = {
+const BADGE: Record<DisplayExpType, string> = {
   "Full-time": "bg-blue-500/10   text-blue-400   border-blue-500/20",
   Contract: "bg-slate-800     text-slate-400  border-slate-700",
   Education: "bg-purple-500/10 text-purple-400 border-purple-500/20",
   Internship: "bg-amber-500/10  text-amber-400  border-amber-500/20",
+  Freelance: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
 };
 
-const ICON_BG: Record<ExpType, string> = {
+const ICON_BG: Record<DisplayExpType, string> = {
   "Full-time": "bg-blue-500/10   text-blue-400",
   Contract: "bg-blue-500/10   text-blue-400",
   Education: "bg-purple-500/10 text-purple-400",
   Internship: "bg-amber-500/10  text-amber-400",
+  Freelance: "bg-emerald-500/10 text-emerald-400",
 };
 
-const EXPERIENCES: ExperienceItem[] = [
-  {
-    id: "1",
-    role: "Senior Frontend Engineer",
-    company: "TechFlow Solutions",
-    period: "2021 – Present",
-    type: "Full-time",
-    icon: <Code2 size={20} />,
-    description:
-      "Leading the frontend development team in building scalable web applications using React, Next.js, and TypeScript. Responsible for architectural decisions, code reviews, and mentoring junior developers.",
-    achievements: [
-      "Improved application performance by 40% through code splitting and lazy-loading.",
-      "Implemented a comprehensive design system used across 5 products.",
-      "Successfully migrated legacy codebase to modern React hooks architecture.",
-    ],
-  },
-  {
-    id: "2",
-    role: "Web Developer",
-    company: "Creative Agency X",
-    period: "2019 – 2021",
-    type: "Contract",
-    icon: <Terminal size={20} />,
-    description:
-      "Developed responsive websites and e-commerce platforms. Collaborated closely with designers for pixel-perfect UI/UX implementation.",
-    achievements: [
-      "Delivered 15+ client projects with a 100% satisfaction rate.",
-      "Introduced automated testing workflows, reducing bug reports by 25%.",
-    ],
-  },
-  {
-    id: "3",
-    role: "BS in Computer Science",
-    company: "University of Technology",
-    period: "2015 – 2019",
-    type: "Education",
-    icon: <GraduationCap size={20} />,
-    description:
-      "Focused on software engineering principles, algorithms, and data structures. Participated in multiple hackathons and open-source initiatives.",
-    coursework: [
-      "Data Structures",
-      "Algorithms",
-      "Database Systems",
-      "Web Dev",
-    ],
-  },
-];
+const MAP_TYPE: Record<PrismaExpType, DisplayExpType> = {
+  WORK: "Full-time",
+  CONTRACT: "Contract",
+  EDUCATION: "Education",
+  INTERNSHIP: "Internship",
+  FREELANCE: "Freelance",
+};
+
+const GET_ICON = (type: PrismaExpType) => {
+  switch (type) {
+    case "EDUCATION":
+      return <GraduationCap size={20} />;
+    case "INTERNSHIP":
+      return <Terminal size={20} />;
+    case "FREELANCE":
+      return <Briefcase size={20} />;
+    case "WORK":
+      return <Code2 size={20} />;
+    default:
+      return <Terminal size={20} />;
+  }
+};
+
+const formatPeriod = (start: string, end: string | null | undefined, isCurrent: boolean) => {
+  const options: Intl.DateTimeFormatOptions = { day: "2-digit", month: "short", year: "numeric" };
+  const startDate = new Date(start).toLocaleDateString('en-US', options);
+  if (isCurrent) return `${startDate} – Present`;
+  if (!end) return `${startDate}`;
+  const endDate = new Date(end).toLocaleDateString('en-US', options);
+  return `${startDate} – ${endDate}`;
+};
 
 /* ── single card ── */
-function ExpCard({ exp }: { exp: ExperienceItem }) {
+function ExpCard({ exp }: { exp: Experience }) {
+  const displayType = MAP_TYPE[exp.type];
+
   return (
     <div className="relative bg-slate-900/50 border border-slate-800 rounded-2xl p-6 md:p-8 backdrop-blur-sm hover:bg-slate-900/80 hover:border-slate-700 transition-all duration-300">
       {/* header */}
@@ -101,12 +82,12 @@ function ExpCard({ exp }: { exp: ExperienceItem }) {
         <div className="space-y-1.5 min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <h3 className="text-xl md:text-2xl font-black text-white tracking-tight leading-tight">
-              {exp.role}
+              {exp.position}
             </h3>
             <span
-              className={`px-2.5 py-0.5 text-[10px] font-black uppercase rounded border shrink-0 ${BADGE[exp.type]}`}
+              className={`px-2.5 py-0.5 text-[10px] font-black uppercase rounded border shrink-0 ${BADGE[displayType]}`}
             >
-              {exp.type}
+              {displayType}
             </span>
           </div>
           <div className="flex items-center gap-2 text-slate-400 font-bold text-sm">
@@ -119,7 +100,7 @@ function ExpCard({ exp }: { exp: ExperienceItem }) {
         <div className="inline-flex items-center gap-2 px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl shrink-0 self-start">
           <Calendar size={13} className="text-blue-500" />
           <span className="text-xs font-black text-slate-300 font-mono tracking-wider whitespace-nowrap">
-            {exp.period}
+            {formatPeriod(exp.startDate, exp.endDate, exp.isCurrent)}
           </span>
         </div>
       </div>
@@ -130,7 +111,7 @@ function ExpCard({ exp }: { exp: ExperienceItem }) {
       </p>
 
       {/* achievements */}
-      {exp.achievements && (
+      {exp.achievements && exp.achievements.length > 0 && (
         <div className="bg-slate-950/50 rounded-2xl p-5 border border-slate-800/50">
           <h5 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4">
             Core Achievements
@@ -152,7 +133,7 @@ function ExpCard({ exp }: { exp: ExperienceItem }) {
       )}
 
       {/* coursework tags */}
-      {exp.coursework && (
+      {exp.coursework && exp.coursework.length > 0 && (
         <div className="flex flex-wrap gap-2 mt-4">
           {exp.coursework.map((tag) => (
             <span
@@ -170,6 +151,29 @@ function ExpCard({ exp }: { exp: ExperienceItem }) {
 
 /* ── main export ── */
 export default function ExperienceSection() {
+  const { experiences, setExperiences, setLoading, setError, isLoading } = useExperienceStore();
+
+  useEffect(() => {
+    const fetchExps = async () => {
+      try {
+        setLoading(true);
+        const res = await experiencesApi.getAll();
+        if (res.success) {
+          setExperiences(res.data);
+        } else {
+          setError("Failed to fetch experiences");
+        }
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : "An unknown error occurred");
+      }
+    };
+    fetchExps();
+  }, [setExperiences, setLoading, setError]);
+
+  if (isLoading && experiences.length === 0) {
+    return null; // Or a skeleton if you prefer, but keeping UI minimal as requested
+  }
+
   return (
     <section
       id="experience"
@@ -210,7 +214,7 @@ export default function ExperienceSection() {
         {/* MOBILE cards */}
         <div className="md:hidden">
           <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory -mx-4 px-4 scrollbar-none">
-            {EXPERIENCES.map((exp) => (
+            {experiences.map((exp) => (
               <div
                 key={exp.id}
                 className="snap-center shrink-0 w-[88vw] max-w-[360px]"
@@ -218,9 +222,9 @@ export default function ExperienceSection() {
                 {/* type icon dot */}
                 <div className="flex items-center gap-3 mb-3">
                   <div
-                    className={`p-2 rounded-xl border border-slate-800 bg-slate-900 ${ICON_BG[exp.type]}`}
+                    className={`p-2 rounded-xl border border-slate-800 bg-slate-900 ${ICON_BG[MAP_TYPE[exp.type]]}`}
                   >
-                    {exp.icon}
+                    {GET_ICON(exp.type)}
                   </div>
                   <div className="h-px flex-1 bg-slate-800" />
                 </div>
@@ -241,17 +245,14 @@ export default function ExperienceSection() {
           <div className="absolute left-7 top-0 bottom-0 w-px bg-gradient-to-b from-blue-500/70 via-slate-700 to-transparent" />
 
           <div className="flex flex-col gap-12">
-            {EXPERIENCES.map((exp) => (
+            {experiences.map((exp) => (
               <div key={exp.id} className="relative pl-24 group">
                 {/* icon node */}
                 <div className="absolute left-0 top-0 size-14 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center shadow-xl group-hover:border-blue-500/40 transition-colors z-10">
-                  <div className={`p-2 rounded-lg ${ICON_BG[exp.type]}`}>
-                    {exp.icon}
+                  <div className={`p-2 rounded-lg ${ICON_BG[MAP_TYPE[exp.type]]}`}>
+                    {GET_ICON(exp.type)}
                   </div>
                 </div>
-
-                {/* connector dot on the line */}
-                {/* <div className="absolute left-[27px] top-6 size-2 rounded-full bg-blue-500 ring-4 ring-slate-950 z-10" /> */}
 
                 <ExpCard exp={exp} />
               </div>
